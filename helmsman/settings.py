@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,11 +34,15 @@ ALLOWED_HOSTS = []
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ribbon2'
-        'USER': 'ribbon2',
-        'password': 'Ribbon2+2=4',
-        'HOST': '192.168.56.21',
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME', 'helsman_db'),
+        'USER': os.getenv('DB_USER', 'helsman_app'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+        'CONN_MAX_AGE': 600,
+        'OPTIONS': {
+            'connect_timeout': 10,
+        }
     }
 }
 
@@ -133,4 +141,24 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
+AUTHENTICATION_BACKENDS = [
+    'helsman.auth_backends.CASRoleBackend',  # Custom backend
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# CAS Configuration
+CAS_SERVER_URL = os.getenv('CAS_HOST')
+CAS_VERSION = '3'
+CAS_APPLY_ATTRIBUTES_TO_USER = True
+CAS_CREATE_USER = True
+CAS_LOGIN_URL_NAME = 'cas_ng_login'
+CAS_LOGOUT_URL_NAME = 'cas_ng_logout'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CAS_SERVER_URL = 'https://your-cas-server.edu/cas/'
+CAS_VERSION = '3'
+CAS_APPLY_ATTRIBUTES_TO_USER = True
+CAS_RENAME_ATTRIBUTES = {
+    'memberOf': 'groups',
+}
