@@ -1,0 +1,74 @@
+{% extends 'sis/base.html' %}
+
+{% block title %}{{ student.first_name }} {{ student.last_name }} - Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Student Details</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="text" value="{{ student.student_id }}" disabled>
+        </div>
+        
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" value="{{ student.first_name }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" value="{{ student.last_name }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ student.email }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="enrollment_status">Enrollment Status</label>
+            <select id="enrollment_status" name="enrollment_status">
+                <option value="Active" {% if student.enrollment_status == 'Active' %}selected{% endif %}>Active</option>
+                <option value="Inactive" {% if student.enrollment_status == 'Inactive' %}selected{% endif %}>Inactive</option>
+                <option value="Graduated" {% if student.enrollment_status == 'Graduated' %}selected{% endif %}>Graduated</option>
+                <option value="Withdrawn" {% if student.enrollment_status == 'Withdrawn' %}selected{% endif %}>Withdrawn</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn">Save Changes</button>
+        <a href="{% url 'sis:student_list' %}" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Enrollments</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Course ID</th>
+                <th>Semester</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for enrollment in enrollments %}
+            <tr>
+                <td>{{ enrollment.course_id }}</td>
+                <td>{{ enrollment.semester }}</td>
+                <td>{{ enrollment.grade|default:"In Progress" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="text-align: center; padding: 20px;">
+                    No enrollments found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
