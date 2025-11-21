@@ -185,6 +185,7 @@ class SgmStubi(models.Model):
         GumIdent,
         on_delete=models.CASCADE,
         db_column='sgm_stubi_rbid',
+        primary_key=True,
         related_name='stubi_records'
     )
     sgm_stubi_update_tmid = models.ForeignKey(SglTerms, models.DO_NOTHING, db_column='sgm_stubi_update_tmid', db_comment='Term ID of most recent update.')
