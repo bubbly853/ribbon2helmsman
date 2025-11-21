@@ -1,0 +1,90 @@
+{% extends 'sis/base.html' %}
+
+{% block title %}Dashboard - Helmsman{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h1>Welcome to Helmsman</h1>
+    <p class="subtitle">SIS Management Portal</p>
+</div>
+
+<div class="dashboard-cards">
+    <a href="{% url 'sis:student_list' %}" class="dashboard-card">
+        <div class="card-icon">👨‍🎓</div>
+        <h2>Students</h2>
+        <p>View and manage student records</p>
+    </a>
+    
+    <a href="{% url 'sis:course_list' %}" class="dashboard-card">
+        <div class="card-icon">📚</div>
+        <h2>Courses</h2>
+        <p>View and manage course catalog</p>
+    </a>
+    
+    <a href="/admin/" class="dashboard-card">
+        <div class="card-icon">⚙️</div>
+        <h2>Admin</h2>
+        <p>Django administration panel</p>
+    </a>
+</div>
+
+<style>
+    .dashboard-header {
+        text-align: center;
+        margin: 40px 0;
+    }
+    
+    .dashboard-header h1 {
+        font-size: 2.5em;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .subtitle {
+        color: #666;
+        font-size: 1.2em;
+    }
+    
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+    
+    .dashboard-card {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 40px 30px;
+        text-align: center;
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.3s;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-color: #667eea;
+    }
+    
+    .card-icon {
+        font-size: 3em;
+        margin-bottom: 20px;
+    }
+    
+    .dashboard-card h2 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    .dashboard-card p {
+        color: #666;
+        font-size: 0.95em;
+    }
+</style>
+{% endblock %}
