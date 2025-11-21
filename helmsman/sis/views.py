@@ -55,6 +55,12 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
     preferred name as `gum_ident_first_name`.
     """
     # fields from GumIdent (if present)
+    def safe_date(d):
+        if d is None:
+            return None
+        if d.year < 1900: 
+            return None
+        return d
     rbid = None
     preferred_name = None
     first_name = None
@@ -69,7 +75,7 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
         first_name = ident.gum_ident_first_name
         middle_name = ident.gum_ident_middle_name
         last_name = ident.gum_ident_last_name
-        birthday = ident.gum_ident_birthday
+        birthday = safe_date(ident.gum_ident_birthday)
 
     # fields from SgmStubi (if present)
     level_id = None
