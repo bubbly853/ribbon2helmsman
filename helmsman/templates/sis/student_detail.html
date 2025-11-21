@@ -1,69 +1,107 @@
 {% extends 'sis/base.html' %}
 
-{% block title %}{{ student.first_name }} {{ student.last_name }} - Helmsman{% endblock %}
+{% block title %}{{ student.preferred_name|default:student.first_name }} {{ student.last_name }} - Helmsman{% endblock %}
 
 {% block content %}
 <div class="card">
     <h1>Student Details</h1>
-    
+
     <form method="post">
         {% csrf_token %}
-        
+
+        <!-- RBID (Primary Banner ID) -->
         <div class="form-group">
-            <label>Student ID</label>
-            <input type="text" value="{{ student.student_id }}" disabled>
+            <label>RBID</label>
+            <input type="text" value="{{ student.rbid }}" disabled>
         </div>
-        
+
+        <!-- Editable: First Name -->
         <div class="form-group">
             <label for="first_name">First Name</label>
-            <input type="text" id="first_name" name="first_name" value="{{ student.first_name }}" required>
+            <input type="text" id="first_name" name="first_name"
+                   value="{{ student.first_name }}" required>
         </div>
-        
+
+        <!-- Editable: Last Name -->
         <div class="form-group">
             <label for="last_name">Last Name</label>
-            <input type="text" id="last_name" name="last_name" value="{{ student.last_name }}" required>
+            <input type="text" id="last_name" name="last_name"
+                   value="{{ student.last_name }}" required>
         </div>
-        
+
+        <!-- Editable: Active Indicator -->
         <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="{{ student.email }}" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="enrollment_status">Enrollment Status</label>
-            <select id="enrollment_status" name="enrollment_status">
-                <option value="Active" {% if student.enrollment_status == 'Active' %}selected{% endif %}>Active</option>
-                <option value="Inactive" {% if student.enrollment_status == 'Inactive' %}selected{% endif %}>Inactive</option>
-                <option value="Graduated" {% if student.enrollment_status == 'Graduated' %}selected{% endif %}>Graduated</option>
-                <option value="Withdrawn" {% if student.enrollment_status == 'Withdrawn' %}selected{% endif %}>Withdrawn</option>
+            <label for="active_ind">Active</label>
+            <select id="active_ind" name="active_ind">
+                <option value="Y" {% if student.active_ind == "Y" %}selected{% endif %}>Yes</option>
+                <option value="N" {% if student.active_ind == "N" %}selected{% endif %}>No</option>
             </select>
         </div>
-        
+
         <button type="submit" class="btn">Save Changes</button>
         <a href="{% url 'sis:student_list' %}" class="btn btn-secondary">Back to List</a>
     </form>
 </div>
 
+<!-- STATIC ACADEMIC INFO (not editable) -->
+<div class="card">
+    <h2>Academic Information</h2>
+
+    <p><strong>Level:</strong> {{ student.level_name|default:"—" }}</p>
+    <p><strong>Student Type:</strong> {{ student.student_type_name|default:"—" }}</p>
+    <p><strong>Major:</strong> {{ student.major1_name|default:"—" }}</p>
+    <p><strong>Minor:</strong> {{ student.minor1_name|default:"—" }}</p>
+</div>
+
+<!-- ENROLLMENTS -->
 <div class="card">
     <h2>Enrollments</h2>
     <table>
         <thead>
             <tr>
-                <th>Course ID</th>
-                <th>Semester</th>
-                <th>Grade</th>
+                <th>Course</th>
+                <th>Section</th>
+                <th>Term</th>
+                <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            {% for enrollment in enrollments %}
+            {% for e in enrollments %}
             <tr>
-                <td>{{ enrollment.course_id }}</td>
-                <td>{{ enrollment.semester }}</td>
-                <td>{{ enrollment.grade|default:"In Progress" }}</td>
+                <!-- COURSE DISPLAY -->
+                <td>
+                    {% if e.srh_enrol_scid.srb_sects_crid %}
+                        {{ e.srh_enrol_scid.srb_sects_crid.srl_cours_sbid.srl_subjs_sbid }}
+                        {{ e.srh_enrol_scid.srb_sects_crid.srl_cours_crse_num }}
+                    {% else %}
+                        Unknown
+                    {% endif %}
+                </td>
+
+                <!-- SECTION NUMBER -->
+                <td>{{ e.srh_enrol_scid.srb_sects_scid }}</td>
+
+                <!-- TERM DESCRIPTION -->
+                <td>
+                    {% if e.srh_enrol_scid.srb_sects_tmid %}
+                        {{ e.srh_enrol_scid.srb_sects_tmid.sgl_terms_desc }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+
+                <!-- ENROLLMENT STATUS -->
+                <td>
+                    {% if e.srh_enrol_esid %}
+                        {{ e.srh_enrol_esid.srl_enrst_desc }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="3" style="text-align: center; padding: 20px;">
+                <td colspan="4" style="text-align: center; padding: 20px;">
                     No enrollments found
                 </td>
             </tr>
