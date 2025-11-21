@@ -188,43 +188,45 @@ def dashboard(request):
 
 @login_required
 def student_list(request):
-    """List all students (users with SGM_STUBI record) with search and pagination"""
+    """List all students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
     rbid_query = request.GET.get('rbid', '').strip()
 
-    # Base queryset: only users that have a SGM_STUBI record
-    qs = GumIdent.objects.using('sis').filter(sgm_stubi__isnull=False)
+    # Base queryset: only students that have a SGM_STUBI record
+    stubi_qs = SgmStubi.objects.using('sis').select_related(
+        'sgm_stubi_rbid',  # GumIdent
+        'sgm_stubi_lvid',
+        'sgm_stubi_stid',
+        'sgm_stubi_major1_mrid',
+        'sgm_stubi_minor1_mrid'
+    )
 
-    # Search by name or RBID
+    # Search by name or RBID through GumIdent
     if search_query:
-        qs = qs.filter(
-            models.Q(gum_ident_first_name__icontains=search_query) |
-            models.Q(gum_ident_last_name__icontains=search_query)
+        stubi_qs = stubi_qs.filter(
+            models.Q(sgm_stubi_rbid__gum_ident_first_name__icontains=search_query) |
+            models.Q(sgm_stubi_rbid__gum_ident_last_name__icontains=search_query)
         )
 
     if rbid_query:
-        qs = qs.filter(gum_ident_rbid__icontains=rbid_query)
+        stubi_qs = stubi_qs.filter(sgm_stubi_rbid__gum_ident_rbid__icontains=rbid_query)
 
-    qs = qs.order_by('gum_ident_last_name', 'gum_ident_first_name')
+    # Order by last_name, first_name from GumIdent
+    stubi_qs = stubi_qs.order_by(
+        'sgm_stubi_rbid__gum_ident_last_name',
+        'sgm_stubi_rbid__gum_ident_first_name'
+    )
 
-    # Limit to a reasonable number to avoid n+1 queries
-    gum_list = qs[:2000]
-    rbids = [g.gum_ident_rbid for g in gum_list]
+    # Limit to 2000 results for safety
+    stubi_list = stubi_qs[:2000]
 
-    # Fetch stubi records in bulk
-    stubi_qs = SgmStubi.objects.using('sis').filter(sgm_stubi_rbid__in=rbids)
-    stubi_map = {s.sgm_stubi_rbid: s for s in stubi_qs}
-
-    # Build StudentRecord list
-    students: List[StudentRecord] = []
-    for g in gum_list:
-        stubi = stubi_map.get(g.gum_ident_rbid)
-        if stubi:
-            # make_student_record should handle null major/minor gracefully
-            students.append(make_student_record(g, stubi))
+    # Build student records
+    students: List = []
+    for stubi in stubi_list:
+        students.append(make_student_record(stubi.sgm_stubi_rbid, stubi))
 
     # Pagination
-    paginator = Paginator(students, 25)
+    paginator = Paginator(students, 25)  # 25 per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -233,7 +235,6 @@ def student_list(request):
         'search_query': search_query,
     }
     return render(request, 'sis/student_list.html', context)
-
 
 @login_required
 def student_detail(request, student_rbid):
