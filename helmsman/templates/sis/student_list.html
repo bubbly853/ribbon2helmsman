@@ -38,7 +38,11 @@
                 <td>{{ student.email|default:"—" }}</td>
                 <td>{{ student.enrollment_status|default:"—" }}</td>
                 <td>
-                    <a href="{% url 'sis:student_detail' student.student_id %}" class="btn">View</a>
+                    {% if student.student_id %}
+                        <a href="{% url 'sis:student_detail' student.student_id %}" class="btn">View</a>
+                    {% else %}
+                        <span class="text-muted">No RBID</span>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}
