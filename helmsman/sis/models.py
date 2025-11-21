@@ -14,6 +14,7 @@ class FglFyear(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'fgl_fyear'
         db_table_comment = 'Financial aid year definition table.'
 
@@ -24,6 +25,7 @@ class GglCount(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'ggl_count'
         db_table_comment = 'Country definition table.'
 
@@ -42,6 +44,7 @@ class GumIdent(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'gum_ident'
         db_table_comment = 'Person identity base record table.'
 
@@ -54,6 +57,7 @@ class SclCipcd(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'scl_cipcd'
         db_table_comment = 'CIP code definition table.'
 
@@ -66,6 +70,7 @@ class SclDegrs(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'scl_degrs'
         db_table_comment = 'Degree lookup table.'
 
@@ -79,6 +84,7 @@ class SclDlevl(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'scl_dlevl'
         db_table_comment = 'Degree level lookup table.'
 
@@ -95,6 +101,7 @@ class SclMajor(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'scl_major'
         db_table_comment = 'Major report table.'
 
@@ -106,6 +113,7 @@ class SdlColeg(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'sdl_coleg'
         db_table_comment = 'College/school definition table.'
 
@@ -117,6 +125,7 @@ class SdlDepts(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'sdl_depts'
         db_table_comment = 'Academic department lookup table.'
 
@@ -128,6 +137,7 @@ class SglLevel(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'sgl_level'
         db_table_comment = 'Student level lookup table.'
 
@@ -138,6 +148,7 @@ class SglSmstr(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'sgl_smstr'
         db_table_comment = 'Semester definition table.'
 
@@ -149,6 +160,7 @@ class SglStype(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'sgl_stype'
         db_table_comment = 'Student type lookup table.'
 
@@ -163,6 +175,7 @@ class SglTerms(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'sgl_terms'
         db_table_comment = 'Academic term definition table.'
 
@@ -183,6 +196,7 @@ class SgmStubi(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'sgm_stubi'
         db_table_comment = 'Student base information table.'
 
@@ -197,6 +211,7 @@ class SrbSects(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'srb_sects'
         unique_together = (('srb_sects_scid', 'srb_sects_tmid'), ('srb_sects_tmid', 'srb_sects_crid', 'srb_sects_section_seq'),)
         db_table_comment = 'Section bridge table'
@@ -213,6 +228,7 @@ class SrhEnrol(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'srh_enrol'
         unique_together = (('srh_enrol_rbid', 'srh_enrol_scid', 'srh_enrol_tmid'),)
         db_table_comment = 'Registration Status History Table'
@@ -227,6 +243,7 @@ class SrlCours(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'srl_cours'
         unique_together = (('srl_cours_sbid', 'srl_cours_crse_num'),)
         db_table_comment = 'Course lookup table'
@@ -240,6 +257,7 @@ class SrlEnrst(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'srl_enrst'
         db_table_comment = 'Enrollment Status Lookup Table with Predefined Values. \n     Combines roll and credit flags to indicate enrollment semantics:\n     - Y,Y = Normal registration (Registered, Web Registered, Admin Registered, Vendor Registered)\n     - N,N = Withdrawal (Withdraw, Web Withdraw, Admin Withdraw, Vendor Withdraw)\n     - N,Y = Special cases (Credited Withdraw, Transfer Course, Honorary Course)\n     - Y,N = Audit'
 
@@ -251,5 +269,6 @@ class SrlSubjs(models.Model):
 
     class Meta:
         managed = False
+        app_label = 'sis'
         db_table = 'srl_subjs'
         db_table_comment = 'Course Subject Report Table'
