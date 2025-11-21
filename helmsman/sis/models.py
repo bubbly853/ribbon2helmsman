@@ -181,7 +181,12 @@ class SglTerms(models.Model):
 
 
 class SgmStubi(models.Model):
-    sgm_stubi_rbid = models.CharField(primary_key=True, max_length=9, db_comment='Ribbon ID.')
+    sgm_stubi_rbid = models.ForeignKey(
+        GumIdent,
+        on_delete=models.CASCADE,
+        db_column='sgm_stubi_rbid',
+        related_name='stubi_records'
+    )
     sgm_stubi_update_tmid = models.ForeignKey(SglTerms, models.DO_NOTHING, db_column='sgm_stubi_update_tmid', db_comment='Term ID of most recent update.')
     sgm_stubi_lvid = models.ForeignKey(SglLevel, models.DO_NOTHING, db_column='sgm_stubi_lvid', db_comment='Student level ID.')
     sgm_stubi_stid = models.ForeignKey(SglStype, models.DO_NOTHING, db_column='sgm_stubi_stid', db_comment='Student type ID.')
