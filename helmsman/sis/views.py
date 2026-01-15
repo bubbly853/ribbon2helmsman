@@ -22,8 +22,8 @@ from .models import (
     SrlEnrst,
     SrlSubjs,
     SglTerms,
+    ScbMjrcm,
 )
-
 
 # --- Helper dataclass representing the combined Student ---
 @dataclass
@@ -111,13 +111,15 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
             student_type_name = getattr(st, 'sgl_stype_hr_name', None)
 
         # ---- Majors / Minors via ScbMjrcm ----
-        def extract_major(mjrcm):
+        def extract_major(mjrcm_obj):
             """
             Given ScbMjrcm, return (major_id, major_name) safely.
+            ScbMjrcm has scb_mjrcm_mrid (FK to SclMajor)
             """
-            if not mjrcm:
+            if not mjrcm_obj:
                 return None, None
-            major = getattr(mjrcm, 'scb_mjrcm_major', None)
+            # Get the SclMajor from the FK
+            major = getattr(mjrcm_obj, 'scb_mjrcm_mrid', None)
             if not major:
                 return None, None
             return (
@@ -161,17 +163,17 @@ def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     # get GumIdent
     ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=rbid).first()
 
-    # get SgmStubi with related lookups (levels, types, majors)
+    # get SgmStubi with related lookups (levels, types, majors via ScbMjrcm)
     stubi_qs = SgmStubi.objects.using('sis').filter(sgm_stubi_rbid=rbid)
-    # attempt to select_related related FKs to avoid extra queries (if available)
+    # select_related to get the ScbMjrcm and then the SclMajor
     try:
         stubi = stubi_qs.select_related(
             'sgm_stubi_lvid',
             'sgm_stubi_stid',
-            'sgm_stubi_major1_mrid',
-            'sgm_stubi_minor1_mrid',
-            'sgm_stubi_major2_mrid',
-            'sgm_stubi_minor2_mrid',
+            'sgm_stubi_major1_mrid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
+            'sgm_stubi_minor1_mrid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
+            'sgm_stubi_major2_mrid__scb_mjrcm_mrid',
+            'sgm_stubi_minor2_mrid__scb_mjrcm_mrid',
         ).first()
     except Exception:
         stubi = stubi_qs.first()
@@ -214,8 +216,8 @@ def student_list(request):
         'sgm_stubi_rbid',  # GumIdent
         'sgm_stubi_lvid',
         'sgm_stubi_stid',
-        'sgm_stubi_major1_mrid',
-        'sgm_stubi_minor1_mrid'
+        'sgm_stubi_major1_mrid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
+        'sgm_stubi_minor1_mrid__scb_mjrcm_mrid'   # ScbMjrcm -> SclMajor
     )
 
     # Search by name or RBID through GumIdent
@@ -263,9 +265,12 @@ def student_detail(request, student_rbid):
         return get_object_or_404(GumIdent, gum_ident_rbid=student_rbid)
 
     # Enrollments for student: SrhEnrol rows where srh_enrol_rbid = student's rbid
-    # (Note: srh_enrol_rbid is the PK in SrhEnrol and also stores RBID)
-    enrollments = SrhEnrol.objects.using('sis').filter(srh_enrol_rbid=student_rbid).select_related(
-        'srh_enrol_esid', 'srh_enrol_scid'
+    enrollments = SrhEnrol.objects.using('sis').filter(
+        srh_enrol_rbid__gum_ident_rbid=student_rbid
+    ).select_related(
+        'srh_enrol_esid', 
+        'srh_enrol_scid__srb_sects_crid',
+        'srh_enrol_tmid'
     )
 
     if request.method == 'POST':
