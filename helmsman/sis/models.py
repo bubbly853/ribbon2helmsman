@@ -7,9 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-# -------------------
-# General Tables
-# -------------------
 class GglCount(models.Model):
     ggl_count_coid = models.CharField(primary_key=True, max_length=2, db_comment='Country ID, Alpha-2 code.')
     ggl_count_hr_name = models.CharField(max_length=64, db_comment='Country human-readable name.')
@@ -38,10 +35,6 @@ class GumIdent(models.Model):
         db_table = 'general.gum_ident'
         db_table_comment = 'Person identity base record table.'
 
-
-# -------------------
-# Student Tables
-# -------------------
 class SdlColeg(models.Model):
     sdl_coleg_cgid = models.CharField(primary_key=True, max_length=4, db_comment='College ID.')
     sdl_coleg_hr_name = models.CharField(max_length=32, db_comment='College human-readable name.')
@@ -149,38 +142,6 @@ class ScbMjrcm(models.Model):
         db_table_comment = 'Major Campus Section Bridge Table.'
         unique_together = (('scb_mjrcm_mrid', 'scb_mjrcm_cpid'),)
 
-class SgmStubi(models.Model):
-    sgm_stubi_rbid = models.ForeignKey(GumIdent, on_delete=models.CASCADE, db_column='sgm_stubi_rbid', primary_key=True, related_name='stubi_records')
-    sgm_stubi_update_tmid = models.ForeignKey(SglTerms, on_delete=models.PROTECT, db_column='sgm_stubi_update_tmid', related_name='stubi_updates', db_comment='Term of last update')
-    sgm_stubi_lvid = models.ForeignKey(SglLevel, on_delete=models.PROTECT, db_column='sgm_stubi_lvid', related_name='stubi_levels', db_comment='Student level ID')
-    sgm_stubi_stid = models.ForeignKey(SglStype, on_delete=models.PROTECT, db_column='sgm_stubi_stid', related_name='stubi_types', db_comment='Student type ID')
-    sgm_stubi_active_ind = models.CharField(max_length=1, db_comment='Active indicator (Y/N)')
-
-    # Majors and campus mapping
-    sgm_stubi_major1_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_major1_mrid', null=True, blank=True, related_name='stubi_major1', db_comment='Primary major, campus mapping')
-    sgm_stubi_major2_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_major2_mrid', null=True, blank=True, related_name='stubi_major2', db_comment='Secondary major, campus mapping')
-    sgm_stubi_major3_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_major3_mrid', null=True, blank=True, related_name='stubi_major3', db_comment='Tertiary major, campus mapping')
-
-    # Minors and campus mapping
-    sgm_stubi_minor1_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_minor1_mrid', null=True, blank=True, related_name='stubi_minor1', db_comment='Primary minor, campus mapping')
-    sgm_stubi_minor2_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_minor2_mrid', null=True, blank=True, related_name='stubi_minor2', db_comment='Secondary minor, campus mapping')
-    sgm_stubi_minor3_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_minor3_mrid', null=True, blank=True, related_name='stubi_minor3', db_comment='Tertiary minor, campus mapping')
-
-    # Audit info
-    sgm_stubi_created_date = models.DateField(db_comment='Record creation date')
-    sgm_stubi_activity_date = models.DateField(null=True, blank=True, db_comment='Last modification date')
-    sgm_stubi_modified_by = models.CharField(max_length=40, null=True, blank=True, db_comment='User who last modified record')
-
-    class Meta:
-        managed = False
-        app_label = 'sis'
-        db_table = 'student.sgm_stubi'
-        db_table_comment = 'Student base information table with majors and minors'
-
-
-# -------------------
-# Student Base Info
-# -------------------
 class SglStype(models.Model):
     sgl_stype_stid = models.CharField(primary_key=True, max_length=2, db_comment='Student type ID.')
     sgl_stype_hr_name = models.CharField(max_length=32, db_comment='Student type human-readable name.')
@@ -216,10 +177,34 @@ class SglTerms(models.Model):
         db_table = 'student.sgl_terms'
         db_table_comment = 'Academic term definition table.'
 
+class SgmStubi(models.Model):
+    sgm_stubi_rbid = models.ForeignKey(GumIdent, on_delete=models.CASCADE, db_column='sgm_stubi_rbid', primary_key=True, related_name='stubi_records')
+    sgm_stubi_update_tmid = models.ForeignKey(SglTerms, on_delete=models.PROTECT, db_column='sgm_stubi_update_tmid', related_name='stubi_updates', db_comment='Term of last update')
+    sgm_stubi_lvid = models.ForeignKey(SglLevel, on_delete=models.PROTECT, db_column='sgm_stubi_lvid', related_name='stubi_levels', db_comment='Student level ID')
+    sgm_stubi_stid = models.ForeignKey(SglStype, on_delete=models.PROTECT, db_column='sgm_stubi_stid', related_name='stubi_types', db_comment='Student type ID')
+    sgm_stubi_active_ind = models.CharField(max_length=1, db_comment='Active indicator (Y/N)')
 
-# -------------------
-# Enrollment / Section Tables
-# -------------------
+    # Majors and campus mapping
+    sgm_stubi_major1_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_major1_mrid', null=True, blank=True, related_name='stubi_major1', db_comment='Primary major, campus mapping')
+    sgm_stubi_major2_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_major2_mrid', null=True, blank=True, related_name='stubi_major2', db_comment='Secondary major, campus mapping')
+    sgm_stubi_major3_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_major3_mrid', null=True, blank=True, related_name='stubi_major3', db_comment='Tertiary major, campus mapping')
+
+    # Minors and campus mapping
+    sgm_stubi_minor1_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_minor1_mrid', null=True, blank=True, related_name='stubi_minor1', db_comment='Primary minor, campus mapping')
+    sgm_stubi_minor2_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_minor2_mrid', null=True, blank=True, related_name='stubi_minor2', db_comment='Secondary minor, campus mapping')
+    sgm_stubi_minor3_mrid = models.ForeignKey(ScbMjrcm, on_delete=models.PROTECT, db_column='sgm_stubi_minor3_mrid', null=True, blank=True, related_name='stubi_minor3', db_comment='Tertiary minor, campus mapping')
+
+    # Audit info
+    sgm_stubi_created_date = models.DateField(db_comment='Record creation date')
+    sgm_stubi_activity_date = models.DateField(null=True, blank=True, db_comment='Last modification date')
+    sgm_stubi_modified_by = models.CharField(max_length=40, null=True, blank=True, db_comment='User who last modified record')
+
+    class Meta:
+        managed = False
+        app_label = 'sis'
+        db_table = 'student.sgm_stubi'
+        db_table_comment = 'Student base information table with majors and minors'
+
 class SrlSubjs(models.Model):
     srl_subjs_sbid = models.CharField(primary_key=True, max_length=4, db_comment='Subject ID')
     srl_subjs_hr_name = models.CharField(max_length=64, db_comment='Subject Human Readable Name')
@@ -289,9 +274,6 @@ class SrhEnrol(models.Model):
         db_table_comment = 'Registration Status History Table'
         unique_together = (('srh_enrol_rbid', 'srh_enrol_scid', 'srh_enrol_tmid'),)
 
-# -------------------
-# Finance Table
-# -------------------
 class FglFyear(models.Model):
     fgl_fyear_fyid = models.CharField(primary_key=True, max_length=4, db_comment='Financial aid year code.')
     fgl_fyear_desc = models.CharField(max_length=40, db_comment='Financial aid year description.')
