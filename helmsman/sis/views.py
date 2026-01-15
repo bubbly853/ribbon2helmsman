@@ -196,6 +196,15 @@ def dashboard(request):
 
 @login_required
 def student_list(request):
+    from django.db import connections
+
+    with connections['sis'].cursor() as c:
+        c.execute("select current_database(), current_user")
+        print("SIS DB:", c.fetchall())
+
+    with connections['default'].cursor() as c:
+        c.execute("select current_database(), current_user")
+        print("DEFAULT DB:", c.fetchall())
     """List all students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
     rbid_query = request.GET.get('rbid', '').strip()
