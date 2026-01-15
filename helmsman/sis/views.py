@@ -2,7 +2,7 @@
 SIS Views - Banner-style pages
 Place this in /srv/ribbon2helmsman/helmsman/sis/views.py
 """
-
+from django.db import models
 from dataclasses import dataclass
 from typing import Optional, List
 
@@ -51,16 +51,19 @@ class StudentRecord:
 def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) -> StudentRecord:
     """
     Build StudentRecord from GumIdent and SgmStubi objects.
-    NOTE: Models do not include a 'name_pref' field. Per your choice, we treat
-    preferred name as `gum_ident_first_name`.
+    Handles ScbMjrcm -> SclMajor indirection for majors/minors.
     """
-    # fields from GumIdent (if present)
+
     def safe_date(d):
         if d is None:
             return None
-        if d.year < 1900: 
+        if d.year < 1900:
             return None
         return d
+
+    # --------------------
+    # GumIdent fields
+    # --------------------
     rbid = None
     preferred_name = None
     first_name = None
@@ -70,59 +73,65 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
 
     if ident:
         rbid = ident.gum_ident_rbid
-        # treat gum_ident_first_name as 'preferred name' since there's no name_pref
         preferred_name = ident.gum_ident_first_name
         first_name = ident.gum_ident_first_name
         middle_name = ident.gum_ident_middle_name
         last_name = ident.gum_ident_last_name
         birthday = safe_date(ident.gum_ident_birthday)
 
-    # fields from SgmStubi (if present)
+    # --------------------
+    # SgmStubi fields
+    # --------------------
     level_id = None
     level_name = None
     student_type_id = None
     student_type_name = None
+    active_ind = None
+
+    # primary major/minor only (for current StudentRecord)
     major1_id = None
     major1_name = None
     minor1_id = None
     minor1_name = None
-    active_ind = None
 
     if stubi:
         rbid = rbid or stubi.sgm_stubi_rbid
         active_ind = stubi.sgm_stubi_active_ind
 
-        # Level
-        if getattr(stubi, "sgm_stubi_lvid", None):
-            try:
-                level_id = stubi.sgm_stubi_lvid.sgl_level_lvid
-                level_name = stubi.sgm_stubi_lvid.sgl_level_hr_name
-            except Exception:
-                # fallback if related object not loaded
-                level_id = getattr(stubi, "sgm_stubi_lvid_id", None)
+        # ---- Level ----
+        lvl = getattr(stubi, 'sgm_stubi_lvid', None)
+        if lvl:
+            level_id = getattr(lvl, 'sgl_level_lvid', None)
+            level_name = getattr(lvl, 'sgl_level_hr_name', None)
 
-        # Student type
-        if getattr(stubi, "sgm_stubi_stid", None):
-            try:
-                student_type_id = stubi.sgm_stubi_stid.sgl_stype_stid
-                student_type_name = stubi.sgm_stubi_stid.sgl_stype_hr_name
-            except Exception:
-                student_type_id = getattr(stubi, "sgm_stubi_stid_id", None)
+        # ---- Student type ----
+        st = getattr(stubi, 'sgm_stubi_stid', None)
+        if st:
+            student_type_id = getattr(st, 'sgl_stype_stid', None)
+            student_type_name = getattr(st, 'sgl_stype_hr_name', None)
 
-        # Majors/minors
-        if getattr(stubi, "sgm_stubi_major1_mrid", None):
-            try:
-                major1_id = stubi.sgm_stubi_major1_mrid.scl_major_mrid
-                major1_name = stubi.sgm_stubi_major1_mrid.scl_major_hr_name
-            except Exception:
-                major1_id = getattr(stubi, "sgm_stubi_major1_mrid_id", None)
+        # ---- Majors / Minors via ScbMjrcm ----
+        def extract_major(mjrcm):
+            """
+            Given ScbMjrcm, return (major_id, major_name) safely.
+            """
+            if not mjrcm:
+                return None, None
+            major = getattr(mjrcm, 'scb_mjrcm_major', None)
+            if not major:
+                return None, None
+            return (
+                getattr(major, 'scl_major_mrid', None),
+                getattr(major, 'scl_major_hr_name', None),
+            )
 
-        if getattr(stubi, "sgm_stubi_minor1_mrid", None):
-            try:
-                minor1_id = stubi.sgm_stubi_minor1_mrid.scl_major_mrid
-                minor1_name = stubi.sgm_stubi_minor1_mrid.scl_major_hr_name
-            except Exception:
-                minor1_id = getattr(stubi, "sgm_stubi_minor1_mrid_id", None)
+        major1_id, major1_name = extract_major(
+            getattr(stubi, 'sgm_stubi_major1_mrid', None)
+        )
+
+        minor1_id, minor1_name = extract_major(
+            getattr(stubi, 'sgm_stubi_minor1_mrid', None)
+        )
 
     return StudentRecord(
         rbid=rbid,
@@ -143,7 +152,6 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
         gum_ident=ident,
         sgm_stubi=stubi,
     )
-
 
 def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     """
