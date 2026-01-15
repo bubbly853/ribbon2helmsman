@@ -15,7 +15,7 @@ class FglFyear(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'fgl_fyear'
+        db_table = 'finance.fgl_fyear'
         db_table_comment = 'Financial aid year definition table.'
 
 
@@ -26,7 +26,7 @@ class GglCount(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'ggl_count'
+        db_table = 'general.ggl_count'
         db_table_comment = 'Country definition table.'
 
 
@@ -45,7 +45,7 @@ class GumIdent(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'gum_ident'
+        db_table = 'general.gum_ident'
         db_table_comment = 'Person identity base record table.'
 
 
@@ -58,7 +58,7 @@ class SclCipcd(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'scl_cipcd'
+        db_table = 'student.scl_cipcd'
         db_table_comment = 'CIP code definition table.'
 
 
@@ -71,7 +71,7 @@ class SclDegrs(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'scl_degrs'
+        db_table = 'student.scl_degrs'
         db_table_comment = 'Degree lookup table.'
 
 
@@ -85,7 +85,7 @@ class SclDlevl(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'scl_dlevl'
+        db_table = 'student.scl_dlevl'
         db_table_comment = 'Degree level lookup table.'
 
 
@@ -102,7 +102,7 @@ class SclMajor(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'scl_major'
+        db_table = 'student.scl_major'
         db_table_comment = 'Major report table.'
 
 
@@ -114,7 +114,7 @@ class SdlColeg(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'sdl_coleg'
+        db_table = 'student.sdl_coleg'
         db_table_comment = 'College/school definition table.'
 
 
@@ -126,7 +126,7 @@ class SdlDepts(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'sdl_depts'
+        db_table = 'student.sdl_depts'
         db_table_comment = 'Academic department lookup table.'
 
 
@@ -138,7 +138,7 @@ class SglLevel(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'sgl_level'
+        db_table = 'student.sgl_level'
         db_table_comment = 'Student level lookup table.'
 
 
@@ -149,7 +149,7 @@ class SglSmstr(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'sgl_smstr'
+        db_table = 'student.sgl_smstr'
         db_table_comment = 'Semester definition table.'
 
 
@@ -161,7 +161,7 @@ class SglStype(models.Model):
     class Meta:
         managed = False
         app_label = 'sis'
-        db_table = 'sgl_stype'
+        db_table = 'student.sgl_stype'
         db_table_comment = 'Student type lookup table.'
 
 

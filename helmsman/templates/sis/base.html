@@ -195,8 +195,11 @@
             <a href="{% url 'sis:student_list' %}" class="nav-link">Students</a>
             <a href="{% url 'sis:course_list' %}" class="nav-link">Courses</a>
             <a href="/admin/" class="nav-link">Admin</a>
+            <form id="logout-form" method="post" action="{% url 'logout' %}" style="display:none;">
+                {% csrf_token %}
+            </form>
             <span class="nav-link">{{ user.username }}</span>
-            <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+            <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a>
         </div>
     </nav>
     

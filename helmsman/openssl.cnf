@@ -1,0 +1,21 @@
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+req_extensions = v3_req
+
+[dn]
+C=US
+ST=Oklahoma
+L=Tahlequah
+O=Development
+CN=192.168.56.25
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+IP.1 = 192.168.56.25
+IP.2 = 127.0.0.1
+DNS.1 = localhost

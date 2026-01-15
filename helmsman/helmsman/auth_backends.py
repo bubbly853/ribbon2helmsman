@@ -71,8 +71,15 @@ class PostgreSQLAuthBackend(BaseBackend):
             
         except psycopg2.OperationalError as e:
             # Authentication failed - invalid credentials or connection error
+            print(e)
+            print("server: ")
+            print(settings.DATABASES['sis']['HOST'])
+            print
             return None
         except Exception as e:
+            print(e)
+            print("server: ")
+            print(settings.DATABASES['sis']['HOST'])
             # Other errors
             return None
     
