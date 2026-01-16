@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="card">
-    <h1>Student List</h1>
+    <h1>Person List</h1>
     
     <form method="get" class="search-form">
         <input type="text" 
@@ -40,8 +40,8 @@
                 <td>{{ pesron.id_num" }}</td>
                 <td>{{ pesron.id_country" }}</td>
                 <td>
-                    {% if student.rbid %}
-                        <a href="{% url 'sis:student_detail' student.rbid %}" class="btn">View</a>
+                    {% if person.rbid %}
+                        <a href="{% url 'sis:person_detail' person.rbid %}" class="btn">View</a>
                     {% else %}
                         <span class="text-muted">No RBID</span>
                     {% endif %}
@@ -51,9 +51,9 @@
             <tr>
                 <td colspan="6" style="text-align: center; padding: 40px;">
                     {% if search_query %}
-                    No students found matching "{{ search_query }}"
+                    No person found matching "{{ search_query }}"
                     {% else %}
-                    No students found
+                    No person found
                     {% endif %}
                 </td>
             </tr>
