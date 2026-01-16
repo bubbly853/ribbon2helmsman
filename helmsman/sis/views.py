@@ -279,7 +279,7 @@ def make_person_record(ident: Optional[GumIdent]) -> PersonRecord:
         gum_ident=ident,
     )
 
-def get_pesron_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
+def get_person_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
     """
     Fetch and return StudentRecord for given RBID (joined GumIdent + SgmStubi).
     Uses select_related where useful.
@@ -291,12 +291,6 @@ def get_pesron_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
     # select_related to get the ScbMjrcm, then the SclMajor and SdlCamps
     try:
         ident = ident_qs.select_related(
-            'gum_ident_rbid',
-            'gum_ident_first_name',
-            'gum_ident_last_name',
-            'gum_ident_middle_name',
-            'gum_ident_birthday',
-            'gum_ident_idnum',
             'gum_ident_id_coid'
         ).first()
     except Exception:
@@ -479,8 +473,8 @@ def person_list(request):
     # Search by name or RBID through GumIdent
     if search_query:
         ident_qs = ident_qs.filter(
-            models.Q(gum_ident_rbid__gum_ident_first_name__icontains=search_query) |
-            models.Q(gum_ident_rbid__gum_ident_last_name__icontains=search_query)
+            models.Q(gum_ident_first_name__icontains=search_query) |
+            models.Q(gum_ident_last_name__icontains=search_query)
         )
 
     if rbid_query:
@@ -488,8 +482,8 @@ def person_list(request):
 
     # Order by last_name, first_name from GumIdent
     ident_qs = ident_qs.order_by(
-        'gum_ident_rbid__gum_ident_last_name',
-        'gum_ident_rbid__gum_ident_first_name'
+        'gum_ident_last_name',
+        'gum_ident_first_name'
     )
 
     # Limit to 2000 results for safety
@@ -498,7 +492,7 @@ def person_list(request):
     # Build student records
     persons: List = []
     for ident in ident_list:
-        persons.append(make_person_record(ident.gum_ident_rbid, ident))
+        persons.append(make_person_record(ident))
 
     # Pagination
     paginator = Paginator(persons, 25)  # 25 per page
