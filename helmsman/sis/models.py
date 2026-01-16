@@ -134,7 +134,7 @@ class SclMajor(models.Model):
 class ScbMjrcm(models.Model):
     scb_mjrcm_mcid = models.CharField(primary_key=True, max_length=10, db_comment='Major Campus ID.')
     scb_mjrcm_mrid = models.ForeignKey(SclMajor, on_delete=models.PROTECT, db_column='scb_mjrcm_mrid', related_name='campus_links')
-    scb_mjrcm_cpid = models.ForeignKey(SdlCamps, on_delete=models.PROTECT, db_column='sdl_camps_cpid', related_name='campus_links')
+    scb_mjrcm_cpid = models.ForeignKey(SdlCamps, on_delete=models.PROTECT, db_column='scb_mjrcm_cpid', related_name='campus_links')
 
     class Meta:
         managed = False
