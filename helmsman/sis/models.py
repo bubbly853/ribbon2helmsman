@@ -199,7 +199,6 @@ class SgmStubi(models.Model):
     sgm_stubi_created_date = models.DateField(db_comment='Record creation date')
     sgm_stubi_activity_date = models.DateField(null=True, blank=True, db_comment='Last modification date')
     sgm_stubi_modified_by = models.CharField(max_length=40, null=True, blank=True, db_comment='User who last modified record')
-    pk = models.CompositePrimaryKey('sgm_stubi_rbid', 'sgm_stubi_update_tmid')
 
     class Meta:
         managed = False
