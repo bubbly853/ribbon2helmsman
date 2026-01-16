@@ -281,7 +281,7 @@ def make_person_record(ident: Optional[GumIdent]) -> PersonRecord:
 
 def get_person_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
     """
-    Fetch and return StudentRecord for given RBID (joined GumIdent + SgmStubi).
+    Fetch and return PersonRecord for given RBID
     Uses select_related where useful.
     """
     # get GumIdent
@@ -294,7 +294,7 @@ def get_person_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
             'gum_ident_id_coid'
         ).first()
     except Exception:
-        ident = -ident_qs.first()
+        ident = ident_qs.first()
 
     if not ident_qs:
         return None
@@ -478,7 +478,7 @@ def person_list(request):
         )
 
     if rbid_query:
-        ident_qs = ident_qs.filter(gum_ident_rbid__gum_ident_rbid__icontains=rbid_query)
+        ident_qs = ident_qs.filter(gum_ident_rbid__icontains=rbid_query)
 
     # Order by last_name, first_name from GumIdent
     ident_qs = ident_qs.order_by(
@@ -528,13 +528,12 @@ def person_detail(request, person_rbid):
                     ident.save(using='sis')
 
             messages.success(request, 'Persson updated successfully.')
-            return redirect('person_detail', student_rbid=student_rbid)
+            return redirect('person_detail', person_rbid=person_rbid)
         except Exception as e:
             messages.error(request, f'Error updating student: {e}')
 
     context = {
-        'student': record,
-        'enrollments': enrollments,
+        'person': record,
     }
     return render(request, 'sis/person_detail.html', context)
 
