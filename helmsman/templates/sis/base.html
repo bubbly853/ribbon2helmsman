@@ -193,7 +193,7 @@
         <a href="{% url 'sis:dashboard' %}" class="navbar-brand">Helmsman</a>
         <div class="navbar-nav">
             <a href="{% url 'sis:student_list' %}" class="nav-link">Students</a>
-            <a href="{% url 'sis:course_list' %}" class="nav-link">Courses</a>
+            <a href="{% url 'sis:person_list' %}" class="nav-link">Persons</a>
             <a href="/admin/" class="nav-link">Admin</a>
             <form id="logout-form" method="post" action="{% url 'logout' %}" style="display:none;">
                 {% csrf_token %}
