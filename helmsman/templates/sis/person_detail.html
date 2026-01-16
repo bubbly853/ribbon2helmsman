@@ -37,4 +37,10 @@
         <a href="{% url 'sis:person_list' %}" class="btn btn-secondary">Back to List</a>
     </form>
 </div>
+
+<div class="card">
+    <h2>Academic Information</h2>
+
+    <p><strong>Nation:</strong> {{ person.id_country|default:"—" }}</p>
+</div>
 {% endblock %}
