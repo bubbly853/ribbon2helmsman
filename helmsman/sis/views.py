@@ -473,7 +473,7 @@ def person_list(request):
 
     # Base queryset: only students that have a SGM_STUBI record
     ident_qs = GumIdent.objects.using('sis').select_related(
-        'gum_ident_id_coid__ggl_count_hr_name'
+        'gum_ident_id_coid'
     )
 
     # Search by name or RBID through GumIdent
