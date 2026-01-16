@@ -473,13 +473,7 @@ def person_list(request):
 
     # Base queryset: only students that have a SGM_STUBI record
     ident_qs = GumIdent.objects.using('sis').select_related(
-        'gum_ident_rbid',
-        'gum_ident_first_name',
-        'gum_ident_last_name',
-        'gum_ident_middle_name',
-        'gum_ident_birthday',
-        'gum_ident_idnum',
-        'gum_ident_id_coid'
+        'gum_ident_id_coid__ggl_count_hr_name'
     )
 
     # Search by name or RBID through GumIdent
@@ -490,7 +484,7 @@ def person_list(request):
         )
 
     if rbid_query:
-        stubi_qs = stubi_qs.filter(gum_ident_rbid__gum_ident_rbid__icontains=rbid_query)
+        ident_qs = ident_qs.filter(gum_ident_rbid__gum_ident_rbid__icontains=rbid_query)
 
     # Order by last_name, first_name from GumIdent
     ident_qs = ident_qs.order_by(
