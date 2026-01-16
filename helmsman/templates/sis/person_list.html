@@ -37,8 +37,8 @@
                 <td>{{ person.first_name }}</td>
                 <td>{{ person.last_name }}</td>
                 <td>{{ person.birthday }}</td>
-                <td>{{ pesron.id_num }}</td>
-                <td>{{ pesron.id_country }}</td>
+                <td>{{ person.id_num }}</td>
+                <td>{{ person.id_country }}</td>
                 <td>
                     {% if person.rbid %}
                         <a href="{% url 'sis:person_detail' person.rbid %}" class="btn">View</a>
