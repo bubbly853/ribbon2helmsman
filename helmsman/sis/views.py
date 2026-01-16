@@ -27,7 +27,7 @@ from .models import (
     SdlCamps,
 )
 
-# --- Helper dataclass representing the combined Student ---
+# --- Helper dataclasses ---
 @dataclass
 class StudentRecord:
     rbid: str
@@ -51,6 +51,18 @@ class StudentRecord:
     active_ind: Optional[str]
     gum_ident: Optional[GumIdent] = None
     sgm_stubi: Optional[SgmStubi] = None
+
+@dataclass
+class PersonRecord:
+    rbid: str
+    preferred_name: Optional[str]
+    first_name: Optional[str]
+    middle_name: Optional[str]
+    last_name: Optional[str]
+    birthday: Optional[str]
+    id_num: Optional[str]
+    id_country: Optional[str]
+    gum_ident: Optional[GumIdent] = None
 
 
 # --- Utility functions ---
@@ -218,8 +230,84 @@ def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     return make_student_record(ident, stubi)
 
 
-# --- Views ---
+def make_person_record(ident: Optional[GumIdent]) -> PersonRecord:
+    """
+    Build PersonRecord from GumIdent and GglCount object.
+    Handles GumIdent -> GglCount.
+    """
 
+    def safe_date(d):
+        if d is None:
+            return None
+        if d.year < 1900:
+            return None
+        return d
+
+    # --------------------
+    # GumIdent fields
+    # --------------------
+    rbid = None
+    preferred_name = None
+    first_name = None
+    middle_name = None
+    last_name = None
+    birthday = None
+    id_num = None
+    id_country = None
+
+    if ident:
+        rbid = ident.gum_ident_rbid
+        preferred_name = ident.gum_ident_first_name
+        first_name = ident.gum_ident_first_name
+        middle_name = ident.gum_ident_middle_name
+        last_name = ident.gum_ident_last_name
+        birthday = safe_date(ident.gum_ident_birthday)
+        id_num = ident.gum_ident_idnum
+
+    if ident and ident.gum_ident_id_coid:
+        id_country = ident.gum_ident_id_coid.ggl_count_hr_name
+
+    return PersonRecord(
+        rbid=rbid,
+        preferred_name=preferred_name,
+        first_name=first_name,
+        middle_name=middle_name,
+        last_name=last_name,
+        birthday=birthday,
+        id_num=id_num,
+        id_country=id_country,
+        gum_ident=ident,
+    )
+
+def get_pesron_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
+    """
+    Fetch and return StudentRecord for given RBID (joined GumIdent + SgmStubi).
+    Uses select_related where useful.
+    """
+    # get GumIdent
+    ident_qs = GumIdent.objects.using('sis').filter(gum_ident_rbid=rbid)
+
+    # get SgmStubi with related lookups (levels, types, majors via ScbMjrcm, campus)
+    # select_related to get the ScbMjrcm, then the SclMajor and SdlCamps
+    try:
+        ident = ident_qs.select_related(
+            'gum_ident_rbid',
+            'gum_ident_first_name',
+            'gum_ident_last_name',
+            'gum_ident_middle_name',
+            'gum_ident_birthday',
+            'gum_ident_idnum',
+            'gum_ident_id_coid'
+        ).first()
+    except Exception:
+        ident = -ident_qs.first()
+
+    if not ident_qs:
+        return None
+
+    return make_person_record(ident)
+
+# --- Views ---
 
 @login_required
 def dashboard(request):
@@ -376,6 +464,91 @@ def course_list(request):
         'search_query': search_query,
     }
     return render(request, 'sis/course_list.html', context)
+
+
+def person_list(request):
+    """List all students with search and pagination"""
+    search_query = request.GET.get('search', '').strip()
+    rbid_query = request.GET.get('rbid', '').strip()
+
+    # Base queryset: only students that have a SGM_STUBI record
+    ident_qs = GumIdent.objects.using('sis').select_related(
+        'gum_ident_rbid',
+        'gum_ident_first_name',
+        'gum_ident_last_name',
+        'gum_ident_middle_name',
+        'gum_ident_birthday',
+        'gum_ident_idnum',
+        'gum_ident_id_coid'
+    )
+
+    # Search by name or RBID through GumIdent
+    if search_query:
+        ident_qs = ident_qs.filter(
+            models.Q(gum_ident_rbid__gum_ident_first_name__icontains=search_query) |
+            models.Q(gum_ident_rbid__gum_ident_last_name__icontains=search_query)
+        )
+
+    if rbid_query:
+        stubi_qs = stubi_qs.filter(gum_ident_rbid__gum_ident_rbid__icontains=rbid_query)
+
+    # Order by last_name, first_name from GumIdent
+    ident_qs = ident_qs.order_by(
+        'gum_ident_rbid__gum_ident_last_name',
+        'gum_ident_rbid__gum_ident_first_name'
+    )
+
+    # Limit to 2000 results for safety
+    ident_list = ident_qs[:2000]
+
+    # Build student records
+    persons: List = []
+    for ident in ident_list:
+        persons.append(make_person_record(ident.gum_ident_rbid, ident))
+
+    # Pagination
+    paginator = Paginator(persons, 25)  # 25 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+    }
+    return render(request, 'sis/person_list.html', context)
+
+@login_required
+def person_detail(request, person_rbid):
+    """View/edit individual student by RBID"""
+    record = get_person_record_by_rbid(person_rbid)
+    if not record:
+        return get_object_or_404(GumIdent, gum_ident_rbid=person_rbid)
+
+    if request.method == 'POST':
+        ident = record.gum_ident
+
+        # use transaction to keep changes consistent
+        try:
+            with transaction.atomic(using='sis'):
+                if ident:
+                    ident.gum_ident_first_name = request.POST.get('first_name', ident.gum_ident_first_name)
+                    ident.gum_ident_last_name = request.POST.get('last_name', ident.gum_ident_last_name)
+                    # idnum if provided
+                    idnum = request.POST.get('idnum')
+                    if idnum is not None:
+                        ident.gum_ident_idnum = idnum or None
+                    ident.save(using='sis')
+
+            messages.success(request, 'Persson updated successfully.')
+            return redirect('person_detail', student_rbid=student_rbid)
+        except Exception as e:
+            messages.error(request, f'Error updating student: {e}')
+
+    context = {
+        'student': record,
+        'enrollments': enrollments,
+    }
+    return render(request, 'sis/person_detail.html', context)
 
 
 @login_required
