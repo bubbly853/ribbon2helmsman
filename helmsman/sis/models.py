@@ -232,10 +232,11 @@ class SrlCours(models.Model):
         unique_together = (('srl_cours_sbid', 'srl_cours_crse_num'),)
 
 class SrbSects(models.Model):
-    srb_sects_scid = models.IntegerField()
+    srb_sects_stid = models.CharField(primary_key=True, max_length=12, db_comment='Section-term-sequece ID')
+    srb_sects_scid = models.IntegerField(db_comment='Section ID')
     srb_sects_tmid = models.ForeignKey(SglTerms, on_delete=models.PROTECT, db_column='srb_sects_tmid', related_name='sections')
     srb_sects_crid = models.ForeignKey(SrlCours, on_delete=models.PROTECT, db_column='srb_sects_crid', related_name='sections')
-    srb_sects_section_seq = models.IntegerField(db_comment='Section Sequence Number')
+    srb_sects_section_seq = models.IntegerField(db_column='srb_sects_section_seq', db_comment='Section Sequence Number')
     srb_sects_prim_inst = models.ForeignKey(GumIdent, on_delete=models.PROTECT, db_column='srb_sects_prim_inst', related_name='primary_sections')
     srb_sects_scnd_inst = models.ForeignKey(GumIdent, on_delete=models.PROTECT, db_column='srb_sects_scnd_inst', null=True, blank=True, related_name='secondary_sections')
 
@@ -244,7 +245,7 @@ class SrbSects(models.Model):
         app_label = 'sis'
         db_table = 'srb_sects'
         db_table_comment = 'Section bridge table'
-        unique_together = (('srb_sects_scid', 'srb_sects_tmid'), ('srb_sects_tmid', 'srb_sects_crid', 'srb_sects_section_seq'))
+        unique_together = (('srb_sects_tmid', 'srb_sects_crid', 'srb_sects_section_seq'),)
 
 
 class SrlEnrst(models.Model):
@@ -261,9 +262,9 @@ class SrlEnrst(models.Model):
 
 class SrhEnrol(models.Model):
     srh_enrol_rbid = models.ForeignKey(GumIdent, on_delete=models.PROTECT, db_column='srh_enrol_rbid', related_name='enrollments')
-    srh_enrol_scid = models.ForeignKey(SrbSects, on_delete=models.PROTECT, db_column='srh_enrol_scid', related_name='enrollments')
-    srh_enrol_tmid = models.ForeignKey(SglTerms, on_delete=models.PROTECT, db_column='srh_enrol_tmid', related_name='enrollments')
+    srh_enrol_stid = models.ForeignKey(SrbSects, on_delete=models.PROTECT, db_column='srh_enrol_stid', related_name='enrollments')
     srh_enrol_esid = models.ForeignKey(SrlEnrst, on_delete=models.PROTECT, db_column='srh_enrol_esid', related_name='enrollments')
+    srh_enrol_final_mark = models.FloatField(db_comment='Student Final Mark.')
     srh_enrol_created_date = models.DateField(db_comment='Date record was created.')
     srh_enrol_activity_date = models.DateField(db_comment='Date record was last modified.')
     srh_enrol_modified_by = models.CharField(max_length=40, db_comment='User who last modified record.')
@@ -273,7 +274,7 @@ class SrhEnrol(models.Model):
         app_label = 'sis'
         db_table = 'srh_enrol'
         db_table_comment = 'Registration Status History Table'
-        unique_together = (('srh_enrol_rbid', 'srh_enrol_scid', 'srh_enrol_tmid'),)
+        unique_together = (('srh_enrol_rbid', 'srh_enrol_stid'),)
 
 class FglFyear(models.Model):
     fgl_fyear_fyid = models.CharField(primary_key=True, max_length=4, db_comment='Financial aid year code.')
