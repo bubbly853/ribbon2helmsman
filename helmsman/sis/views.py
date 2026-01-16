@@ -408,7 +408,7 @@ def student_detail(request, student_rbid):
                         stubi.save(using='sis')
 
             messages.success(request, 'Student updated successfully.')
-            return redirect('student_detail', student_rbid=student_rbid)
+            return redirect('sis:student_detail', student_rbid=student_rbid)
         except Exception as e:
             messages.error(request, f'Error updating student: {e}')
 
@@ -528,7 +528,7 @@ def person_detail(request, person_rbid):
                     ident.save(using='sis')
 
             messages.success(request, 'Persson updated successfully.')
-            return redirect('person_detail', person_rbid=person_rbid)
+            return redirect('sis:person_detail', person_rbid=person_rbid)
         except Exception as e:
             messages.error(request, f'Error updating student: {e}')
 
@@ -566,7 +566,7 @@ def course_detail(request, course_id):
         try:
             course.save(using='sis')
             messages.success(request, 'Course updated successfully.')
-            return redirect('course_detail', course_id=course_id)
+            return redirect('sis:course_detail', course_id=course_id)
         except Exception as e:
             messages.error(request, f'Error updating course: {e}')
 
