@@ -1,5 +1,5 @@
 """
-SIS Views - Banner-style pages
+SIS Views - Banner-style pages with campus per major support
 Place this in /srv/ribbon2helmsman/helmsman/sis/views.py
 """
 from django.db import models
@@ -23,6 +23,8 @@ from .models import (
     SrlSubjs,
     SglTerms,
     ScbMjrcm,
+    SclMajor,
+    SdlCamps,
 )
 
 # --- Helper dataclass representing the combined Student ---
@@ -40,8 +42,12 @@ class StudentRecord:
     student_type_name: Optional[str]
     major1_id: Optional[str]
     major1_name: Optional[str]
+    major1_campus_id: Optional[str]
+    major1_campus_name: Optional[str]
     minor1_id: Optional[str]
     minor1_name: Optional[str]
+    minor1_campus_id: Optional[str]
+    minor1_campus_name: Optional[str]
     active_ind: Optional[str]
     gum_ident: Optional[GumIdent] = None
     sgm_stubi: Optional[SgmStubi] = None
@@ -51,7 +57,7 @@ class StudentRecord:
 def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) -> StudentRecord:
     """
     Build StudentRecord from GumIdent and SgmStubi objects.
-    Handles ScbMjrcm -> SclMajor indirection for majors/minors.
+    Handles ScbMjrcm -> SclMajor and ScbMjrcm -> SdlCamps for majors/minors with campus.
     """
 
     def safe_date(d):
@@ -91,8 +97,12 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
     # primary major/minor only (for current StudentRecord)
     major1_id = None
     major1_name = None
+    major1_campus_id = None
+    major1_campus_name = None
     minor1_id = None
     minor1_name = None
+    minor1_campus_id = None
+    minor1_campus_name = None
 
     if stubi:
         rbid = rbid or stubi.sgm_stubi_rbid
@@ -111,28 +121,40 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
             student_type_name = getattr(st, 'sgl_stype_hr_name', None)
 
         # ---- Majors / Minors via ScbMjrcm ----
-        def extract_major(mjrcm_obj):
+        def extract_major_with_campus(mjrcm_obj):
             """
-            Given ScbMjrcm, return (major_id, major_name) safely.
-            ScbMjrcm has scb_mjrcm_mrid (FK to SclMajor)
+            Given ScbMjrcm, return (major_id, major_name, campus_id, campus_name) safely.
+            ScbMjrcm has:
+              - scb_mjrcm_mrid (FK to SclMajor)
+              - scb_mjrcm_cpid (FK to SdlCamps)
             """
             if not mjrcm_obj:
-                return None, None
+                return None, None, None, None
+            
             # Get the SclMajor from the FK
             major = getattr(mjrcm_obj, 'scb_mjrcm_mrid', None)
-            if not major:
-                return None, None
-            return (
-                getattr(major, 'scl_major_mrid', None),
-                getattr(major, 'scl_major_hr_name', None),
-            )
+            major_id = None
+            major_name = None
+            if major:
+                major_id = getattr(major, 'scl_major_mrid', None)
+                major_name = getattr(major, 'scl_major_hr_name', None)
+            
+            # Get the SdlCamps from the FK
+            campus = getattr(mjrcm_obj, 'scb_mjrcm_cpid', None)
+            campus_id = None
+            campus_name = None
+            if campus:
+                campus_id = getattr(campus, 'sdl_camps_cpid', None)
+                campus_name = getattr(campus, 'sdl_camps_hr_name', None)
+            
+            return major_id, major_name, campus_id, campus_name
 
-        major1_id, major1_name = extract_major(
-            getattr(stubi, 'sgm_stubi_major1_mrid', None)
+        major1_id, major1_name, major1_campus_id, major1_campus_name = extract_major_with_campus(
+            getattr(stubi, 'sgm_stubi_major1_mcid', None)
         )
 
-        minor1_id, minor1_name = extract_major(
-            getattr(stubi, 'sgm_stubi_minor1_mrid', None)
+        minor1_id, minor1_name, minor1_campus_id, minor1_campus_name = extract_major_with_campus(
+            getattr(stubi, 'sgm_stubi_minor1_mcid', None)
         )
 
     return StudentRecord(
@@ -148,8 +170,12 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
         student_type_name=student_type_name,
         major1_id=major1_id,
         major1_name=major1_name,
+        major1_campus_id=major1_campus_id,
+        major1_campus_name=major1_campus_name,
         minor1_id=minor1_id,
         minor1_name=minor1_name,
+        minor1_campus_id=minor1_campus_id,
+        minor1_campus_name=minor1_campus_name,
         active_ind=active_ind,
         gum_ident=ident,
         sgm_stubi=stubi,
@@ -163,17 +189,25 @@ def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     # get GumIdent
     ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=rbid).first()
 
-    # get SgmStubi with related lookups (levels, types, majors via ScbMjrcm)
+    # get SgmStubi with related lookups (levels, types, majors via ScbMjrcm, campus)
     stubi_qs = SgmStubi.objects.using('sis').filter(sgm_stubi_rbid=rbid)
-    # select_related to get the ScbMjrcm and then the SclMajor
+    # select_related to get the ScbMjrcm, then the SclMajor and SdlCamps
     try:
         stubi = stubi_qs.select_related(
             'sgm_stubi_lvid',
             'sgm_stubi_stid',
-            'sgm_stubi_major1_mrid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
-            'sgm_stubi_minor1_mrid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
-            'sgm_stubi_major2_mrid__scb_mjrcm_mrid',
-            'sgm_stubi_minor2_mrid__scb_mjrcm_mrid',
+            'sgm_stubi_major1_mcid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
+            'sgm_stubi_major1_mcid__scb_mjrcm_cpid',  # ScbMjrcm -> SdlCamps
+            'sgm_stubi_minor1_mcid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
+            'sgm_stubi_minor1_mcid__scb_mjrcm_cpid',  # ScbMjrcm -> SdlCamps
+            'sgm_stubi_major2_mcid__scb_mjrcm_mrid',
+            'sgm_stubi_major2_mcid__scb_mjrcm_cpid',
+            'sgm_stubi_minor2_mcid__scb_mjrcm_mrid',
+            'sgm_stubi_minor2_mcid__scb_mjrcm_cpid',
+            'sgm_stubi_major3_mcid__scb_mjrcm_mrid',
+            'sgm_stubi_major3_mcid__scb_mjrcm_cpid',
+            'sgm_stubi_minor3_mcid__scb_mjrcm_mrid',
+            'sgm_stubi_minor3_mcid__scb_mjrcm_cpid',
         ).first()
     except Exception:
         stubi = stubi_qs.first()
@@ -198,15 +232,6 @@ def dashboard(request):
 
 @login_required
 def student_list(request):
-    from django.db import connections
-
-    with connections['sis'].cursor() as c:
-        c.execute("select current_database(), current_user")
-        print("SIS DB:", c.fetchall())
-
-    with connections['default'].cursor() as c:
-        c.execute("select current_database(), current_user")
-        print("DEFAULT DB:", c.fetchall())
     """List all students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
     rbid_query = request.GET.get('rbid', '').strip()
@@ -216,8 +241,10 @@ def student_list(request):
         'sgm_stubi_rbid',  # GumIdent
         'sgm_stubi_lvid',
         'sgm_stubi_stid',
-        'sgm_stubi_major1_mrid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
-        'sgm_stubi_minor1_mrid__scb_mjrcm_mrid'   # ScbMjrcm -> SclMajor
+        'sgm_stubi_major1_mcid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
+        'sgm_stubi_major1_mcid__scb_mjrcm_cpid',  # ScbMjrcm -> SdlCamps
+        'sgm_stubi_minor1_mcid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
+        'sgm_stubi_minor1_mcid__scb_mjrcm_cpid'   # ScbMjrcm -> SdlCamps
     )
 
     # Search by name or RBID through GumIdent
@@ -269,8 +296,8 @@ def student_detail(request, student_rbid):
         srh_enrol_rbid__gum_ident_rbid=student_rbid
     ).select_related(
         'srh_enrol_esid', 
-        'srh_enrol_scid__srb_sects_crid',
-        'srh_enrol_tmid'
+        'srh_enrol_stid__srb_sects_crid',
+        'srh_enrol_stid__srb_sects_tmid'
     )
 
     if request.method == 'POST':
@@ -360,15 +387,14 @@ def course_detail(request, course_id):
     # Sections for this course
     sections = SrbSects.objects.using('sis').filter(srb_sects_crid=course).select_related('srb_sects_tmid')
 
-    # Enrollments for this course: SrhEnrol where srh_enrol_scid references a section whose crid is this course
-    enrollments = SrhEnrol.objects.using('sis').filter(srh_enrol_scid__srb_sects_crid=course).select_related(
-        'srh_enrol_scid', 'srh_enrol_esid', 'srh_enrol_tmid'
+    # Enrollments for this course: SrhEnrol where srh_enrol_stid references a section whose crid is this course
+    enrollments = SrhEnrol.objects.using('sis').filter(srh_enrol_stid__srb_sects_crid=course).select_related(
+        'srh_enrol_stid', 'srh_enrol_esid', 'srh_enrol_stid__srb_sects_tmid'
     )
 
     if request.method == 'POST':
         # Only allow limited updates: course title and inactive indicator
         course_title = request.POST.get('course_name')
-        credits = request.POST.get('credits')  # your model doesn't store credits; ignore if absent
         inactive = request.POST.get('inactive_ind')
 
         if course_title is not None:
