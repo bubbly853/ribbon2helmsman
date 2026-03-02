@@ -572,3 +572,40 @@ class StlMarks(models.Model):
         managed = False
         db_table = 'stl_marks'
         db_table_comment = 'Grade marks/letters lookup table with quality points for GPA calculation.'
+
+class HsvStdnt(models.Model):
+    hsv_stdnt_rbid = models.CharField(primary_key=True, max_length=9, db_comment='Ribbon ID.')
+    hsv_stdnt_pref_first_name = models.CharField(max_length=32, blank=True, null=True, db_comment='Preferred first name.')
+    hsv_stdnt_first_name = models.CharField(max_length=32, db_comment='Legal first name.')
+    hsv_stdnt_middle_name = models.CharField(max_length=32, blank=True, null=True, db_comment='Middle name.')
+    hsv_stdnt_last_name = models.CharField(max_length=32, db_comment='Last name.')
+    hsv_stdnt_birthday = models.DateField(blank=True, null=True, db_comment='Date of birth.')
+    hsv_stdnt_lvid = models.CharField(max_length=2, db_comment='Student level ID.')
+    hsv_stdnt_level = models.CharField(max_length=32, db_comment='Student level human-readable name.')
+    hsv_stdnt_stud = models.CharField(max_length=2, db_comment='Student type ID.')
+    hsv_stdnt_student_type = models.CharField(max_length=32, db_comment='Student type human-readable name.')
+    hsv_stdnt_mrid = models.CharField(max_length=8, blank=True, null=True, db_comment='Major ID.')
+    hsv_stdnt_major = models.CharField(max_length=64, blank=True, null=True, db_comment='Major human-readable name.')
+    hsv_stdnt_cpid = models.CharField(max_length=2, blank=True, null=True, db_comment='Campus ID.')
+    hsv_stdnt_campus = models.CharField(max_length=32, blank=True, null=True, db_comment='Campus human-readable name.')
+    hsv_stdnt_active_ind = models.CharField(max_length=1, db_comment='Active enrollment indicator.')
+
+    class Meta:
+        managed = False
+        db_table = 'hsv_stdnt'
+        db_table_comment = 'Helmsman student view - current term student record with level, type, major, and campus.'
+
+class HgvPrson(models.Model):
+    hgv_prson_rbid = models.CharField(primary_key=True, max_length=9, db_comment='Ribbon ID.')
+    hgv_prson_pref_first_name = models.CharField(max_length=32, blank=True, null=True, db_comment='Preferred first name.')
+    hgv_prson_first_name = models.CharField(max_length=32, db_comment='Legal first name.')
+    hgv_prson_middle_name = models.CharField(max_length=32, blank=True, null=True, db_comment='Middle name.')
+    hgv_prson_last_name = models.CharField(max_length=32, db_comment='Last name.')
+    hgv_prson_birthday = models.DateField(blank=True, null=True, db_comment='Date of birth.')
+    hgv_prson_idnum = models.CharField(max_length=32, blank=True, null=True, db_comment='National identification number.')
+    hgv_prson_id_country = models.CharField(max_length=64, db_comment='Country of national ID human-readable name.')
+
+    class Meta:
+        managed = False
+        db_table = 'hgv_prson'
+        db_table_comment = 'Helmsman person view - base identity record with preferred name and national ID country.'
