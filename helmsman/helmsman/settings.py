@@ -84,12 +84,12 @@ DATABASES = {
     'sis': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ribbon2',
-        'USER': 'ribbon2',  # Will be set dynamically per user
-        'PASSWORD': 'Ribbon2+2=4',  # Will be set dynamically per user
+        'USER': '',  # Will be set dynamically per user
+        'PASSWORD': '',  # Will be set dynamically per user
         'HOST': os.getenv('SIS_DB_HOST'),
         'PORT': os.getenv('SIS_DB_PORT'),
         'OPTIONS': {
-            'options': '-c search_path=general,finance,student'
+            'options': '-c search_path=helmsman,general,finance,student'
         },
     }
 }
