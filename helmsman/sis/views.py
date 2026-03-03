@@ -288,40 +288,32 @@ def student_list(request):
     search_query = request.GET.get('search', '').strip()
     rbid_query = request.GET.get('rbid', '').strip()
 
-    # Base queryset: only students that have a SGM_STUBI record
-    stubi_qs = SgmStubi.objects.using('sis').select_related(
-        'sgm_stubi_rbid',  # GumIdent
-        'sgm_stubi_lvid',
-        'sgm_stubi_stid',
-        'sgm_stubi_major1_mcid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
-        'sgm_stubi_major1_mcid__scb_mjrcm_cpid',  # ScbMjrcm -> SdlCamps
-        'sgm_stubi_minor1_mcid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
-        'sgm_stubi_minor1_mcid__scb_mjrcm_cpid'   # ScbMjrcm -> SdlCamps
-    )
+    # Base queryset: only students that have a SGM_stdnt record
+    stdnt_qs = HsvStdnt.objects.using('sis').all()
 
     # Search by name or RBID through GumIdent
     if search_query:
-        stubi_qs = stubi_qs.filter(
-            models.Q(sgm_stubi_rbid__gum_ident_first_name__icontains=search_query) |
-            models.Q(sgm_stubi_rbid__gum_ident_last_name__icontains=search_query)
+        stdnt_qs = stdnt_qs.filter(
+            models.Q(hsv_stdnt_first_name__icontains=search_query) |
+            models.Q(hsv_stdnt_last_name__icontains=search_query)
         )
 
     if rbid_query:
-        stubi_qs = stubi_qs.filter(sgm_stubi_rbid__gum_ident_rbid__icontains=rbid_query)
+        stdnt_qs = stdnt_qs.filter(hsv_stdnt_rbid__icontains=rbid_query)
 
     # Order by last_name, first_name from GumIdent
-    stubi_qs = stubi_qs.order_by(
-        'sgm_stubi_rbid__gum_ident_last_name',
-        'sgm_stubi_rbid__gum_ident_first_name'
+    stdnt_qs = stdnt_qs.order_by(
+        'hsv_stdnt_last_name',
+        'hsv_stdnt_first_name'
     )
 
     # Limit to 2000 results for safety
-    stubi_list = stubi_qs[:2000]
+    stdnt_list = stdnt_qs[:2000]
 
     # Build student records
     students: List = []
-    for stubi in stubi_list:
-        students.append(make_student_record(stubi.sgm_stubi_rbid, stubi))
+    for stdnt in stdnt_list:
+        students.append(make_student_record(stdnt))
 
     # Pagination
     paginator = Paginator(students, 25)  # 25 per page
