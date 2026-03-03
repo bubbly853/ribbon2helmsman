@@ -14,17 +14,52 @@ from django.db import transaction
 
 # Import your real models
 from .models import (
+    FglFyear,
+    GglCitzn,
+    GglCount,
+    GrlRcens,
+    GrlRdetl,
+    GumAdinf,
     GumIdent,
+    SalAvtyp,
+    SarAdvrl,
+    SarOvrar,
+    SclCipcd,
+    SclCrtyp,
+    SclCurrv,
+    SclDegrs,
+    SclDlevl,
+    SclIscdf,
+    SclMajor,
+    ScmStucv,
+    ScrCreqs,
+    ScrOvcls,
+    ScrOvmrk,
+    ScrPreqs,
+    ScrRqgrp,
+    SdlCamps,
+    SdlColeg,
+    SdlDepts,
+    SglLevel,
+    SglSmstr,
+    SglStype,
+    SglTerms,
     SgmStubi,
-    SrlCours,
     SrbSects,
     SrhEnrol,
+    SrhSterm,
+    SrlCours,
     SrlEnrst,
+    SrlRgtyp,
+    SrlRqtyp,
     SrlSubjs,
-    SglTerms,
-    ScbMjrcm,
-    SclMajor,
-    SdlCamps,
+    SthCrtrn,
+    StlMarks,
+    HsvStdnt,
+    HgvPrson,
+    HsvActcr,
+    HsvAllcr,
+    HsvCrcrc,
 )
 
 # --- Helper dataclasses ---
@@ -44,13 +79,8 @@ class StudentRecord:
     major1_name: Optional[str]
     major1_campus_id: Optional[str]
     major1_campus_name: Optional[str]
-    minor1_id: Optional[str]
-    minor1_name: Optional[str]
-    minor1_campus_id: Optional[str]
-    minor1_campus_name: Optional[str]
     active_ind: Optional[str]
-    gum_ident: Optional[GumIdent] = None
-    sgm_stubi: Optional[SgmStubi] = None
+    hsv_student: Optional[HsvStdnt] = None
 
 @dataclass
 class PersonRecord:
@@ -66,10 +96,9 @@ class PersonRecord:
 
 
 # --- Utility functions ---
-def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) -> StudentRecord:
+def make_student_record(stdnt: Optional[HsvStdnt]) -> StudentRecord:
     """
-    Build StudentRecord from GumIdent and SgmStubi objects.
-    Handles ScbMjrcm -> SclMajor and ScbMjrcm -> SdlCamps for majors/minors with campus.
+    Build StudentRecord from HsvStdnt object.
     """
 
     def safe_date(d):
@@ -88,86 +117,32 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
     middle_name = None
     last_name = None
     birthday = None
-
-    if ident:
-        rbid = ident.gum_ident_rbid
-        preferred_name = ident.gum_ident_first_name
-        first_name = ident.gum_ident_first_name
-        middle_name = ident.gum_ident_middle_name
-        last_name = ident.gum_ident_last_name
-        birthday = safe_date(ident.gum_ident_birthday)
-
-    # --------------------
-    # SgmStubi fields
-    # --------------------
     level_id = None
     level_name = None
     student_type_id = None
     student_type_name = None
-    active_ind = None
-
-    # primary major/minor only (for current StudentRecord)
     major1_id = None
     major1_name = None
     major1_campus_id = None
     major1_campus_name = None
-    minor1_id = None
-    minor1_name = None
-    minor1_campus_id = None
-    minor1_campus_name = None
+    active_ind = None
 
-    if stubi:
-        rbid = rbid or stubi.sgm_stubi_rbid
-        active_ind = stubi.sgm_stubi_active_ind
-
-        # ---- Level ----
-        lvl = getattr(stubi, 'sgm_stubi_lvid', None)
-        if lvl:
-            level_id = getattr(lvl, 'sgl_level_lvid', None)
-            level_name = getattr(lvl, 'sgl_level_hr_name', None)
-
-        # ---- Student type ----
-        st = getattr(stubi, 'sgm_stubi_stid', None)
-        if st:
-            student_type_id = getattr(st, 'sgl_stype_stid', None)
-            student_type_name = getattr(st, 'sgl_stype_hr_name', None)
-
-        # ---- Majors / Minors via ScbMjrcm ----
-        def extract_major_with_campus(mjrcm_obj):
-            """
-            Given ScbMjrcm, return (major_id, major_name, campus_id, campus_name) safely.
-            ScbMjrcm has:
-              - scb_mjrcm_mrid (FK to SclMajor)
-              - scb_mjrcm_cpid (FK to SdlCamps)
-            """
-            if not mjrcm_obj:
-                return None, None, None, None
-            
-            # Get the SclMajor from the FK
-            major = getattr(mjrcm_obj, 'scb_mjrcm_mrid', None)
-            major_id = None
-            major_name = None
-            if major:
-                major_id = getattr(major, 'scl_major_mrid', None)
-                major_name = getattr(major, 'scl_major_hr_name', None)
-            
-            # Get the SdlCamps from the FK
-            campus = getattr(mjrcm_obj, 'scb_mjrcm_cpid', None)
-            campus_id = None
-            campus_name = None
-            if campus:
-                campus_id = getattr(campus, 'sdl_camps_cpid', None)
-                campus_name = getattr(campus, 'sdl_camps_hr_name', None)
-            
-            return major_id, major_name, campus_id, campus_name
-
-        major1_id, major1_name, major1_campus_id, major1_campus_name = extract_major_with_campus(
-            getattr(stubi, 'sgm_stubi_major1_mcid', None)
-        )
-
-        minor1_id, minor1_name, minor1_campus_id, minor1_campus_name = extract_major_with_campus(
-            getattr(stubi, 'sgm_stubi_minor1_mcid', None)
-        )
+    if HsvStdnt:
+        rbid = stdnt.hsv_stdnt_rbid
+        preferred_name = stdnt.hsv_stdnt_pref_first_name
+        first_name = stdnt.hsv_stdnt_first_name
+        middle_name = stdnt.hsv_stdnt_middle_name
+        last_name = stdnt.hsv_stdnt_last_name
+        birthday = safe_date(stdnt.hsv_stdnt_birthday)
+        level_id = stdnt.hsv_stdnt_lvid
+        level_name = stdnt.hsv_stdnt_level
+        student_type_id = stdnt.hsv_stdnt_stid
+        student_type_name = stdnt.hsv_stdnt_student_type
+        major1_id = stdnt.hsv_stdnt_mrid
+        major1_name = stdnt.hsv_stdnt_major
+        major1_campus_id = stdnt.hsv_stdnt_cpid
+        major1_campus_name = stdnt.hsv_stdnt_campus
+        active_ind = stdnt.hsv_stdnt_active_ind
 
     return StudentRecord(
         rbid=rbid,
@@ -184,13 +159,8 @@ def make_student_record(ident: Optional[GumIdent], stubi: Optional[SgmStubi]) ->
         major1_name=major1_name,
         major1_campus_id=major1_campus_id,
         major1_campus_name=major1_campus_name,
-        minor1_id=minor1_id,
-        minor1_name=minor1_name,
-        minor1_campus_id=minor1_campus_id,
-        minor1_campus_name=minor1_campus_name,
         active_ind=active_ind,
-        gum_ident=ident,
-        sgm_stubi=stubi,
+        hsv_stdnt=stdnt
     )
 
 def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
