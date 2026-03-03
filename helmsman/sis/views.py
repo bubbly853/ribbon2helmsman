@@ -80,7 +80,7 @@ class StudentRecord:
     major1_campus_id: Optional[str]
     major1_campus_name: Optional[str]
     active_ind: Optional[str]
-    hsv_student: Optional[HsvStdnt] = None
+    hsv_stdnt: Optional[HsvStdnt] = None
 
 @dataclass
 class PersonRecord:
