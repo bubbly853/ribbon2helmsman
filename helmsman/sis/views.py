@@ -173,7 +173,7 @@ def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     try:
         stdnt = stdnt_qs.objects.using('sis').all().first()
     except Exception:
-        stubi = stubi_qs.first()
+        stdnt = stdnt_qs.first()
 
     if not ident and not stubi:
         return None
