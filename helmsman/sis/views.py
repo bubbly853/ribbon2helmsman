@@ -170,15 +170,10 @@ def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     """
     # get GumIdent
     stdnt_qs = HsvStdnt.objects.using('sis').filter(hsv_stdnt_rbid=rbid).first()
-    try:
-        stdnt = stdnt_qs.objects.using('sis').all().first()
-    except Exception:
-        stdnt = stdnt_qs.first()
-
     if not ident and not stubi:
         return None
 
-    return make_student_record(stdnt)
+    return make_student_record(stdnt_qs)
 
 
 def make_person_record(ident: Optional[GumIdent]) -> PersonRecord:
