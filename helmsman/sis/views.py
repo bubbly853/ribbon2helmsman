@@ -169,35 +169,16 @@ def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     Uses select_related where useful.
     """
     # get GumIdent
-    ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=rbid).first()
-
-    # get SgmStubi with related lookups (levels, types, majors via ScbMjrcm, campus)
-    stubi_qs = SgmStubi.objects.using('sis').filter(sgm_stubi_rbid=rbid)
-    # select_related to get the ScbMjrcm, then the SclMajor and SdlCamps
+    stdnt_qs = HsvStdnt.objects.using('sis').filter(hsv_stdnt=rbid).first()
     try:
-        stubi = stubi_qs.select_related(
-            'sgm_stubi_lvid',
-            'sgm_stubi_stid',
-            'sgm_stubi_major1_mcid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
-            'sgm_stubi_major1_mcid__scb_mjrcm_cpid',  # ScbMjrcm -> SdlCamps
-            'sgm_stubi_minor1_mcid__scb_mjrcm_mrid',  # ScbMjrcm -> SclMajor
-            'sgm_stubi_minor1_mcid__scb_mjrcm_cpid',  # ScbMjrcm -> SdlCamps
-            'sgm_stubi_major2_mcid__scb_mjrcm_mrid',
-            'sgm_stubi_major2_mcid__scb_mjrcm_cpid',
-            'sgm_stubi_minor2_mcid__scb_mjrcm_mrid',
-            'sgm_stubi_minor2_mcid__scb_mjrcm_cpid',
-            'sgm_stubi_major3_mcid__scb_mjrcm_mrid',
-            'sgm_stubi_major3_mcid__scb_mjrcm_cpid',
-            'sgm_stubi_minor3_mcid__scb_mjrcm_mrid',
-            'sgm_stubi_minor3_mcid__scb_mjrcm_cpid',
-        ).first()
+        stdnt = stdnt_qs.objects.using('sis').all().first()
     except Exception:
         stubi = stubi_qs.first()
 
     if not ident and not stubi:
         return None
 
-    return make_student_record(ident, stubi)
+    return make_student_record(stdnt)
 
 
 def make_person_record(ident: Optional[GumIdent]) -> PersonRecord:
@@ -284,12 +265,12 @@ def dashboard(request):
 
 @login_required
 def student_list(request):
-    """List all students with search and pagination"""
+    """List  students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
     rbid_query = request.GET.get('rbid', '').strip()
 
     # Base queryset: only students that have a SGM_stdnt record
-    stdnt_qs = HsvStdnt.objects.using('sis').all()
+    stdnt_qs = HsvStdnt.objects.using('sis').()
 
     # Search by name or RBID through GumIdent
     if search_query:
