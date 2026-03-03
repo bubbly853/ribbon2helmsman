@@ -270,7 +270,7 @@ def student_list(request):
     rbid_query = request.GET.get('rbid', '').strip()
 
     # Base queryset: only students that have a SGM_stdnt record
-    stdnt_qs = HsvStdnt.objects.using('sis').()
+    stdnt_qs = HsvStdnt.objects.using('sis').all()
 
     # Search by name or RBID through GumIdent
     if search_query:
