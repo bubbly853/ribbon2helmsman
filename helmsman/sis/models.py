@@ -609,3 +609,50 @@ class HgvPrson(models.Model):
         managed = False
         db_table = 'hgv_prson'
         db_table_comment = 'Helmsman person view - base identity record with preferred name and national ID country.'
+
+class HsvActcr(models.Model):
+    hsv_actcr_crid = models.CharField(primary_key=True, max_length=10, db_comment='Course ID.')
+    hsv_actcr_sbid = models.CharField(max_length=4, db_comment='Subject ID.')
+    hsv_actcr_crse_num = models.CharField(max_length=6, db_comment='Course number.')
+    hsv_actcr_subject = models.CharField(max_length=64, blank=True, null=True, db_comment='Subject human-readable name.')
+    hsv_actcr_department = models.CharField(max_length=64, db_comment='Department human-readable name.')
+    hsv_actcr_name = models.CharField(max_length=64, db_comment='Course title.')
+    hsv_actcr_inactive_ind = models.CharField(max_length=1, db_comment='Inactive indicator - always N in this view.')
+
+    class Meta:
+        managed = False
+        db_table = 'hsv_actcr'
+        db_table_comment = 'Helmsman active courses view - active courses only with subject and department.'
+
+class HsvAllcr(models.Model):
+    hsv_allcr_crid = models.CharField(primary_key=True, max_length=10, db_comment='Course ID.')
+    hsv_allcr_sbid = models.CharField(max_length=4, db_comment='Subject ID.')
+    hsv_allcr_crse_num = models.CharField(max_length=6, db_comment='Course number.')
+    hsv_allcr_subject = models.CharField(max_length=64, blank=True, null=True, db_comment='Subject human-readable name.')
+    hsv_allcr_department = models.CharField(max_length=64, db_comment='Department human-readable name.')
+    hsv_allcr_name = models.CharField(max_length=64, db_comment='Course title.')
+    hsv_allcr_inactive_ind = models.CharField(max_length=1, db_comment='Inactive indicator.')
+
+    class Meta:
+        managed = False
+        db_table = 'hsv_allcr'
+        db_table_comment = 'Helmsman all courses view - all courses regardless of active status with subject and department.'
+
+class HsvCrcrc(models.Model):
+    hsv_crcrc_cvid = models.CharField(primary_key=True, max_length=14, db_comment='Curriculum version ID.')
+    hsv_crcrc_mrid = models.CharField(max_length=8, db_comment='Major ID.')
+    hsv_crcrc_effective_term = models.CharField(max_length=6, db_comment='Term when this curriculum version became effective.')
+    hsv_crcrc_hr_name = models.CharField(max_length=64, db_comment='Major human-readable name.')
+    hsv_crcrc_ctid = models.CharField(max_length=4, db_comment='Curriculum type ID.')
+    hsv_crcrc_curr_type = models.CharField(max_length=32, blank=True, null=True, db_comment='Curriculum type human-readable name.')
+    hsv_crcrc_mark_avg = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True, db_comment='Minimum grade average required for graduation.')
+    hsv_crcrc_min_gpa = models.DecimalField(max_digits=3, decimal_places=2, blank=True, null=True, db_comment='Minimum cumulative GPA required.')
+    hsv_crcrc_min_credits = models.IntegerField(db_comment='Minimum total credits required for graduation.')
+    hsv_crcrc_created_date = models.DateField(db_comment='Date record was created.')
+    hsv_crcrc_activity_date = models.DateField(blank=True, null=True, db_comment='Date record was last modified.')
+    hsv_crcrc_modified_by = models.CharField(max_length=40, blank=True, null=True, db_comment='User who last modified record.')
+
+    class Meta:
+        managed = False
+        db_table = 'hsv_crcrc'
+        db_table_comment = 'Helmsman current curriculum versions view - active curriculum versions only (no end term) with major and type details.'
