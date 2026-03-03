@@ -169,7 +169,7 @@ def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     Uses select_related where useful.
     """
     # get GumIdent
-    stdnt_qs = HsvStdnt.objects.using('sis').filter(hsv_stdnt=rbid).first()
+    stdnt_qs = HsvStdnt.objects.using('sis').filter(hsv_stdnt_rbid=rbid).first()
     try:
         stdnt = stdnt_qs.objects.using('sis').all().first()
     except Exception:
