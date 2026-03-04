@@ -394,17 +394,17 @@ def person_list(request):
     # Search by name or RBID through hsvprson
     if search_query:
         prson_qs = prson_qs.filter(
-            models.Q(hsv_prson_first_name__icontains=search_query) |
-            models.Q(hsv_prson_last_name__icontains=search_query)
+            models.Q(hgv_prson_first_name__icontains=search_query) |
+            models.Q(hgv_prson_last_name__icontains=search_query)
         )
 
     if rbid_query:
-        prson_qs = prson_qs.filter(hsv_prson_rbid__icontains=rbid_query)
+        prson_qs = prson_qs.filter(hgv_prson_rbid__icontains=rbid_query)
 
     # Order by last_name, first_name from hsvprson
     prson_qs = prson_qs.order_by(
-        'hsv_prson_last_name',
-        'hsv_prson_first_name'
+        'hgv_prson_last_name',
+        'hgv_prson_first_name'
     )
 
     # Limit to 2000 results for safety
