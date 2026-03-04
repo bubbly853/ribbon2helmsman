@@ -389,7 +389,7 @@ def person_list(request):
     rbid_query = request.GET.get('rbid', '').strip()
 
     # Base queryset: only students that have a SGM_STUBI record
-    prson_qs = HsvPrson.objects.using('sis').all()
+    prson_qs = HgvPrson.objects.using('sis').all()
 
     # Search by name or RBID through hsvprson
     if search_query:
