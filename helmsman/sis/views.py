@@ -389,33 +389,31 @@ def person_list(request):
     rbid_query = request.GET.get('rbid', '').strip()
 
     # Base queryset: only students that have a SGM_STUBI record
-    ident_qs = GumIdent.objects.using('sis').select_related(
-        'gum_ident_id_coid'
-    )
+    prson_qs = HsvPrson.objects.using('sis').all()
 
-    # Search by name or RBID through GumIdent
+    # Search by name or RBID through hsvprson
     if search_query:
-        ident_qs = ident_qs.filter(
-            models.Q(gum_ident_first_name__icontains=search_query) |
-            models.Q(gum_ident_last_name__icontains=search_query)
+        prson_qs = prson_qs.filter(
+            models.Q(hsv_prson_first_name__icontains=search_query) |
+            models.Q(hsv_prson_last_name__icontains=search_query)
         )
 
     if rbid_query:
-        ident_qs = ident_qs.filter(gum_ident_rbid__icontains=rbid_query)
+        prson_qs = prson_qs.filter(hsv_prson_rbid__icontains=rbid_query)
 
-    # Order by last_name, first_name from GumIdent
-    ident_qs = ident_qs.order_by(
-        'gum_ident_last_name',
-        'gum_ident_first_name'
+    # Order by last_name, first_name from hsvprson
+    prson_qs = prson_qs.order_by(
+        'hsv_prson_last_name',
+        'hsv_prson_first_name'
     )
 
     # Limit to 2000 results for safety
-    ident_list = ident_qs[:2000]
+    prson_list = prson_qs[:2000]
 
     # Build student records
     persons: List = []
-    for ident in ident_list:
-        persons.append(make_person_record(ident))
+    for prson in prson_list:
+        persons.append(make_person_record(prson))
 
     # Pagination
     paginator = Paginator(persons, 25)  # 25 per page
