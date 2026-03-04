@@ -226,7 +226,7 @@ def get_person_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
     Fetch and return PersonRecord for given RBID
     """
     
-    prson_qs = HsvPrson.objects.using('sis').filter(hgv_prson_rbid=rbid)
+    prson_qs = HgvPrson.objects.using('sis').filter(hgv_prson_rbid=rbid)
     if not ident_qs:
         return None
 
