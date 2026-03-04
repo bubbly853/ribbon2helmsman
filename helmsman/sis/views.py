@@ -227,7 +227,7 @@ def get_person_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
     """
     
     prson_qs = HgvPrson.objects.using('sis').filter(hgv_prson_rbid=rbid)
-    if not ident_qs:
+    if not prson_qs:
         return None
 
     return make_person_record(prson_qs)
