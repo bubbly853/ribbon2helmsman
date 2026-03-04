@@ -127,7 +127,7 @@ def make_student_record(stdnt: Optional[HsvStdnt]) -> StudentRecord:
     major1_campus_name = None
     active_ind = None
 
-    if HsvStdnt:
+    if stdnt:
         rbid = stdnt.hsv_stdnt_rbid
         preferred_name = stdnt.hsv_stdnt_pref_first_name
         first_name = stdnt.hsv_stdnt_first_name
@@ -226,7 +226,7 @@ def get_person_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
     Fetch and return PersonRecord for given RBID
     """
     
-    prson_qs = HgvPrson.objects.using('sis').filter(hgv_prson_rbid=rbid)
+    prson_qs = HgvPrson.objects.using('sis').filter(hgv_prson_rbid=rbid).first()
     if not prson_qs:
         return None
 
