@@ -92,7 +92,7 @@ class PersonRecord:
     birthday: Optional[str]
     id_num: Optional[str]
     id_country: Optional[str]
-    gum_ident: Optional[GumIdent] = None
+    hgv_prson: Optional[HgvPrson] = None
 
 
 # --- Utility functions ---
@@ -165,8 +165,7 @@ def make_student_record(stdnt: Optional[HsvStdnt]) -> StudentRecord:
 
 def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     """
-    Fetch and return StudentRecord for given RBID (joined GumIdent + SgmStubi).
-    Uses select_related where useful.
+    Fetch and return StudentRecord for given RBID.
     """
     # get GumIdent
     stdnt_qs = HsvStdnt.objects.using('sis').filter(hsv_stdnt_rbid=rbid).first()
@@ -176,10 +175,9 @@ def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
     return make_student_record(stdnt_qs)
 
 
-def make_person_record(ident: Optional[GumIdent]) -> PersonRecord:
+def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
     """
-    Build PersonRecord from GumIdent and GglCount object.
-    Handles GumIdent -> GglCount.
+    Build PersonRecord from hsv_prson.
     """
 
     def safe_date(d):
@@ -201,17 +199,15 @@ def make_person_record(ident: Optional[GumIdent]) -> PersonRecord:
     id_num = None
     id_country = None
 
-    if ident:
-        rbid = ident.gum_ident_rbid
-        preferred_name = ident.gum_ident_first_name
-        first_name = ident.gum_ident_first_name
-        middle_name = ident.gum_ident_middle_name
-        last_name = ident.gum_ident_last_name
-        birthday = safe_date(ident.gum_ident_birthday)
-        id_num = ident.gum_ident_idnum
-
-    if ident and ident.gum_ident_id_coid:
-        id_country = ident.gum_ident_id_coid.ggl_count_hr_name
+    if prson:
+        rbid = prson.hgv_prson_rbid
+        preferred_name = prson.hgv_prson_pref_first_name
+        first_name = prson.hgv_prson_first_name
+        middle_name = prson.hgv_prson_middle_name
+        last_name = prson.hgv_prson_last_name
+        birthday = safe_date(prson.hgv_prson_birthday)
+        id_num = prson.hgv_prson_idnum
+        id_country = prson.hgv_prson_country
 
     return PersonRecord(
         rbid=rbid,
@@ -222,30 +218,19 @@ def make_person_record(ident: Optional[GumIdent]) -> PersonRecord:
         birthday=birthday,
         id_num=id_num,
         id_country=id_country,
-        gum_ident=ident,
+        hgv_prson=prson,
     )
 
 def get_person_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
     """
     Fetch and return PersonRecord for given RBID
-    Uses select_related where useful.
     """
-    # get GumIdent
-    ident_qs = GumIdent.objects.using('sis').filter(gum_ident_rbid=rbid)
-
-    # get SgmStubi with related lookups (levels, types, majors via ScbMjrcm, campus)
-    # select_related to get the ScbMjrcm, then the SclMajor and SdlCamps
-    try:
-        ident = ident_qs.select_related(
-            'gum_ident_id_coid'
-        ).first()
-    except Exception:
-        ident = ident_qs.first()
-
+    
+    prson_qs = HsvPrson.objects.using('sis').filter(hgv_prson_rbid=rbid)
     if not ident_qs:
         return None
 
-    return make_person_record(ident)
+    return make_person_record(prson_qs)
 
 # --- Views ---
 
