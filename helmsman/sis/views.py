@@ -207,7 +207,7 @@ def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
         last_name = prson.hgv_prson_last_name
         birthday = safe_date(prson.hgv_prson_birthday)
         id_num = prson.hgv_prson_idnum
-        id_country = prson.hgv_prson_country
+        id_country = prson.hgv_prson_id_country
 
     return PersonRecord(
         rbid=rbid,
