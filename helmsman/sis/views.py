@@ -553,18 +553,22 @@ def person_detail(request, person_rbid):
 
     if request.method == 'POST':
         ident = record.gum_ident
+        adinf = record.gum_adinf
 
         # use transaction to keep changes consistent
         try:
             with transaction.atomic(using='sis'):
                 if ident:
                     ident.gum_ident_first_name = request.POST.get('first_name', ident.gum_ident_first_name)
+                    ident.gum_ident_middle_name = request.POST.get('middle_name', ident.gum_ident_middle_name)
                     ident.gum_ident_last_name = request.POST.get('last_name', ident.gum_ident_last_name)
                     # idnum if provided
                     idnum = request.POST.get('idnum')
                     if idnum is not None:
                         ident.gum_ident_idnum = idnum or None
                     ident.save(using='sis')
+                if adinf:
+                    adinf.gum_adinf_pref_first_name = request.POST.get('preffered_name', adinf.gum_adinf_pref_first_name)
 
             messages.success(request, 'Persson updated successfully.')
             return redirect('sis:person_detail', person_rbid=person_rbid)
