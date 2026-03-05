@@ -290,11 +290,10 @@ def make_student_detail_record(search_rbid: str) -> StudentDetail:
     stubi = None 
     if ltsts:
         stubi = SgmStubi.objects.using('sis').filter(sgm_stubi_tsid=ltsts.hsv_ltsts_latest_tsid_id).first()
-        if stubi:
-            ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=stubi.sgm_stubi_rbid).first()
-            adinf = GumAdinf.objects.using('sis').filter(gum_adinf_rbid=ident.gum_ident_rbid).first()
-            level = SglLevel.objects.using('sis').filter(sgl_level_lvid=stubi.sgm_stubi_lvid).first()
-            stype = SglStype.objects.using('sis').filter(sgl_stype_stid=stubi.sgm_stubi_stid).first()
+        ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=stubi.sgm_stubi_rbid_id).first()
+        adinf = GumAdinf.objects.using('sis').filter(gum_adinf_rbid_id=ident.gum_ident_rbid).first()
+        level = SglLevel.objects.using('sis').filter(sgl_level_lvid=stubi.sgm_stubi_lvid_id).first()
+        stype = SglStype.objects.using('sis').filter(sgl_stype_stid=stubi.sgm_stubi_stid_id).first()
 
         rbid = stubi.sgm_stubi_rbid
         term = stubi.sgm_stubi_tmid
