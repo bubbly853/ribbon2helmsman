@@ -19,7 +19,7 @@
         <div class="form-group">
             <label for="preferred_name">First Name</label>
             <input type="text" id="preferred_name" name="preferred_name"
-                   value="{{ person.preferred_name }}" required>
+                   value="{{ person.preferred_name|default:'' }}">
         </div>
 
         <!-- Editable: First Name -->
@@ -69,7 +69,7 @@
             <select id="id_country" name="id_country">
                 {% for country in countries %}
                     <option value="{{ country.ggl_count_coid }}"
-                        {% if country.ggl_count_coid == person.id_country %}selected{% endif %}>
+                        {% if country.ggl_count_coid == person.id_coid %}selected{% endif %}>
                         {{ country.ggl_count_hr_name }}
                     </option>
                 {% endfor %}
