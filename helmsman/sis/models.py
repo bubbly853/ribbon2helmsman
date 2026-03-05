@@ -426,7 +426,7 @@ class SglTerms(models.Model):
 
 class SgmStubi(models.Model):
     sgm_stubi_tsid = models.OneToOneField('SrhSterm', models.DO_NOTHING, db_column='sgm_stubi_tsid', primary_key=True)
-    sgm_stubi_rbid = models.CharField(max_length=9)
+    sgm_stubi_rbid = models.ForeignKey(GumIdent, models.DO_NOTHING, db_column='sgm_stubi_rbid')
     sgm_stubi_tmid = models.ForeignKey(SglTerms, models.DO_NOTHING, db_column='sgm_stubi_tmid')
     sgm_stubi_lvid = models.ForeignKey(SglLevel, models.DO_NOTHING, db_column='sgm_stubi_lvid')
     sgm_stubi_stid = models.ForeignKey(SglStype, models.DO_NOTHING, db_column='sgm_stubi_stid')
@@ -651,3 +651,11 @@ class HsvCrcrc(models.Model):
         managed = False
         db_table = 'hsv_crcrc'
         db_table_comment = 'Helmsman current curriculum versions view - active curriculum versions only (no end term) with major and type details.'
+
+class HsvLtsts(models.Model):
+    hsv_ltsts_rbid = models.CharField(primary_key=True, max_length=9, db_comment='Ribbon ID')
+    hsv_ltsts_lastest_tsid = models.ForeignKey(SgmStubi, models.DO_NOTHING, db_column='srl_subjs_dpid', blank=True, null=True, db_comment='Student Term ID - References SGM_STUBI.SGM_STUBI_TSID')
+    class Meta:
+        managed = False
+        db_table = 'hsv_ltsts'
+        db_table_comment = 'Helmsman latest student term code table.'

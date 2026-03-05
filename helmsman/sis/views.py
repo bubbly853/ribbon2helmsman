@@ -60,6 +60,7 @@ from .models import (
     HsvActcr,
     HsvAllcr,
     HsvCrcrc,
+    HsvLtsts,
 )
 
 # --- Helper dataclasses ---
@@ -79,6 +80,37 @@ class StudentRecord:
     hsv_stdnt: Optional[HsvStdnt] = None
 
 @dataclass
+class StudentDetail:
+    rbid: str
+    term: str
+    tsid: str
+    preferred_name: Optional[str]
+    first_name: Optional[str]
+    middle_name: Optional[str]
+    last_name: Optional[str]
+    birthday: Optional[str]
+    level_id: Optional[str]
+    level_name: Optional[str]
+    student_type_id: Optional[str]
+    student_type_name: Optional[str]
+    active_ind: Optional[str]
+    hsv_ltsts: Optional[HsvLtsts] = None
+    sgm_stubi: Optional[SgmStubi] = None
+
+@dataclass
+class Enrollments:
+    rbid: str
+    section: str
+    term: str
+    subject: str
+    number: str
+    status: str
+    activity_date: str
+    sgm_stubi: Optional[SgmStubi] = None
+    srh_enrol: Optional[SrhEnrol] = None
+
+
+@dataclass
 class PersonRecord:
     rbid: str
     preferred_name: Optional[str]
@@ -89,6 +121,20 @@ class PersonRecord:
     id_num: Optional[str]
     id_country: Optional[str]
     hgv_prson: Optional[HgvPrson] = None
+
+@dataclass
+class PersonDetail:
+    rbid: str
+    preferred_name: Optional[str]
+    first_name: Optional[str]
+    middle_name: Optional[str]
+    last_name: Optional[str]
+    username: Optional[str]
+    birthday: Optional[str]
+    id_num: Optional[str]
+    id_country: Optional[str]
+    gum_ident: Optional[GumIdent] = None
+    gum_adinf: Optional[GumAdinf] = None
 
 
 # --- Utility functions ---
@@ -158,7 +204,6 @@ def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
 
     return make_student_record(stdnt_qs)
 
-
 def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
     """
     Build PersonRecord from hsv_prson.
@@ -216,6 +261,71 @@ def get_person_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
 
     return make_person_record(prson_qs)
 
+def make_student_detail_record(search_rbid: str) -> StudentDetail:
+    """
+    Build StudentDetail from HsvLtsts and its select_related objects.
+    """
+
+    def safe_date(d):
+        if d is None:
+            return None
+        if d.year < 1900:
+            return None
+        return d
+
+    rbid = None
+    term = None
+    tsid = None
+    preferred_name = None
+    first_name = None
+    middle_name = None
+    last_name = None
+    birthday = None
+    level_id = None
+    level_name = None
+    student_type_id = None
+    student_type_name = None
+    active_ind = None
+    ltsts = HsvLtsts.objects.using('sis').filter(hsv_ltsts_rbid=search_rbid).first()
+    stubi = None 
+    if ltsts:
+        stubi = ltsts.hsv_ltsts_lastest_tsid
+        ident = stubi.sgm_stubi_rbid
+        adinf = ident.gum_adinf
+        level = stubi.sgl_level
+        stype = stubi.sgl_stype
+
+        rbid = stubi.sgm_stubi_rbid
+        term = stubi.sgm_stubi_tmid
+        tsid = stubi.sgm_stubi_tsid
+        preferred_name = adinf.gum_adinf_pref_first_name
+        first_name = ident.gum_ident_first_name
+        middle_name = ident.gum_ident_middle_name
+        last_name = ident.gum_ident_last_name
+        birthday = safe_date(ident.gum_ident_birthday)
+        level_id = stubi.sgm_stubi_lvid
+        level_name = level.sgl_level_hr_name
+        student_type_id = stubi.sgm_stubi_stid
+        student_type_name = stype.sgl_stype_hr_name
+        active_ind = stubi.sgm_stubi_active_ind
+
+    return StudentDetail(
+        rbid=rbid,
+        term=term,
+        tsid=tsid,
+        preferred_name=preferred_name,
+        first_name=first_name,
+        middle_name=middle_name,
+        last_name=last_name,
+        birthday=birthday,
+        level_id=level_id,
+        level_name=level_name,
+        student_type_id=student_type_id,
+        student_type_name=student_type_name,
+        active_ind=active_ind,
+        hsv_ltsts=ltsts,
+        sgm_stubi=stubi,
+    )
 # --- Views ---
 
 @login_required
@@ -275,7 +385,7 @@ def student_list(request):
 def student_detail(request, student_rbid):
     """View/edit individual student by RBID"""
     # Build combined student record
-    record = get_student_record_by_rbid(student_rbid)
+    record = make_student_detail_record(student_rbid)
     if not record:
         # mimic get_object_or_404 behaviour
         return get_object_or_404(GumIdent, gum_ident_rbid=student_rbid)
@@ -293,21 +403,11 @@ def student_detail(request, student_rbid):
         # Accept only a small set of editable fields for safety
         # Update GumIdent: first_name, last_name, idnum
         # Update SgmStubi: active_ind
-        ident = record.gum_ident
         stubi = record.sgm_stubi
 
         # use transaction to keep changes consistent
         try:
             with transaction.atomic(using='sis'):
-                if ident:
-                    ident.gum_ident_first_name = request.POST.get('first_name', ident.gum_ident_first_name)
-                    ident.gum_ident_last_name = request.POST.get('last_name', ident.gum_ident_last_name)
-                    # idnum if provided
-                    idnum = request.POST.get('idnum')
-                    if idnum is not None:
-                        ident.gum_ident_idnum = idnum or None
-                    ident.save(using='sis')
-
                 if stubi:
                     active_val = request.POST.get('active_ind')
                     if active_val is not None:
