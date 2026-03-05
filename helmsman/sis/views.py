@@ -289,7 +289,7 @@ def make_student_detail_record(search_rbid: str) -> StudentDetail:
     ltsts = HsvLtsts.objects.using('sis').filter(hsv_ltsts_rbid=search_rbid).first()
     stubi = None 
     if ltsts:
-        stubi = ltsts.hsv_ltsts_lastest_tsid
+        stubi = ltsts.hsv_ltsts_latest_tsid
         ident = stubi.sgm_stubi_rbid
         adinf = ident.gum_adinf
         level = stubi.sgl_level
