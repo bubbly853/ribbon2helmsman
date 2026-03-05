@@ -1,4 +1,4 @@
-{% extends 'sis/base.html' %}
+{% extends 'sis/detail_base.html' %}
 
 {% block title %}{{ person.preferred_name|default:person.first_name }} {{ person.last_name }} - Helmsman{% endblock %}
 
@@ -12,55 +12,63 @@
         <!-- RBID (Primary Banner ID) -->
         <div class="form-group">
             <label>RBID</label>
-            <input type="text" value="{{ person.rbid }}" disabled>
+            <input type="text" value="{{ person.rbid }}" disabled
+                   data-db-field="gum_ident.gum_idtent_rbid">
         </div>
 
         <!-- Editable: Preferred Name -->
         <div class="form-group">
             <label for="preferred_name">Preferred First Name</label>
             <input type="text" id="preferred_name" name="preferred_name"
-                   value="{{ person.preferred_name|default:'' }}">
+                   value="{{ person.preferred_name|default:'' }}"
+                   data-db-field="gum_adinf.gum_adinf_pref_first_name">
         </div>
 
         <!-- Editable: First Name -->
         <div class="form-group">
             <label for="first_name">First Name</label>
             <input type="text" id="first_name" name="first_name"
-                   value="{{ person.first_name }}" required>
+                   value="{{ person.first_name }}" required
+                   data-db-field="gum_ident.gum_ident_first_name">
         </div>
 
         <!-- Editable: Middle Name -->
         <div class="form-group">
             <label for="middle_name">First Name</label>
             <input type="text" id="middle_name" name="middle_name"
-                   value="{{ person.middle_name }}" required>
+                   value="{{ person.middle_name }}" required
+                   data-db-field="gum_ident.gum_ident_middle_name">
         </div>
 
         <!-- Editable: Last Name -->
         <div class="form-group">
             <label for="last_name">Last Name</label>
             <input type="text" id="last_name" name="last_name"
-                   value="{{ person.last_name }}" required>
+                   value="{{ person.last_name }}" required
+                   data-db-field="gum_ident.gum_ident_last_name">
         </div>
 
         <!-- Birthday -->
         <div class="form-group">
             <label>Birthday</label>
-            <input type="text" value="{{ person.birthday }}" disabled>
+            <input type="text" value="{{ person.birthday }}" disabled
+            data-db-field="gum_ident.gum_ident_birthday">
         </div>
 
         <!-- Editable: Username -->
         <div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username"
-                   value="{{ person.username }}" required>
+                   value="{{ person.username }}" required
+                   data-db-field="gum_adinf.gum_adinf_first_name">
         </div>
 
         <!-- Editable: ID Num -->
         <div class="form-group">
             <label for="id_num">ID Number</label>
             <input type="text" id="id_num" name="id_num"
-                   value="{{ person.id_num }}" required>
+                   value="{{ person.id_num }}" required
+                   data-db-field="gum_ident.gum_ident_id_num">
         </div>
 
         <!-- Editable: Country -->
@@ -69,6 +77,7 @@
             <select id="id_country" name="id_country">
                 {% for country in countries %}
                     <option value="{{ country.ggl_count_coid }}"
+                        data-db-field="gum_ident.gum_ident_id_coid | ggl_count_hr_name"
                         {% if country.ggl_count_coid == person.id_coid %}selected{% endif %}>
                         {{ country.ggl_count_hr_name }}
                     </option>
