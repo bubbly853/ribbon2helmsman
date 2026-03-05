@@ -548,6 +548,7 @@ def person_list(request):
 def person_detail(request, person_rbid):
     """View/edit individual student by RBID"""
     record = make_person_detail_record(person_rbid)
+    countries = GglCount.objects.using('sis').all()
     if not record:
         return get_object_or_404(GumIdent, gum_ident_rbid=person_rbid)
 
@@ -562,13 +563,12 @@ def person_detail(request, person_rbid):
                     ident.gum_ident_first_name = request.POST.get('first_name', ident.gum_ident_first_name)
                     ident.gum_ident_middle_name = request.POST.get('middle_name', ident.gum_ident_middle_name)
                     ident.gum_ident_last_name = request.POST.get('last_name', ident.gum_ident_last_name)
-                    # idnum if provided
-                    idnum = request.POST.get('idnum')
-                    if idnum is not None:
-                        ident.gum_ident_idnum = idnum or None
+                    ident.gum_ident_idnum = request.POST.get('id_num', ident.gum_ident_idnum)
                     ident.save(using='sis')
                 if adinf:
-                    adinf.gum_adinf_pref_first_name = request.POST.get('preffered_name', adinf.gum_adinf_pref_first_name)
+                    adinf.gum_adinf_pref_first_name = request.POST.get('preferred_name', adinf.gum_adinf_pref_first_name)
+                    adinf.gum_adinf_username = request.POST.get('username', adinf.gum_adinf_username)
+                    adinf.save(using='sis')
 
             messages.success(request, 'Persson updated successfully.')
             return redirect('sis:person_detail', person_rbid=person_rbid)
@@ -577,6 +577,7 @@ def person_detail(request, person_rbid):
 
     context = {
         'person': record,
+        'countries': countries,
     }
     return render(request, 'sis/person_detail.html', context)
 

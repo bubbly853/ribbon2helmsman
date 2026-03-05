@@ -49,18 +49,33 @@
             <input type="text" value="{{ person.birthday }}" disabled>
         </div>
 
-        <!-- Username -->
+        <!-- Editable: Username -->
         <div class="form-group">
-            <label>Birthday</label>
-            <input type="text" value="{{ person.username }}" disabled>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username"
+                   value="{{ person.username }}" required>
         </div>
 
-        <!-- Editable: ID Num-->
+        <!-- Editable: ID Num -->
         <div class="form-group">
             <label for="id_num">ID Number</label>
             <input type="text" id="id_num" name="id_num"
                    value="{{ person.id_num }}" required>
         </div>
+
+        <!-- Editable: Country -->
+        <div class="form-group">
+            <label for="id_country">ID Country</label>
+            <select id="id_country" name="id_country">
+                {% for country in countries %}
+                    <option value="{{ country.ggl_count_coid }}"
+                        {% if country.ggl_count_coid == person.id_country %}selected{% endif %}>
+                        {{ country.ggl_count_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
         <button type="submit" class="btn">Save Changes</button>
         <a href="{% url 'sis:person_list' %}" class="btn btn-secondary">Back to List</a>
     </form>
