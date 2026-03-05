@@ -654,7 +654,7 @@ class HsvCrcrc(models.Model):
 
 class HsvLtsts(models.Model):
     hsv_ltsts_rbid = models.CharField(primary_key=True, max_length=9, db_comment='Ribbon ID')
-    hsv_ltsts_lastest_tsid = models.ForeignKey(SgmStubi, models.DO_NOTHING, db_column='srl_subjs_dpid', blank=True, null=True, db_comment='Student Term ID - References SGM_STUBI.SGM_STUBI_TSID')
+    hsv_ltsts_latest_tsid = models.ForeignKey(SgmStubi, models.DO_NOTHING, db_column='hsv_ltsts_latest_tsid', blank=True, null=True, db_comment='Student Term ID - References SGM_STUBI.SGM_STUBI_TSID')
     class Meta:
         managed = False
         db_table = 'hsv_ltsts'
