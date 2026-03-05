@@ -132,6 +132,7 @@ class PersonDetail:
     username: Optional[str]
     birthday: Optional[str]
     id_num: Optional[str]
+    id_coid: Optional[str]
     id_country: Optional[str]
     gum_ident: Optional[GumIdent] = None
     gum_adinf: Optional[GumAdinf] = None
@@ -193,17 +194,6 @@ def make_student_record(stdnt: Optional[HsvStdnt]) -> StudentRecord:
         hsv_stdnt=stdnt
     )
 
-def get_student_record_by_rbid(rbid: str) -> Optional[StudentRecord]:
-    """
-    Fetch and return StudentRecord for given RBID.
-    """
-    # get GumIdent
-    stdnt_qs = HsvStdnt.objects.using('sis').filter(hsv_stdnt_rbid=rbid).first()
-    if not stdnt_qs:
-        return None
-
-    return make_student_record(stdnt_qs)
-
 def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
     """
     Build PersonRecord from hsv_prson.
@@ -249,17 +239,6 @@ def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
         id_country=id_country,
         hgv_prson=prson,
     )
-
-def get_person_record_by_rbid(rbid: str) -> Optional[PersonRecord]:
-    """
-    Fetch and return PersonRecord for given RBID
-    """
-    
-    prson_qs = HgvPrson.objects.using('sis').filter(hgv_prson_rbid=rbid).first()
-    if not prson_qs:
-        return None
-
-    return make_person_record(prson_qs)
 
 def make_student_detail_record(search_rbid: str) -> StudentDetail:
     """
@@ -325,6 +304,61 @@ def make_student_detail_record(search_rbid: str) -> StudentDetail:
         active_ind=active_ind,
         hsv_ltsts=ltsts,
         sgm_stubi=stubi,
+    )
+
+def make_person_detail_record(search_rbid: str) -> PersonDetail:
+    """
+    Build StudentDetail from HsvLtsts and its select_related objects.
+    """
+
+    def safe_date(d):
+        if d is None:
+            return None
+        if d.year < 1900:
+            return None
+        return d
+
+    rbid = None
+    preferred_name = None
+    first_name = None
+    middle_name = None
+    last_name = None
+    username = None
+    birthday = None
+    id_num = None
+    id_coid = None
+    id_country = None
+    ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=search_rbid).first()
+    adinf = None 
+    if ident:
+        adinf = GumAdinf.objects.using('sis').filter(gum_adinf_rbid_id=ident.gum_ident_rbid).first()
+        count = GglCount.objects.using('sis').filter(ggl_count_coid=ident.gum_ident_id_coid_id).first()
+
+        rbid = ident.gum_ident_rbid
+        preferred_name = adinf.gum_adinf_pref_first_name
+        first_name = ident.gum_ident_first_name
+        middle_name = ident.gum_ident_middle_name
+        last_name = ident.gum_ident_last_name
+        birthday = safe_date(ident.gum_ident_birthday)
+        username = adinf.gum_adinf_username
+        id_num = ident.gum_ident_idnum
+        id_coid = ident.gum_ident_id_coid
+        id_country =count.ggl_count_hr_name
+
+
+    return PersonDetail(
+        rbid=rbid,
+        preferred_name=preferred_name,
+        first_name=first_name,
+        middle_name=middle_name,
+        last_name=last_name,
+        username=username,
+        birthday=birthday,
+        id_num=id_num,
+        id_coid=id_coid,
+        id_country=id_country,
+        gum_ident=ident,
+        gum_adinf=adinf,
     )
 # --- Views ---
 
@@ -513,7 +547,7 @@ def person_list(request):
 @login_required
 def person_detail(request, person_rbid):
     """View/edit individual student by RBID"""
-    record = get_person_record_by_rbid(person_rbid)
+    record = make_person_detail_record(person_rbid)
     if not record:
         return get_object_or_404(GumIdent, gum_ident_rbid=person_rbid)
 
