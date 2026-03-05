@@ -274,17 +274,17 @@ def make_student_detail_record(search_rbid: str) -> StudentDetail:
         level = SglLevel.objects.using('sis').filter(sgl_level_lvid=stubi.sgm_stubi_lvid_id).first()
         stype = SglStype.objects.using('sis').filter(sgl_stype_stid=stubi.sgm_stubi_stid_id).first()
 
-        rbid = stubi.sgm_stubi_rbid
-        term = stubi.sgm_stubi_tmid
-        tsid = stubi.sgm_stubi_tsid
+        rbid = stubi.sgm_stubi_rbid_id
+        term = stubi.sgm_stubi_tmid_id
+        tsid = stubi.sgm_stubi_tsid_id
         preferred_name = adinf.gum_adinf_pref_first_name
         first_name = ident.gum_ident_first_name
         middle_name = ident.gum_ident_middle_name
         last_name = ident.gum_ident_last_name
         birthday = safe_date(ident.gum_ident_birthday)
-        level_id = stubi.sgm_stubi_lvid
+        level_id = stubi.sgm_stubi_lvid_id
         level_name = level.sgl_level_hr_name
-        student_type_id = stubi.sgm_stubi_stid
+        student_type_id = stubi.sgm_stubi_stid_id
         student_type_name = stype.sgl_stype_hr_name
         active_ind = stubi.sgm_stubi_active_ind
 
@@ -342,7 +342,7 @@ def make_person_detail_record(search_rbid: str) -> PersonDetail:
         birthday = safe_date(ident.gum_ident_birthday)
         username = adinf.gum_adinf_username
         id_num = ident.gum_ident_idnum
-        id_coid = ident.gum_ident_id_coid
+        id_coid = ident.gum_ident_id_coid_id
         id_country =count.ggl_count_hr_name
 
 
