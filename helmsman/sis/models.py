@@ -587,7 +587,7 @@ class HsvStdnt(models.Model):
 
     class Meta:
         managed = False
-        db_table = '"student"."hsv_stdnt"'
+        db_table = '"helmsman"."hsv_stdnt"'
         db_table_comment = 'Helmsman student view - current term student record with level, type, major, and campus.'
 
 class HgvPrson(models.Model):
