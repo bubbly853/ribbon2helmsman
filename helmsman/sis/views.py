@@ -549,6 +549,8 @@ def person_detail(request, person_rbid):
     """View/edit individual student by RBID"""
     record = make_person_detail_record(person_rbid)
     countries = GglCount.objects.using('sis').all()
+    print(f"id_coid: '{record.id_coid}' type: {type(record.id_coid)}")
+    print(f"ggl_count_coid sample: '{countries.first().ggl_count_coid}' type: {type(countries.first().ggl_count_coid)}")
     if not record:
         return get_object_or_404(GumIdent, gum_ident_rbid=person_rbid)
 
