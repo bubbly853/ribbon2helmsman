@@ -14,7 +14,7 @@ class FglFyear(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'fgl_fyear'
+        db_table = '"finance"."fgl_fyear"'
         db_table_comment = 'Financial aid year definition table.'
 
 
@@ -26,7 +26,7 @@ class GglCitzn(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'ggl_citzn'
+        db_table = '"general"."ggl_citzn"'
         db_table_comment = 'Citizenship lookup table.'
 
 
@@ -36,7 +36,7 @@ class GglCount(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'ggl_count'
+        db_table = '"general"."ggl_count"'
         db_table_comment = 'Country definition table.'
 
 
@@ -49,7 +49,7 @@ class GrlRcens(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'grl_rcens'
+        db_table = '"general"."grl_rcens"'
         db_table_comment = 'Census/Goverment Race lookup table'
 
 
@@ -60,7 +60,7 @@ class GrlRdetl(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'grl_rdetl'
+        db_table = '"general"."grl_rdetl"'
         db_table_comment = 'Race Detail lookup table'
 
 
@@ -83,7 +83,7 @@ class GumAdinf(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'gum_adinf'
+        db_table = '"general"."gum_adinf"'
         db_table_comment = 'Additional user information table - extended demographics and preferences.'
 
 
@@ -101,7 +101,7 @@ class GumIdent(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'gum_ident'
+        db_table = '"general"."gum_ident"'
         db_table_comment = 'Person identity base record table.'
 
 
@@ -114,7 +114,7 @@ class SalAvtyp(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sal_avtyp'
+        db_table = '"student"."sal_avtyp"'
 
 
 class SarAdvrl(models.Model):
@@ -129,7 +129,7 @@ class SarAdvrl(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sar_advrl'
+        db_table = '"student"."sar_advrl"'
         unique_together = (('sar_advrl_avid', 'sar_advrl_begin_letter', 'sar_advrl_end_letter'),)
 
 
@@ -146,7 +146,7 @@ class SarOvrar(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sar_ovrar'
+        db_table = '"student"."sar_ovrar"'
         unique_together = (('sar_ovrar_arid', 'sar_ovrar_stdn_rbid'),)
 
 
@@ -158,7 +158,7 @@ class SclCipcd(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scl_cipcd'
+        db_table = '"student"."scl_cipcd"'
         db_table_comment = 'CIP code definition table.'
 
 
@@ -169,7 +169,7 @@ class SclCrtyp(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scl_crtyp'
+        db_table = '"student"."scl_crtyp"'
         db_table_comment = 'Curriculum type lookup table (e.g., Major, Minor, Certificate).'
 
 
@@ -188,7 +188,7 @@ class SclCurrv(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scl_currv'
+        db_table = '"student"."scl_currv"'
         unique_together = (('scl_currv_mrid', 'scl_currv_effective_term'),)
         db_table_comment = 'Curriculum version table - tracks changes to major/degree requirements over time.'
 
@@ -201,7 +201,7 @@ class SclDegrs(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scl_degrs'
+        db_table = '"student"."scl_degrs"'
         db_table_comment = 'Degree lookup table.'
 
 
@@ -214,7 +214,7 @@ class SclDlevl(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scl_dlevl'
+        db_table = '"student"."scl_dlevl"'
         db_table_comment = 'Degree level lookup table.'
 
 
@@ -224,7 +224,7 @@ class SclIscdf(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scl_iscdf'
+        db_table = '"student"."scl_iscdf"'
 
 
 class SclMajor(models.Model):
@@ -240,7 +240,7 @@ class SclMajor(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scl_major'
+        db_table = '"student"."scl_major"'
         db_table_comment = 'Major report table.'
 
 
@@ -254,7 +254,7 @@ class ScmStucv(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scm_stucv'
+        db_table = '"student"."scm_stucv"'
         unique_together = (('scm_stucv_rbid', 'scm_stucv_cvid'),)
 
 
@@ -272,7 +272,7 @@ class ScrCreqs(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scr_creqs'
+        db_table = '"student"."scr_creqs"'
         unique_together = (('scr_creqs_cvid', 'scr_creqs_crid'),)
         db_table_comment = 'Course requirements - individual courses required for curriculum. Links to groups for elective blocks.'
 
@@ -290,7 +290,7 @@ class ScrOvcls(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scr_ovcls'
+        db_table = '"student"."scr_ovcls"'
         unique_together = (('scr_ovcls_scid', 'scr_ovcls_rqid'),)
 
 
@@ -308,7 +308,7 @@ class ScrOvmrk(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scr_ovmrk'
+        db_table = '"student"."scr_ovmrk"'
         unique_together = (('scr_ovmrk_scid', 'scr_ovmrk_rqid'),)
         db_table_comment = 'Minimum grade/mark requirement overrides. Allows reducing or waiving the minimum grade requirement for specific curriculum requirements for individual students (e.g., accepting a C when B is normally required).'
 
@@ -321,7 +321,7 @@ class ScrPreqs(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scr_preqs'
+        db_table = '"student"."scr_preqs"'
         db_table_comment = 'Course prerequisite mapping table.'
 
 
@@ -339,7 +339,7 @@ class ScrRqgrp(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'scr_rqgrp'
+        db_table = '"student"."scr_rqgrp"'
         unique_together = (('scr_rqgrp_cvid', 'scr_rqgrp_rtid'),)
         db_table_comment = 'Requirement groups/blocks - defines elective blocks and course groups for curriculum. E.g., "6 credits from Block A courses".'
 
@@ -350,7 +350,7 @@ class SdlCamps(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sdl_camps'
+        db_table = '"student"."sdl_camps"'
         db_table_comment = 'Campus definition table.'
 
 
@@ -361,7 +361,7 @@ class SdlColeg(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sdl_coleg'
+        db_table = '"student"."sdl_coleg"'
         db_table_comment = 'College/school definition table.'
 
 
@@ -372,7 +372,7 @@ class SdlDepts(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sdl_depts'
+        db_table = '"student"."sdl_depts"'
         db_table_comment = 'Academic department lookup table.'
 
 
@@ -383,7 +383,7 @@ class SglLevel(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sgl_level'
+        db_table = '"student"."sgl_level"'
         db_table_comment = 'Student level lookup table.'
 
 
@@ -393,7 +393,7 @@ class SglSmstr(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sgl_smstr'
+        db_table = '"student"."sgl_smstr"'
         db_table_comment = 'Semester definition table.'
 
 
@@ -404,7 +404,7 @@ class SglStype(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sgl_stype'
+        db_table = '"student"."sgl_stype"'
         db_table_comment = 'Student type lookup table.'
 
 
@@ -419,7 +419,7 @@ class SglTerms(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sgl_terms'
+        db_table = '"student"."sgl_terms"'
         unique_together = (('sgl_terms_year', 'sgl_terms_smid'),)
         db_table_comment = 'Academic term definition table.'
 
@@ -437,7 +437,7 @@ class SgmStubi(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sgm_stubi'
+        db_table = '"student"."sgm_stubi"'
         unique_together = (('sgm_stubi_rbid', 'sgm_stubi_tmid'),)
 
 
@@ -451,7 +451,7 @@ class SrbSects(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'srb_sects'
+        db_table = '"student"."srb_sects"'
         unique_together = (('srb_sects_tmid', 'srb_sects_crid', 'srb_sects_section_seq'),)
         db_table_comment = 'Section bridge table'
 
@@ -467,7 +467,7 @@ class SrhEnrol(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'srh_enrol'
+        db_table = '"student"."srh_enrol"'
         unique_together = (('srh_enrol_rbid', 'srh_enrol_stid'),)
         db_table_comment = 'Registration Status History Table'
 
@@ -483,7 +483,7 @@ class SrhSterm(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'srh_sterm'
+        db_table = '"student"."srh_sterm"'
         unique_together = (('srh_sterm_rbid', 'srh_sterm_tmid'),)
         db_table_comment = 'Student base information table.'
 
@@ -498,7 +498,7 @@ class SrlCours(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'srl_cours'
+        db_table = '"student"."srl_cours"'
         unique_together = (('srl_cours_sbid', 'srl_cours_crse_num'),)
         db_table_comment = 'Course lookup table'
 
@@ -511,7 +511,7 @@ class SrlEnrst(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'srl_enrst'
+        db_table = '"student"."srl_enrst"'
         db_table_comment = 'Enrollment Status Lookup Table with Predefined Values. \n     Combines roll and credit flags to indicate enrollment semantics:\n     - Y,Y = Normal registration (Registered, Web Registered, Admin Registered, Vendor Registered)\n     - N,N = Withdrawal (Withdraw, Web Withdraw, Admin Withdraw, Vendor Withdraw)\n     - N,Y = Special cases (Credited Withdraw, Transfer Course, Honorary Course)\n     - Y,N = Audit'
 
 
@@ -524,7 +524,7 @@ class SrlRgtyp(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'srl_rgtyp'
+        db_table = '"student"."srl_rgtyp"'
 
 
 class SrlRqtyp(models.Model):
@@ -534,7 +534,7 @@ class SrlRqtyp(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'srl_rqtyp'
+        db_table = '"student"."srl_rqtyp"'
         db_table_comment = 'Requirement type lookup table (e.g., CORE, ELCA, ELCB for elective blocks).'
 
 
@@ -545,7 +545,7 @@ class SrlSubjs(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'srl_subjs'
+        db_table = '"student"."srl_subjs"'
         db_table_comment = 'Course Subject Report Table'
 
 
@@ -559,7 +559,7 @@ class SthCrtrn(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'sth_crtrn'
+        db_table = '"student"."sth_crtrn"'
         db_table_comment = 'Course transcript history - stores final grades for completed courses.'
 
 
@@ -569,7 +569,7 @@ class StlMarks(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'stl_marks'
+        db_table = '"student"."stl_marks"'
         db_table_comment = 'Grade marks/letters lookup table with quality points for GPA calculation.'
 
 class HsvStdnt(models.Model):
@@ -587,7 +587,7 @@ class HsvStdnt(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'hsv_stdnt'
+        db_table = '"student"."hsv_stdnt"'
         db_table_comment = 'Helmsman student view - current term student record with level, type, major, and campus.'
 
 class HgvPrson(models.Model):
@@ -602,7 +602,7 @@ class HgvPrson(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'hgv_prson'
+        db_table = '"helmsman"."hgv_prson"'
         db_table_comment = 'Helmsman person view - base identity record with preferred name and national ID country.'
 
 class HsvActcr(models.Model):
@@ -616,7 +616,7 @@ class HsvActcr(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'hsv_actcr'
+        db_table = '"helmsman"."hsv_actcr"'
         db_table_comment = 'Helmsman active courses view - active courses only with subject and department.'
 
 class HsvAllcr(models.Model):
@@ -630,7 +630,7 @@ class HsvAllcr(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'hsv_allcr'
+        db_table = '"helmsman"."hsv_allcr"'
         db_table_comment = 'Helmsman all courses view - all courses regardless of active status with subject and department.'
 
 class HsvCrcrc(models.Model):
@@ -649,7 +649,7 @@ class HsvCrcrc(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'hsv_crcrc'
+        db_table = '"helmsman"."hsv_crcrc"'
         db_table_comment = 'Helmsman current curriculum versions view - active curriculum versions only (no end term) with major and type details.'
 
 class HsvLtsts(models.Model):
@@ -657,5 +657,5 @@ class HsvLtsts(models.Model):
     hsv_ltsts_latest_tsid = models.ForeignKey(SgmStubi, models.DO_NOTHING, db_column='hsv_ltsts_latest_tsid', blank=True, null=True, db_comment='Student Term ID - References SGM_STUBI.SGM_STUBI_TSID')
     class Meta:
         managed = False
-        db_table = 'hsv_ltsts'
+        db_table = '"helmsman"."hsv_ltsts"'
         db_table_comment = 'Helmsman latest student term code table.'
