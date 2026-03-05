@@ -75,10 +75,6 @@ class StudentRecord:
     level_name: Optional[str]
     student_type_id: Optional[str]
     student_type_name: Optional[str]
-    major1_id: Optional[str]
-    major1_name: Optional[str]
-    major1_campus_id: Optional[str]
-    major1_campus_name: Optional[str]
     active_ind: Optional[str]
     hsv_stdnt: Optional[HsvStdnt] = None
 
@@ -121,10 +117,6 @@ def make_student_record(stdnt: Optional[HsvStdnt]) -> StudentRecord:
     level_name = None
     student_type_id = None
     student_type_name = None
-    major1_id = None
-    major1_name = None
-    major1_campus_id = None
-    major1_campus_name = None
     active_ind = None
 
     if stdnt:
@@ -138,10 +130,6 @@ def make_student_record(stdnt: Optional[HsvStdnt]) -> StudentRecord:
         level_name = stdnt.hsv_stdnt_level
         student_type_id = stdnt.hsv_stdnt_stid
         student_type_name = stdnt.hsv_stdnt_student_type
-        major1_id = stdnt.hsv_stdnt_mrid
-        major1_name = stdnt.hsv_stdnt_major
-        major1_campus_id = stdnt.hsv_stdnt_cpid
-        major1_campus_name = stdnt.hsv_stdnt_campus
         active_ind = stdnt.hsv_stdnt_active_ind
 
     return StudentRecord(
@@ -155,10 +143,6 @@ def make_student_record(stdnt: Optional[HsvStdnt]) -> StudentRecord:
         level_name=level_name,
         student_type_id=student_type_id,
         student_type_name=student_type_name,
-        major1_id=major1_id,
-        major1_name=major1_name,
-        major1_campus_id=major1_campus_id,
-        major1_campus_name=major1_campus_name,
         active_ind=active_ind,
         hsv_stdnt=stdnt
     )
