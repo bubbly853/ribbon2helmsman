@@ -566,6 +566,7 @@ def person_detail(request, person_rbid):
                     ident.gum_ident_middle_name = request.POST.get('middle_name', ident.gum_ident_middle_name)
                     ident.gum_ident_last_name = request.POST.get('last_name', ident.gum_ident_last_name)
                     ident.gum_ident_idnum = request.POST.get('id_num', ident.gum_ident_idnum)
+                    ident.gum_ident_id_coid_id = request.POST.get('id_country', ident.gum_ident_id_coid_id)
                     ident.save(using='sis')
                 if adinf:
                     adinf.gum_adinf_pref_first_name = request.POST.get('preferred_name', adinf.gum_adinf_pref_first_name)
