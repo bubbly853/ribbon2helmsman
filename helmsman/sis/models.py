@@ -583,10 +583,6 @@ class HsvStdnt(models.Model):
     hsv_stdnt_level = models.CharField(max_length=32, db_comment='Student level human-readable name.')
     hsv_stdnt_stid = models.CharField(max_length=2, db_comment='Student type ID.')
     hsv_stdnt_student_type = models.CharField(max_length=32, db_comment='Student type human-readable name.')
-    hsv_stdnt_mrid = models.CharField(max_length=8, blank=True, null=True, db_comment='Major ID.')
-    hsv_stdnt_major = models.CharField(max_length=64, blank=True, null=True, db_comment='Major human-readable name.')
-    hsv_stdnt_cpid = models.CharField(max_length=2, blank=True, null=True, db_comment='Campus ID.')
-    hsv_stdnt_campus = models.CharField(max_length=32, blank=True, null=True, db_comment='Campus human-readable name.')
     hsv_stdnt_active_ind = models.CharField(max_length=1, db_comment='Active enrollment indicator.')
 
     class Meta:
