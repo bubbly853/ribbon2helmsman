@@ -291,9 +291,9 @@ def make_student_detail_record(search_rbid: str) -> StudentDetail:
     if ltsts:
         stubi = ltsts.hsv_ltsts_latest_tsid
         ident = stubi.sgm_stubi_rbid
-        adinf = ident.gum_adinf
-        level = stubi.sgl_level
-        stype = stubi.sgl_stype
+        adinf = ident.gum_ident_rbid
+        level = stubi.sgm_stubi_lvid
+        stype = stubi.sgm_stubi_stid
 
         rbid = stubi.sgm_stubi_rbid
         term = stubi.sgm_stubi_tmid
