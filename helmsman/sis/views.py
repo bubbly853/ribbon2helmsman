@@ -475,7 +475,7 @@ def student_detail(request, student_rbid):
     if request.method == 'POST' and 'update_major' in request.POST:
         try:
             with transaction.atomic(using='sis'):
-                scid = request.POST.get('update_major')
+                scid = request.POST.get('scid')
                 print(scid)
                 stucv = ScmStucv.objects.using('sis').filter(
                     scm_stucv_scid=scid

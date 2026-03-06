@@ -90,7 +90,7 @@
             <tr class="form-group">
                 <form method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="update_major" value="{{ major.scm_stucv_scid }}">
+                    <input type="hidden" name="scid" value="{{ major.scm_stucv_scid }}">
                     <td>{{ major.scm_stucv_cvid.scl_currv_mrid.scl_major_hr_name }}</td>
                     <td>
                         <select name="cpid" data-db-field="scm_stucv.scm_stucv_cpid | sdl_camps.sdl_camps_hr_name">
