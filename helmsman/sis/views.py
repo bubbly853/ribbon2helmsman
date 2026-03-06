@@ -426,7 +426,7 @@ def student_detail(request, student_rbid):
 
     # Enrollments for student: SrhEnrol rows where srh_enrol_rbid = student's rbid
     enrollments = SrhEnrol.objects.using('sis').filter(
-        srh_enrol_rbid__gum_ident_rbid=student_rbid
+        srh_enrol_rbid=student_rbid
     ).select_related(
         'srh_enrol_esid', 
         'srh_enrol_stid__srb_sects_crid',

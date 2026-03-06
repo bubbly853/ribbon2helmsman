@@ -573,7 +573,8 @@ class StlMarks(models.Model):
         db_table_comment = 'Grade marks/letters lookup table with quality points for GPA calculation.'
 
 class HsvStdnt(models.Model):
-    hsv_stdnt_rbid = models.CharField(primary_key=True, max_length=9, db_comment='Ribbon ID.')
+    hsv_stdnt_tsid = models.CharField(primary_key=True, max_length=15, db_comment='Ribbon ID.')
+    hsv_stdnt_rbid = models.CharField(max_length=9, db_comment='Ribbon ID.')
     hsv_stdnt_pref_first_name = models.CharField(max_length=32, blank=True, null=True, db_comment='Preferred first name.')
     hsv_stdnt_first_name = models.CharField(max_length=32, db_comment='Legal first name.')
     hsv_stdnt_middle_name = models.CharField(max_length=32, blank=True, null=True, db_comment='Middle name.')
