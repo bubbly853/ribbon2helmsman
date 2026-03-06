@@ -426,6 +426,7 @@ def student_detail(request, student_rbid):
         return get_object_or_404(GumIdent, gum_ident_rbid=student_rbid)
     stypes = SglStype.objects.using('sis').all()
     levels = SglLevel.objects.using('sis').all()
+    camps = SdlCamps.objects.using('sis').all()
     
     print(f"stid: '{record.student_type_id}' type: {type(record.student_type_id)}")
     print(f"sgl_stype_stid sample: '{stypes.first().sgl_stype_stid}' type: {type(stypes.first().sgl_stype_stid)}")
@@ -451,7 +452,7 @@ def student_detail(request, student_rbid):
         'scm_stucv_cvid__scl_currv_ctid',
     )
 
-    if request.method == 'POST':
+    if request.method == 'POST' and 'stubi-post' in request.POST:
         # Accept only a small set of editable fields for safety
         # Update GumIdent: first_name, last_name, idnum
         # Update SgmStubi: active_ind
@@ -471,6 +472,17 @@ def student_detail(request, student_rbid):
         except Exception as e:
             messages.error(request, f'Error updating student: {e}')
 
+    if request.method == 'POST' and 'update_major' in request.POST:
+        try:
+            scid = request.POST.get('update_major')
+            ScmStucv.objects.using('sis').filter(
+                scm_stucv_scid=scid
+            ).update(
+                scm_stucv_active_ind=request.POST.get('m_active_ind'),
+                scm_stucv_cpid_id=request.POST.get('cpid')
+            )
+        except Exception as e:
+            messages.error(request, f'Error updating student: {e}')
 
     context = {
         'student': record,
@@ -478,6 +490,7 @@ def student_detail(request, student_rbid):
         'levels': levels,
         'stypes': stypes,
         'majors': majors,
+        'camps': camps,
     }
     return render(request, 'sis/student_detail.html', context)
 
