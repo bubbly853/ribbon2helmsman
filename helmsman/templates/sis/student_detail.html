@@ -72,17 +72,38 @@
     </form>
 </div>
 
-<!-- STATIC ACADEMIC INFO (not editable) -->
 <div class="card">
-    <h2>Academic Information</h2>
-
-    <p><strong>Level:</strong> {{ student.level_name|default:"—" }}</p>
-    <p><strong>Student Type:</strong> {{ student.student_type_name|default:"—" }}</p>
-    <p><strong>Major:</strong> {{ student.major1_name|default:"—" }}</p>
-    <p><strong>Minor:</strong> {{ student.minor1_name|default:"—" }}</p>
+    <h2>Majors</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Campus</th>
+                <th>Type</th>
+                <th>Degree</th>
+                <th>Active Ind</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for major in majors %}
+            <tr>
+                <td>{{ major.scm_stucv_cvid.scl_currv_mrid.scl_major_hr_name }}</td>
+                <td>{{ major.scm_stucv_cpid.sdl_camps_hr_name}}</td>
+                <td>{{ major.scm_stucv_cvid.scl_currv_ctid.scl_crtyp_hr_name }}</td>
+                <td>{{ major.scm_stucv_cvid.scl_currv_mrid.scl_major_dgid.scl_degrs_hr_name }}</td>
+                <td>{{ major.scm_stucv_active_ind }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 20px;">
+                    No enrollments found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
-<!-- ENROLLMENTS -->
 <div class="card">
     <h2>Enrollments</h2>
     <table>
@@ -97,7 +118,6 @@
         <tbody>
             {% for e in enrollments %}
             <tr>
-                <!-- COURSE DISPLAY -->
                 <td>
                     {% if e.srh_enrol_scid.srb_sects_crid %}
                         {{ e.srh_enrol_scid.srb_sects_crid.srl_cours_sbid.srl_subjs_sbid }}
@@ -107,10 +127,8 @@
                     {% endif %}
                 </td>
 
-                <!-- SECTION NUMBER -->
                 <td>{{ e.srh_enrol_scid.srb_sects_scid }}</td>
 
-                <!-- TERM DESCRIPTION -->
                 <td>
                     {% if e.srh_enrol_scid.srb_sects_tmid %}
                         {{ e.srh_enrol_scid.srb_sects_tmid.sgl_terms_desc }}
@@ -119,7 +137,6 @@
                     {% endif %}
                 </td>
 
-                <!-- ENROLLMENT STATUS -->
                 <td>
                     {% if e.srh_enrol_esid %}
                         {{ e.srh_enrol_esid.srl_enrst_desc }}

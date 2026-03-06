@@ -442,6 +442,15 @@ def student_detail(request, student_rbid):
         'srh_enrol_stid__srb_sects_tmid'
     )
 
+    majors = ScmStucv.objects.using('sis').filter(
+        scm_stucv_rbid=student_rbid
+    ).select_related(
+        'scm_stucv_cvid__scl_currv_mrid__scl_major_hr_name',
+        'scm_stucv_cvid__scl_currv_mrid__scl_major_dgid__scl_degrs_hr_name',
+        'scm_stucv_cpid__sdl_camps_hr_name',
+        'scm_stucv_cvid__scl_currv_ctid__scl_crtyp_hr_name',
+    )
+
     if request.method == 'POST':
         # Accept only a small set of editable fields for safety
         # Update GumIdent: first_name, last_name, idnum
@@ -468,6 +477,7 @@ def student_detail(request, student_rbid):
         'enrollments': enrollments,
         'levels': levels,
         'stypes': stypes,
+        'majors': majors,
     }
     return render(request, 'sis/student_detail.html', context)
 
