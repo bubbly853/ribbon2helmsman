@@ -429,7 +429,7 @@ def student_detail(request, student_rbid):
     print(f"stid: '{record.student_type_id}' type: {type(record.student_type_id)}")
     print(f"sgl_stype_stid sample: '{stypes.first().sgl_stype_stid}' type: {type(stypes.first().sgl_stype_stid)}")
 
-    print(f"stlvidid: '{record.level_id}' type: {type(record.level_id)}")
+    print(f"lvid: '{record.level_id}' type: {type(record.level_id)}")
     print(f"sgl_stype_stid sample: '{levels.first().sgl_level_lvid}' type: {type(levels.first().sgl_level_lvid)}")
     
     # Enrollments for student: SrhEnrol rows where srh_enrol_rbid = student's rbid
@@ -452,9 +452,10 @@ def student_detail(request, student_rbid):
             with transaction.atomic(using='sis'):
                 if stubi:
                     active_val = request.POST.get('active_ind')
-                    if active_val is not None:
-                        stubi.sgm_stubi_active_ind = active_val
-                        stubi.save(using='sis')
+                    stubi.sgm_stubi_active_ind = request.POST.get('active_ind', stubi.sgm_stubi_active_ind )
+                    stubi.sgm_stubi_lvid_id = request.POST.get('level', stubi.stubi.sgm_stubi_lvid_id )
+                    stubi.sgm_stubi_stid_id = request.POST.get('stype', stubi.stubi.sgm_stubi_stid_id )
+                    stubi.save(using='sis')
 
             messages.success(request, 'Student updated successfully.')
             return redirect('sis:student_detail', student_rbid=student_rbid)
