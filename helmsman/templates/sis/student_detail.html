@@ -20,7 +20,7 @@
         <div class="form-group">
             <label for="first_name">First Name</label>
             <input type="text" id="first_name" name="first_name"
-                   value="{{ student.preferred_name|student.first_name }}" disabled
+                   value="{{ student.preferred_name|default:student.first_name }}" disabled
                    data-db-field="gum_ident.gum_ident_first_name | gum_adinf.gum_adinf_pref_first_name">
         </div>
 
