@@ -87,17 +87,17 @@
         </thead>
         <tbody>
             {% for major in majors %}
-            <tr>
+            <tr class="form-group">
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="update_major" value="{{ major.scm_stucv_scid }}">
                     <td>{{ major.scm_stucv_cvid.scl_currv_mrid.scl_major_hr_name }}</td>
                     <td>
                         <select name="cpid" data-db-field="scm_stucv.scm_stucv_cpid | sdl_camps.sdl_camps_hr_name">
-                            {% for campus in campuses %}
-                            <option value="{{ campus.sdl_camps_cpid }}" 
-                                {% if campus.sdl_camps_cpid == major.scm_stucv_cpid_id %}selected{% endif %}>
-                                {{ campus.sdl_camps_hr_name }}
+                            {% for camp in camps %}
+                            <option value="{{ camp.sdl_camps_cpid }}" 
+                                {% if camp.sdl_camps_cpid == major.scm_stucv_cpid_id %}selected{% endif %}>
+                                {{ camp.sdl_camps_hr_name }}
                             </option>
                             {% endfor %}
                         </select>
@@ -110,7 +110,7 @@
                             <option value="N" {% if major.scm_stucv_active_ind == "N" %}selected{% endif %}>N</option>
                         </select>
                     </td>
-                    <td><button type="submit" name="update_major">Save</button></td>
+                    <td><button type="submit" name="update_major" class="btn">Save</button></td>
                 </form>
             </tr>
             {% empty %}
