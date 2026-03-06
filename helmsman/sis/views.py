@@ -453,15 +453,15 @@ def student_detail(request, student_rbid):
             with transaction.atomic(using='sis'):
                 if stubi:
                     stubi.sgm_stubi_active_ind = request.POST.get('active_ind', stubi.sgm_stubi_active_ind )
-                    stubi.sgm_stubi_lvid_id = request.POST.get('level', stubi.stubi.sgm_stubi_lvid_id )
-                    stubi.sgm_stubi_stid_id = request.POST.get('stype', stubi.stubi.sgm_stubi_stid_id )
+                    stubi.sgm_stubi_lvid_id = request.POST.get('level', stubi.sgm_stubi_lvid_id )
+                    stubi.sgm_stubi_stid_id = request.POST.get('stype', stubi.sgm_stubi_stid_id )
                     stubi.save(using='sis')
 
             messages.success(request, 'Student updated successfully.')
             return redirect('sis:student_detail', student_rbid=student_rbid)
         except Exception as e:
-            #messages.error(request, f'Error updating student: {e}')
-            messages.error(request, f'Error updating student: {traceback.format_exc()}')
+            messages.error(request, f'Error updating student: {e}')
+
 
     context = {
         'student': record,
