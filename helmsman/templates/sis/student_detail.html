@@ -36,7 +36,7 @@
             data-db-field="sgm_stubi.sgm_stubi_stid | sgl_stype_hr_name">
                 {% for stype in stypes %}
                     <option value="{{ stype.sgl_stype_stid }}"
-                        {% if stype.sgl_stype_stid == student.stid %}selected{% endif %}>
+                        {% if stype.sgl_stype_stid == student.student_type_id %}selected{% endif %}>
                         {{ stype.sgl_stype_hr_name }}
                     </option>
                 {% endfor %}
@@ -50,7 +50,7 @@
             data-db-field="sgm_stubi.sgm_stubi_lvid | sgl_level_hr_name">
                 {% for level in levels %}
                     <option value="{{ level.sgl_level_lvid }}"
-                        {% if level.sgl_level_lvid == student.lvid %}selected{% endif %}>
+                        {% if level.sgl_level_lvid == student.level_id %}selected{% endif %}>
                         {{ level.sgl_level_hr_name }}
                     </option>
                 {% endfor %}
