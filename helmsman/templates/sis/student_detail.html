@@ -31,13 +31,13 @@
 
         <!-- Editable: Stype -->
         <div class="form-group">
-            <label for="stype">ID Country</label>
+            <label for="stype">Student Type</label>
             <select id="stype" name="stype"
             data-db-field="sgm_stubi.sgm_stubi_stid | sgl_stype_hr_name">
-                {% for country in countries %}
-                    <option value="{{ stypes.sgl_stype_stid }}"
-                        {% if stypes.sgl_stype_stid == student.stid %}selected{% endif %}>
-                        {{ stypes.sgl_stype_hr_name }}
+                {% for stype in stypes %}
+                    <option value="{{ stype.sgl_stype_stid }}"
+                        {% if stype.sgl_stype_stid == student.stid %}selected{% endif %}>
+                        {{ stype.sgl_stype_hr_name }}
                     </option>
                 {% endfor %}
             </select>
@@ -45,13 +45,13 @@
 
         <!-- Editable: Level -->
         <div class="form-group">
-            <label for="stype">ID Country</label>
+            <label for="stype">Student Level</label>
             <select id="stype" name="stype"
             data-db-field="sgm_stubi.sgm_stubi_lvid | sgl_level_hr_name">
-                {% for country in countries %}
-                    <option value="{{ levels.sgl_level_lvid }}"
-                        {% if levels.sgl_level_lvid == student.lvid %}selected{% endif %}>
-                        {{ levels.sgl_level_hr_name }}
+                {% for level in levels %}
+                    <option value="{{ level.sgl_level_lvid }}"
+                        {% if level.sgl_level_lvid == student.lvid %}selected{% endif %}>
+                        {{ level.sgl_level_hr_name }}
                     </option>
                 {% endfor %}
             </select>
