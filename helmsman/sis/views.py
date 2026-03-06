@@ -445,10 +445,10 @@ def student_detail(request, student_rbid):
     majors = ScmStucv.objects.using('sis').filter(
         scm_stucv_rbid=student_rbid
     ).select_related(
-        'scm_stucv_cvid__scl_currv_mrid__scl_major_hr_name',
-        'scm_stucv_cvid__scl_currv_mrid__scl_major_dgid__scl_degrs_hr_name',
-        'scm_stucv_cpid__sdl_camps_hr_name',
-        'scm_stucv_cvid__scl_currv_ctid__scl_crtyp_hr_name',
+        'scm_stucv_cvid__scl_currv_mrid',
+        'scm_stucv_cvid__scl_currv_mrid__scl_major_dgid',
+        'scm_stucv_cpid',
+        'scm_stucv_cvid__scl_currv_ctid',
     )
 
     if request.method == 'POST':
