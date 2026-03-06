@@ -473,10 +473,10 @@ def student_detail(request, student_rbid):
             messages.error(request, f'Error updating student: {e}')
 
     if request.method == 'POST' and 'update_major' in request.POST:
-        print('Reached')
         try:
             with transaction.atomic(using='sis'):
                 scid = request.POST.get('update_major')
+                print(scid)
                 stucv = ScmStucv.objects.using('sis').filter(
                     scm_stucv_scid=scid
                 ).first()
