@@ -473,16 +473,18 @@ def student_detail(request, student_rbid):
             messages.error(request, f'Error updating student: {e}')
 
     if request.method == 'POST' and 'update_major' in request.POST:
-        #try:
-        scid = request.POST.get('update_major')
-        ScmStucv.objects.using('sis').filter(
-            scm_stucv_scid=scid
-        ).update(
-            scm_stucv_active_ind=request.POST.get('m_active_ind'),
-            scm_stucv_cpid_id=request.POST.get('cpid')
-        )
-        #except Exception as e:
-        #    messages.error(request, f'Error updating student: {e}')
+        print('Reached')
+        try:
+            scid = request.POST.get('update_major')
+            ScmStucv.objects.using('sis').filter(
+                scm_stucv_scid=scid
+            ).update(
+                scm_stucv_active_ind=request.POST.get('m_active_ind'),
+                scm_stucv_cpid_id=request.POST.get('cpid')
+            )
+            messages.success(request, 'Major updated successfully.')
+        except Exception as e:
+            messages.error(request, f'Error updating student: {e}')
 
     context = {
         'student': record,
