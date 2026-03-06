@@ -426,6 +426,12 @@ def student_detail(request, student_rbid):
     stypes = SglStype.objects.using('sis').all()
     levels = SglLevel.objects.using('sis').all()
     
+    print(f"stid: '{record.student_type_id}' type: {type(record.student_type_id)}")
+    print(f"sgl_stype_stid sample: '{stypes.first().sgl_stype_stid}' type: {type(stypes.first().sgl_stype_stid)}")
+
+    print(f"stlvidid: '{record.level_id}' type: {type(record.level_id)}")
+    print(f"sgl_stype_stid sample: '{levels.first().sgl_level_lvid}' type: {type(levels.first().sgl_level_lvid)}")
+    
     # Enrollments for student: SrhEnrol rows where srh_enrol_rbid = student's rbid
     enrollments = SrhEnrol.objects.using('sis').filter(
         srh_enrol_rbid=student_rbid
