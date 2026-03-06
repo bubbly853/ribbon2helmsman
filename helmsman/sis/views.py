@@ -5,6 +5,7 @@ Place this in /srv/ribbon2helmsman/helmsman/sis/views.py
 from django.db import models
 from dataclasses import dataclass
 from typing import Optional, List
+import traceback
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -451,7 +452,6 @@ def student_detail(request, student_rbid):
         try:
             with transaction.atomic(using='sis'):
                 if stubi:
-                    active_val = request.POST.get('active_ind')
                     stubi.sgm_stubi_active_ind = request.POST.get('active_ind', stubi.sgm_stubi_active_ind )
                     stubi.sgm_stubi_lvid_id = request.POST.get('level', stubi.stubi.sgm_stubi_lvid_id )
                     stubi.sgm_stubi_stid_id = request.POST.get('stype', stubi.stubi.sgm_stubi_stid_id )
@@ -460,7 +460,8 @@ def student_detail(request, student_rbid):
             messages.success(request, 'Student updated successfully.')
             return redirect('sis:student_detail', student_rbid=student_rbid)
         except Exception as e:
-            messages.error(request, f'Error updating student: {e}')
+            #messages.error(request, f'Error updating student: {e}')
+            messages.error(request, f'Error updating student: {traceback.format_exc()}')
 
     context = {
         'student': record,
