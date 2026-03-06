@@ -475,14 +475,15 @@ def student_detail(request, student_rbid):
     if request.method == 'POST' and 'update_major' in request.POST:
         print('Reached')
         try:
-            scid = request.POST.get('update_major')
-            ScmStucv.objects.using('sis').filter(
-                scm_stucv_scid=scid
-            ).update(
-                scm_stucv_active_ind=request.POST.get('m_active_ind'),
-                scm_stucv_cpid_id=request.POST.get('cpid')
-            )
-            messages.success(request, 'Major updated successfully.')
+            with transaction.atomic(using='sis'):
+                scid = request.POST.get('update_major')
+                stucv = ScmStucv.objects.using('sis').filter(
+                    scm_stucv_scid=scid
+                ).first()
+                stucv.scm_stucv_cpid_id = request.POST.get('cpid', stucv.scm_stucv_cpid_id )
+                stucv.scm_stucv_active_ind = request.POST.get('m_active_ind', stucv.scm_stucv_active_ind )
+                stucv.save()
+                messages.success(request, 'Major updated successfully.')
         except Exception as e:
             messages.error(request, f'Error updating student: {e}')
 
