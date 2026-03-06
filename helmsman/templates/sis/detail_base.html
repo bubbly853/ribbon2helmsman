@@ -243,10 +243,10 @@
     {% block extra_js %}
     <script>
         document.querySelectorAll('[data-db-field]').forEach(el => {
-            el.addEventListener('focus', function() {
+            el.addEventListener('mouseenter', function() {
                 document.getElementById('db-field-display').textContent = this.dataset.dbField;
             });
-            el.addEventListener('blur', function() {
+            el.addEventListener('mouseleave', function() {
                 document.getElementById('db-field-display').textContent = '—';
             });
         });

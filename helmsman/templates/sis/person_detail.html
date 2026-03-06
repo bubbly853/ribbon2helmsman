@@ -60,7 +60,7 @@
             <label for="username">Username</label>
             <input type="text" id="username" name="username"
                    value="{{ person.username }}" required
-                   data-db-field="gum_adinf.gum_adinf_first_name">
+                   data-db-field="gum_ident.gum_ident_first_name">
         </div>
 
         <!-- Editable: ID Num -->
@@ -75,10 +75,9 @@
         <div class="form-group">
             <label for="id_country">ID Country</label>
             <select id="id_country" name="id_country"
-            data-db-field="gum_ident.gum_ident_id_coid | ggl_count_hr_name">
+            data-db-field="gum_ident.gum_ident_id_coid | ggl_count.ggl_count_hr_name">
                 {% for country in countries %}
                     <option value="{{ country.ggl_count_coid }}"
-                        data-db-field="gum_ident.gum_ident_id_coid | ggl_count_hr_name"
                         {% if country.ggl_count_coid == person.id_coid %}selected{% endif %}>
                         {{ country.ggl_count_hr_name }}
                     </option>

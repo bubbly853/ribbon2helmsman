@@ -12,28 +12,31 @@
         <!-- RBID (Primary Banner ID) -->
         <div class="form-group">
             <label>RBID</label>
-            <input type="text" value="{{ student.rbid }}" disabled>
+            <input type="text" value="{{ student.rbid }}" disabled
+                   data-db-field="gum_ident.gum_ident_rbid">
         </div>
 
-        <!-- First Name -->
+        <!--   Name -->
         <div class="form-group">
             <label for="first_name">First Name</label>
             <input type="text" id="first_name" name="first_name"
-                   value="{{ student.first_name }}" disabled>
+                   value="{{ student.preferred_name|student.first_name }}" disabled
+                   data-db-field="gum_ident.gum_ident_first_name | gum_adinf.gum_adinf_pref_first_name">
         </div>
 
         <!-- Last Name -->
         <div class="form-group">
             <label for="last_name">Last Name</label>
             <input type="text" id="last_name" name="last_name"
-                   value="{{ student.last_name }}" disabled>
+                   value="{{ student.last_name }}" disabled
+                   data-db-field="gum_ident.gum_ident_last_name">
         </div>
 
         <!-- Editable: Stype -->
         <div class="form-group">
             <label for="stype">Student Type</label>
             <select id="stype" name="stype"
-            data-db-field="sgm_stubi.sgm_stubi_stid | sgl_stype_hr_name">
+            data-db-field="sgm_stubi.sgm_stubi_stid | sgl_stype.sgl_stype_hr_name">
                 {% for stype in stypes %}
                     <option value="{{ stype.sgl_stype_stid }}"
                         {% if stype.sgl_stype_stid == student.student_type_id %}selected{% endif %}>
@@ -47,7 +50,7 @@
         <div class="form-group">
             <label for="level">Student Level</label>
             <select id="level" name="level"
-            data-db-field="sgm_stubi.sgm_stubi_lvid | sgl_level_hr_name">
+            data-db-field="sgm_stubi.sgm_stubi_lvid | sgl_level.sgl_level_hr_name">
                 {% for level in levels %}
                     <option value="{{ level.sgl_level_lvid }}"
                         {% if level.sgl_level_lvid == student.level_id %}selected{% endif %}>
