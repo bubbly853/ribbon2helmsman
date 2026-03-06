@@ -1,4 +1,4 @@
-{% extends 'sis/base.html' %}
+{% extends 'sis/detail_base.html' %}
 
 {% block title %}{{ student.preferred_name|default:student.first_name }} {{ student.last_name }} - Helmsman{% endblock %}
 
@@ -15,24 +15,53 @@
             <input type="text" value="{{ student.rbid }}" disabled>
         </div>
 
-        <!-- Editable: First Name -->
+        <!-- First Name -->
         <div class="form-group">
             <label for="first_name">First Name</label>
             <input type="text" id="first_name" name="first_name"
-                   value="{{ student.first_name }}" required>
+                   value="{{ student.first_name }}" disabled>
         </div>
 
-        <!-- Editable: Last Name -->
+        <!-- Last Name -->
         <div class="form-group">
             <label for="last_name">Last Name</label>
             <input type="text" id="last_name" name="last_name"
-                   value="{{ student.last_name }}" required>
+                   value="{{ student.last_name }}" disabled>
+        </div>
+
+        <!-- Editable: Stype -->
+        <div class="form-group">
+            <label for="stype">ID Country</label>
+            <select id="stype" name="stype"
+            data-db-field="sgm_stubi.sgm_stubi_stid | sgl_stype_hr_name">
+                {% for country in countries %}
+                    <option value="{{ stypes.sgl_stype_stid }}"
+                        {% if stypes.sgl_stype_stid == student.stid %}selected{% endif %}>
+                        {{ stypes.sgl_stype_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Level -->
+        <div class="form-group">
+            <label for="stype">ID Country</label>
+            <select id="stype" name="stype"
+            data-db-field="sgm_stubi.sgm_stubi_lvid | sgl_level_hr_name">
+                {% for country in countries %}
+                    <option value="{{ levels.sgl_level_lvid }}"
+                        {% if levels.sgl_level_lvid == student.lvid %}selected{% endif %}>
+                        {{ levels.sgl_level_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
         </div>
 
         <!-- Editable: Active Indicator -->
         <div class="form-group">
             <label for="active_ind">Active</label>
-            <select id="active_ind" name="active_ind">
+            <select id="active_ind" name="active_ind"
+            data-db-field="sgm_stubi.sgm_stubi_active_ind">
                 <option value="Y" {% if student.active_ind == "Y" %}selected{% endif %}>Yes</option>
                 <option value="N" {% if student.active_ind == "N" %}selected{% endif %}>No</option>
             </select>

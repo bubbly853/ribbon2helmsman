@@ -423,7 +423,8 @@ def student_detail(request, student_rbid):
     if not record:
         # mimic get_object_or_404 behaviour
         return get_object_or_404(GumIdent, gum_ident_rbid=student_rbid)
-
+    stypes = SglStype.objects.using('sis').all()
+    levels = SglLevel.objects.using('sis').all()
     # Enrollments for student: SrhEnrol rows where srh_enrol_rbid = student's rbid
     enrollments = SrhEnrol.objects.using('sis').filter(
         srh_enrol_rbid=student_rbid
@@ -456,6 +457,8 @@ def student_detail(request, student_rbid):
     context = {
         'student': record,
         'enrollments': enrollments,
+        'levels': levels,
+        'stypes': stypes,
     }
     return render(request, 'sis/student_detail.html', context)
 
