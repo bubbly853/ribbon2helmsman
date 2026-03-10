@@ -99,17 +99,26 @@ class StudentDetail:
     sgm_stubi: Optional[SgmStubi] = None
 
 @dataclass
-class Enrollments:
-    rbid: str
-    section: str
-    term: str
-    subject: str
+class CourseRecord:
+    crid: str
+    sbid: str
     number: str
+    subject: str
+    department: str
+    name: str
     status: str
-    activity_date: str
-    sgm_stubi: Optional[SgmStubi] = None
-    srh_enrol: Optional[SrhEnrol] = None
+    actcr: Optional[HsvAllcr] = None
 
+class CourseDetail:
+    crid: str
+    sbid: str
+    number: str
+    subject: str
+    department: str
+    name: str
+    status: str
+    credit_hours: str
+    actcr: Optional[SrlCours] = None
 
 @dataclass
 class PersonRecord:
@@ -195,52 +204,6 @@ def make_student_record(stdnt: Optional[HsvStdnt]) -> StudentRecord:
         hsv_stdnt=stdnt
     )
 
-def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
-    """
-    Build PersonRecord from hsv_prson.
-    """
-
-    def safe_date(d):
-        if d is None:
-            return None
-        if d.year < 1900:
-            return None
-        return d
-
-    # --------------------
-    # GumIdent fields
-    # --------------------
-    rbid = None
-    preferred_name = None
-    first_name = None
-    middle_name = None
-    last_name = None
-    birthday = None
-    id_num = None
-    id_country = None
-
-    if prson:
-        rbid = prson.hgv_prson_rbid
-        preferred_name = prson.hgv_prson_pref_first_name
-        first_name = prson.hgv_prson_first_name
-        middle_name = prson.hgv_prson_middle_name
-        last_name = prson.hgv_prson_last_name
-        birthday = safe_date(prson.hgv_prson_birthday)
-        id_num = prson.hgv_prson_idnum
-        id_country = prson.hgv_prson_id_country
-
-    return PersonRecord(
-        rbid=rbid,
-        preferred_name=preferred_name,
-        first_name=first_name,
-        middle_name=middle_name,
-        last_name=last_name,
-        birthday=birthday,
-        id_num=id_num,
-        id_country=id_country,
-        hgv_prson=prson,
-    )
-
 def make_student_detail_record(search_rbid: str) -> StudentDetail:
     """
     Build StudentDetail from HsvLtsts and its select_related objects.
@@ -307,6 +270,84 @@ def make_student_detail_record(search_rbid: str) -> StudentDetail:
         sgm_stubi=stubi,
     )
 
+def make_course_record(allcr: Optional[HsvAllcr]) -> CourseRecord:
+    """
+    Build StudentRecord from HsvStdnt object.
+    """
+
+    crid = None
+    sbid = None
+    number = None
+    subject = None
+    department = None
+    name = None
+    status = None
+
+    if allcr:
+        crid = allcr.hsv_allcr_crid
+        sbid = allcr.hsv_allcr_sbid
+        number = allcr.hsv_allcr_crse_num
+        subject = allcr.hsv_allcr_subject
+        department = allcr.hsv_allcr_department
+        name = allcr.hsv_allcr_name
+        status = allcr.hsv_allcr_inactive_ind
+    
+    return CourseRecord (
+    crid=crid,
+    sbid=sbid,
+    number=number,
+    subject=subject,
+    department=department,
+    name=name,
+    status=status,
+    )
+
+def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
+    """
+    Build PersonRecord from hsv_prson.
+    """
+
+    def safe_date(d):
+        if d is None:
+            return None
+        if d.year < 1900:
+            return None
+        return d
+
+    # --------------------
+    # GumIdent fields
+    # --------------------
+    rbid = None
+    preferred_name = None
+    first_name = None
+    middle_name = None
+    last_name = None
+    birthday = None
+    id_num = None
+    id_country = None
+
+    if prson:
+        rbid = prson.hgv_prson_rbid
+        preferred_name = prson.hgv_prson_pref_first_name
+        first_name = prson.hgv_prson_first_name
+        middle_name = prson.hgv_prson_middle_name
+        last_name = prson.hgv_prson_last_name
+        birthday = safe_date(prson.hgv_prson_birthday)
+        id_num = prson.hgv_prson_idnum
+        id_country = prson.hgv_prson_id_country
+
+    return PersonRecord(
+        rbid=rbid,
+        preferred_name=preferred_name,
+        first_name=first_name,
+        middle_name=middle_name,
+        last_name=last_name,
+        birthday=birthday,
+        id_num=id_num,
+        id_country=id_country,
+        hgv_prson=prson,
+    )
+
 def make_person_detail_record(search_rbid: str) -> PersonDetail:
     """
     Build StudentDetail from HsvLtsts and its select_related objects.
@@ -361,8 +402,8 @@ def make_person_detail_record(search_rbid: str) -> PersonDetail:
         gum_ident=ident,
         gum_adinf=adinf,
     )
-# --- Views ---
 
+# --- Views ---
 @login_required
 def dashboard(request):
     """Main dashboard/home page"""
@@ -370,7 +411,6 @@ def dashboard(request):
         'user': request.user,
     }
     return render(request, 'sis/dashboard.html', context)
-
 
 @login_required
 def student_list(request):
@@ -497,36 +537,28 @@ def student_detail(request, student_rbid):
     }
     return render(request, 'sis/student_detail.html', context)
 
-
 @login_required
 def course_list(request):
     """List all courses with search and pagination"""
     search_query = request.GET.get('search', '').strip()
 
-    qs = SrlCours.objects.using('sis').all().select_related('srl_cours_sbid')
+    course_qs = HsvActcr.objects.using('sis').all()
 
     if search_query:
-        qs = qs.filter(
-            models.Q(srl_cours_crid__icontains=search_query) |
-            models.Q(srl_cours_hr_name__icontains=search_query) |
-            models.Q(srl_cours_crse_num__icontains=search_query) |
-            models.Q(srl_cours_sbid__srl_subjs_hr_name__icontains=search_query)
+        course_qs = course_qs.filter(
+            models.Q(hsv_actcr_crid__icontains=search_query) |
+            models.Q(hsv_actcr_name__icontains=search_query) |
+            models.Q(hsv_actcr_number__icontains=search_query) |
+            models.Q(hsv_actcr_sbid__icontains=search_query)
         )
 
-    qs = qs.order_by('srl_cours_crid')
+    course_qs = course_qs.order_by('hsv_actcr_crid')
 
     # Build simple course objects for template convenience
-    courses = []
-    for c in qs:
-        subject_code = getattr(c.srl_cours_sbid, 'srl_subjs_sbid', None) if getattr(c, 'srl_cours_sbid', None) else None
-        course_code = f"{subject_code} {c.srl_cours_crse_num}" if subject_code else f"{c.srl_cours_crse_num}"
-        courses.append({
-            'id': c.srl_cours_crid,
-            'course_code': course_code,
-            'course_name': c.srl_cours_hr_name,
-            'inactive_ind': c.srl_cours_inactive_ind,
-            'model': c,
-        })
+    course_list = course_qs[:2000]
+    courses: List = []
+    for course in course_list:
+        courses.append(make_course_record(course))
 
     paginator = Paginator(courses, 25)
     page_number = request.GET.get('page')
@@ -538,7 +570,7 @@ def course_list(request):
     }
     return render(request, 'sis/course_list.html', context)
 
-
+@login_required
 def person_list(request):
     """List all students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
@@ -622,32 +654,16 @@ def person_detail(request, person_rbid):
     }
     return render(request, 'sis/person_detail.html', context)
 
-
 @login_required
 def course_detail(request, course_id):
     """View/edit individual course by CRID"""
     # Get course (SrlCours)
     course = get_object_or_404(SrlCours.objects.using('sis'), pk=course_id)
 
-    # Sections for this course
-    sections = SrbSects.objects.using('sis').filter(srb_sects_crid=course).select_related('srb_sects_tmid')
-
-    # Enrollments for this course: SrhEnrol where srh_enrol_stid references a section whose crid is this course
-    enrollments = SrhEnrol.objects.using('sis').filter(srh_enrol_stid__srb_sects_crid=course).select_related(
-        'srh_enrol_stid', 'srh_enrol_esid', 'srh_enrol_stid__srb_sects_tmid'
-    )
-
     if request.method == 'POST':
         # Only allow limited updates: course title and inactive indicator
         course_title = request.POST.get('course_name')
         inactive = request.POST.get('inactive_ind')
-
-        if course_title is not None:
-            course.srl_cours_hr_name = course_title
-
-        if inactive is not None:
-            course.srl_cours_inactive_ind = inactive
-
         try:
             course.save(using='sis')
             messages.success(request, 'Course updated successfully.')
@@ -657,7 +673,5 @@ def course_detail(request, course_id):
 
     context = {
         'course': course,
-        'sections': sections,
-        'enrollments': enrollments,
     }
     return render(request, 'sis/course_detail.html', context)
