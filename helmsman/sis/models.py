@@ -660,3 +660,17 @@ class HsvLtsts(models.Model):
         managed = False
         db_table = '"helmsman"."hsv_ltsts"'
         db_table_comment = 'Helmsman latest student term code table.'
+
+class HsvSects(models.Model):
+    hsv_sects_stid = models.CharField(primary_key=True, max_length=10, db_comment='Section record ID.')
+    hsv_sects_tmid = models.CharField(max_length=6, db_comment='Term ID.')
+    hsv_sects_crid = models.CharField(max_length=10, db_comment='Course ID.')
+    hsv_sects_seq = models.IntegerField(db_comment='Section sequence number.')
+    hsv_sects_name = models.CharField(max_length=64, db_comment='Course human-readable name.')
+    hsv_sects_prim_inst = models.CharField(max_length=82, blank=True, null=True, db_comment='Primary instructor full name.')
+    hsv_sects_scnd_inst = models.CharField(max_length=82, blank=True, null=True, db_comment='Secondary instructor full name.')
+
+    class Meta:
+        managed = False
+        db_table = '"helmsman"."hsv_sects"'
+        db_table_comment = 'Helmsman sections view - course sections with term, course, and instructor details.'

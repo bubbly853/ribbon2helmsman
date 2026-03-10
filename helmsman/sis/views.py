@@ -62,6 +62,7 @@ from .models import (
     HsvAllcr,
     HsvCrcrc,
     HsvLtsts,
+    HsvSects,
 )
 
 # --- Helper dataclasses ---
@@ -121,6 +122,30 @@ class CourseDetail:
     status: str
     credit_hours: str
     cours: Optional[SrlCours] = None
+
+@dataclass
+class SectionRecord:
+    stid: str
+    tmid: str
+    crid: str
+    seq: str
+    name: str
+    prim_inst: str
+    scnd_inst: str
+    sects: Optional[HsvSects] = None
+
+@dataclass
+class SectionDetail:
+    stid: str
+    tmid: str
+    crid: str
+    seq: str
+    name: str
+    prim_rbid: str
+    prim_inst: str
+    scnd_rbid: Optional[str]
+    scnd_inst: Optional[str]
+    sects: Optional[SrbSects] = None
 
 @dataclass
 class PersonRecord:
@@ -305,6 +330,78 @@ def make_course_record(allcr: Optional[HsvAllcr]) -> CourseRecord:
     )
 
 def make_course_detail_record(search_crid: str) -> CourseDetail:
+    """
+    Build StudentDetail from HsvLtsts and its select_related objects.
+    """
+
+    crid = None
+    sbid = None
+    number = None
+    subject = None
+    dpid = None
+    department = None
+    name = None
+    status = None
+    credit_hours = None
+    cours = SrlCours.objects.using('sis').filter(srl_cours_crid=search_crid).select_related('srl_cours_sbid', 'srl_cours_sbid__srl_subjs_dpid').first()
+    if cours:
+        crid = cours.srl_cours_crid
+        sbid = cours.srl_cours_sbid_id
+        number = cours.srl_cours_crse_num
+        subject = cours.srl_cours_sbid.srl_subjs_hr_name
+        dpid = cours.srl_cours_sbid.srl_subjs_dpid_id
+        department = cours.srl_cours_sbid.srl_subjs_dpid.sdl_depts_hr_name
+        name = cours.srl_cours_hr_name
+        status = cours.srl_cours_inactive_ind
+        credit_hours = cours.srl_cours_credit_hours
+
+
+    return CourseDetail(
+        crid=crid,
+        sbid=sbid,
+        number=number,
+        subject=subject,
+        dpid=dpid,
+        department=department,
+        name=name,
+        status=status,
+        credit_hours=credit_hours,
+        cours=cours,
+    )
+
+def make_section_record(sects: Optional[HsvSects]) -> SectionRecord:
+    """
+    Build StudentRecord from HsvStdnt object.
+    """
+
+    stid = None
+    tmid = None
+    crid = None
+    seq = None
+    name = None
+    prim_inst = None
+    scnd_inst = None
+
+    if sects:
+        stid = sects.hsv_sects_stid
+        tmid = sects.hsv_sects_tmid
+        crid = sects.hsv_sects_crid
+        seq = sects.hsv_sects_seq
+        name = sects.hsv_sects_name
+        prim_inst = sects.hsv_sects_prim_inst
+        scnd_inst = sects.hsv_sects_scnd_inst
+    
+    return SectionRecord (
+    stid=stid,
+    tmid=tmid,
+    crid=crid,
+    seq=seq,
+    name=name,
+    prim_inst=prim_inst,
+    scnd_inst=scnd_inst,
+    )
+
+def make_section_detail_record(search_crid: str) -> CourseDetail:
     """
     Build StudentDetail from HsvLtsts and its select_related objects.
     """
