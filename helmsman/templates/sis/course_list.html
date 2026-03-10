@@ -41,7 +41,7 @@
                 <td data-label="Name">{{ course.name }}</td>
                 <td data-label="Department" class="hide-mobile">{{ course.department }}</td>
                 <td data-label="Status" class="hide-mobile">{{ course.status }}</td>
-                <td data-label="Actions" class="hide-mobile">
+                <td data-label="Actions">
                     {% if course.crid %}
                         <a href="{% url 'sis:course_detail' course.crid %}" class="btn">View</a>
                     {% else %}
