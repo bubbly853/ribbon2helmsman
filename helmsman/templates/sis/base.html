@@ -16,6 +16,55 @@
             background: #f5f5f5;
             min-height: 100vh;
         }
+
+        .navbar-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .navbar-toggle span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+                position: relative;
+            }
+
+            .navbar-toggle {
+                display: flex;
+            }
+
+            .navbar-nav {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+                padding: 10px 0;
+                border-top: 1px solid rgba(255,255,255,0.2);
+                margin-top: 10px;
+            }
+
+            .navbar-nav.open {
+                display: flex;
+            }
+
+            .nav-link {
+                width: 100%;
+            }
+        }
         
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -192,11 +241,25 @@
         }
     </style>
     {% block extra_css %}{% endblock %}
+
+    <script>
+    document.getElementById('nav-toggle').addEventListener('click', function () {
+        document.getElementById('navbar-nav').classList.toggle('open');
+    });
+    </script>
 </head>
+
 <body>
     <nav class="navbar">
         <a href="{% url 'sis:dashboard' %}" class="navbar-brand">Helmsman</a>
-        <div class="navbar-nav">
+
+        <button class="navbar-toggle" id="nav-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="navbar-nav" id="navbar-nav">
             <a href="{% url 'sis:student_list' %}" class="nav-link">Students</a>
             <a href="{% url 'sis:person_list' %}" class="nav-link">Persons</a>
             <a href="{% url 'sis:course_list' %}" class="nav-link">Courses</a>
