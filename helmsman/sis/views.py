@@ -322,9 +322,9 @@ def make_course_detail_record(search_crid: str) -> CourseDetail:
         crid = cours.srl_cours_crid
         sbid = cours.srl_cours_sbid_id
         number = cours.srl_cours_crse_num
-        subject = cours.srl_cours_sbid__srl_subjs_hr_name
-        dpid = cours.srl_cours_sbid__srl_subjs_dpid_id
-        department = cours.srl_cours_sbid__srl_subjs_dpid__sdl_depts_hr_name
+        subject = cours.srl_cours_sbid.srl_subjs_hr_name
+        dpid = cours.srl_cours_sbid.srl_subjs_dpid_id
+        department = cours.srl_cours_sbid.srl_subjs_dpid.sdl_depts_hr_name
         name = cours.srl_cours_hr_name
         status = cours.srl_cours_inactive_ind
         credit_hours = cours.srl_cours_credit_hours
