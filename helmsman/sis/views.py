@@ -108,7 +108,8 @@ class CourseRecord:
     name: str
     status: str
     actcr: Optional[HsvAllcr] = None
-
+    
+@dataclass
 class CourseDetail:
     crid: str
     sbid: str
