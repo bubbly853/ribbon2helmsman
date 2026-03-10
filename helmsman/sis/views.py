@@ -108,7 +108,7 @@ class CourseRecord:
     name: str
     status: str
     actcr: Optional[HsvAllcr] = None
-    
+
 @dataclass
 class CourseDetail:
     crid: str
@@ -617,6 +617,7 @@ def course_detail(request, course_crid):
     """View/edit individual course by CRID"""
     # Get course (SrlCours)
     record = make_course_detail_record(course_crid)
+    subjects = SrlSubjs.objects.using('sis').all()
     if request.method == 'POST':
         # Only allow limited updates: course title and inactive indicator
         cours = record.cours
@@ -629,6 +630,7 @@ def course_detail(request, course_crid):
 
     context = {
         'course': record,
+        'subjects': subjects
     }
     return render(request, 'sis/course_detail.html', context)
 

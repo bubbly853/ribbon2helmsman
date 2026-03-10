@@ -1,0 +1,70 @@
+{% extends 'sis/detail_base.html' %}
+
+{% block title %}{{ person.preferred_name|default:person.first_name }} {{ person.last_name }} - Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Person Details</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- CRID (Course ID) -->
+        <div class="form-group">
+            <label>RBID</label>
+            <input type="text" value="{{ course.crid }}" 
+                   data-db-field="srl_cours.srl_cours_crid" disabled>
+        </div>
+        
+        <!-- Subject -->
+        <div class="form-group">
+            <label>Subject</label>
+            <input type="text" value="{{ course.subject }}" 
+                   data-db-field="srl_cours.srl_cours_sbid | scl_subjs.scl_subjs_hr_name" disabled>
+        </div>
+
+        <!-- Course Number -->
+        <div class="form-group">
+            <label>Course Number</label>
+            <input type="text" value="{{ course.subject }}" 
+                   data-db-field="srl_cours.srl_cours_crse_numb" disabled>
+        </div>
+
+        <!-- Department-->
+        <div class="form-group">
+            <label>Departent</label>
+            <input type="text" value="{{ course.department }}" 
+                   data-db-field="scl_subjs.scl_subjs_dpid" disabled>
+        </div>
+
+        <!-- Editable: Course Name -->
+        <div class="form-group">
+            <label for="name">Course Name</label>
+            <input type="text" id="name" name="name"
+                   value="{{ cours.name }}" required
+                   data-db-field="srl_cours.srl_cours_hr_name">
+        </div>
+
+        <!-- Editable: Credit Hours -->
+        <div class="form-group">
+            <label for="credit_hr">Credit Hours</label>
+            <input type="number" min="1" step="1" max="9" id="credit_hr" name="credit_hr"
+                   value="{{ cours.credit_hours }}" required
+                   data-db-field="srl_cours.srl_cours_credit_hours" >
+        </div>
+
+        <!-- Editable: Inactive Indicator -->
+        <div class="form-group">
+            <label for="active_ind">Inactive</label>
+            <select id="active_ind" name="active_ind"
+            data-db-field="srl_cours.srl_cours_inactive_ind">
+                <option value="Y" {% if course.status == "Y" %}selected{% endif %}>Yes</option>
+                <option value="N" {% if course.status == "N" %}selected{% endif %}>No</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn">Save Changes</button>
+        <a href="{% url 'sis:person_list' %}" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>
+{% endblock %}
