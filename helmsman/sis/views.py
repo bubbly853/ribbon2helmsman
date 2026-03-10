@@ -590,7 +590,7 @@ def course_list(request):
         course_qs = course_qs.filter(
             models.Q(hsv_allcr_crid__icontains=search_query) |
             models.Q(hsv_allcr_name__icontains=search_query) |
-            models.Q(hsv_allcr_number__icontains=search_query) |
+            models.Q(hsv_allcr_crse_num__icontains=search_query) |
             models.Q(hsv_allcr_sbid__icontains=search_query)
         )
 
