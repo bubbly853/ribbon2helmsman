@@ -114,11 +114,12 @@ class CourseDetail:
     sbid: str
     number: str
     subject: str
+    dpid: str
     department: str
     name: str
     status: str
     credit_hours: str
-    actcr: Optional[SrlCours] = None
+    cours: Optional[SrlCours] = None
 
 @dataclass
 class PersonRecord:
@@ -300,6 +301,46 @@ def make_course_record(allcr: Optional[HsvAllcr]) -> CourseRecord:
     department=department,
     name=name,
     status=status,
+    )
+
+def make_course_detail_record(search_crid: str) -> PersonDetail:
+    """
+    Build StudentDetail from HsvLtsts and its select_related objects.
+    """
+
+    crid = None
+    sbid = None
+    number = None
+    subject = None
+    dpid = None
+    department = None
+    name = None
+    status = None
+    credit_hours = None
+    cours = SrlCours.objects.using('sis').filter(srl_cours_crid=search_crid).select_related('srl_cours_sbid', 'srl_subjs_dpid').first()
+    if cours:
+        crid = cours.srl_cours_crid
+        sbid = cours.srl_cours_sbid_id
+        number = cours.srl_cours_crse_num
+        subject = cours.srl_cours_sbid__srl_subjs_hr_name
+        dpid = cours.srl_cours_sbid__srl_subjs_dpid_id
+        department = cours.srl_cours_sbid__srl_subjs_dpid__sdl_depts_hr_name
+        name = cours.srl_cours_hr_name
+        status = cours.srl_cours_inactive_ind
+        credit_hours = cours.srl_cours_credit_hours
+
+
+    return PersonDetail(
+        crid=crid,
+        sbid=sbid,
+        number=number,
+        subject=subject,
+        dpid=dpid,
+        department=department,
+        name=name,
+        status=status,
+        credit_hours=credit_hours,
+        cours=cours,
     )
 
 def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
@@ -571,6 +612,28 @@ def course_list(request):
     return render(request, 'sis/course_list.html', context)
 
 @login_required
+def course_detail(request, course_id):
+    """View/edit individual course by CRID"""
+    # Get course (SrlCours)
+    course = get_object_or_404(SrlCours.objects.using('sis'), pk=course_id)
+
+    if request.method == 'POST':
+        # Only allow limited updates: course title and inactive indicator
+        course_title = request.POST.get('course_name')
+        inactive = request.POST.get('inactive_ind')
+        try:
+            course.save(using='sis')
+            messages.success(request, 'Course updated successfully.')
+            return redirect('sis:course_detail', course_id=course_id)
+        except Exception as e:
+            messages.error(request, f'Error updating course: {e}')
+
+    context = {
+        'course': course,
+    }
+    return render(request, 'sis/course_detail.html', context)
+
+@login_required
 def person_list(request):
     """List all students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
@@ -653,25 +716,3 @@ def person_detail(request, person_rbid):
         'countries': countries,
     }
     return render(request, 'sis/person_detail.html', context)
-
-@login_required
-def course_detail(request, course_id):
-    """View/edit individual course by CRID"""
-    # Get course (SrlCours)
-    course = get_object_or_404(SrlCours.objects.using('sis'), pk=course_id)
-
-    if request.method == 'POST':
-        # Only allow limited updates: course title and inactive indicator
-        course_title = request.POST.get('course_name')
-        inactive = request.POST.get('inactive_ind')
-        try:
-            course.save(using='sis')
-            messages.success(request, 'Course updated successfully.')
-            return redirect('sis:course_detail', course_id=course_id)
-        except Exception as e:
-            messages.error(request, f'Error updating course: {e}')
-
-    context = {
-        'course': course,
-    }
-    return render(request, 'sis/course_detail.html', context)
