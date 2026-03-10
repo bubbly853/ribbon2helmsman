@@ -40,6 +40,12 @@
             transition: all 0.3s;
         }
 
+        .navbar-nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
         @media (max-width: 768px) {
             .navbar {
                 flex-wrap: wrap;
@@ -85,12 +91,6 @@
             font-weight: 600;
             color: white;
             text-decoration: none;
-        }
-        
-        .navbar-nav {
-            display: flex;
-            gap: 20px;
-            align-items: center;
         }
         
         .nav-link {
@@ -260,12 +260,6 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<script>
-document.getElementById('nav-toggle').addEventListener('click', function () {
-    document.getElementById('navbar-nav').classList.toggle('open');
-});
-</script>
-
 <body>
     <nav class="navbar">
         <a href="{% url 'sis:dashboard' %}" class="navbar-brand">Helmsman</a>
@@ -319,5 +313,11 @@ document.getElementById('nav-toggle').addEventListener('click', function () {
         });
     </script>
     {% endblock %}
+
+    <script>
+    document.getElementById('nav-toggle').addEventListener('click', function () {
+        document.getElementById('navbar-nav').classList.toggle('open');
+    });
+    </script>
 </body>
 </html>
