@@ -626,7 +626,7 @@ def course_detail(request, course_crid):
                     cours.srl_cours_credit_hours = request.POST.get('credit_hr', cours.srl_cours_credit_hours )
                     cours.srl_cours_inactive_ind = request.POST.get('inactive_ind', cours.srl_cours_inactive_ind)
                     cours.save(using='sis')
-            messages.success(request, 'Persson updated successfully.')
+            messages.success(request, 'Course updated successfully.')
             return redirect('sis:course_detail', course_crid=course_crid)
         except Exception as e:
             messages.error(request, f'Error updating student: {e}')
