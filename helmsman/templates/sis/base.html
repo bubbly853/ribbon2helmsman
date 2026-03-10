@@ -241,13 +241,13 @@
         }
     </style>
     {% block extra_css %}{% endblock %}
-
-    <script>
-    document.getElementById('nav-toggle').addEventListener('click', function () {
-        document.getElementById('navbar-nav').classList.toggle('open');
-    });
-    </script>
 </head>
+
+<script>
+document.getElementById('nav-toggle').addEventListener('click', function () {
+    document.getElementById('navbar-nav').classList.toggle('open');
+});
+</script>
 
 <body>
     <nav class="navbar">
