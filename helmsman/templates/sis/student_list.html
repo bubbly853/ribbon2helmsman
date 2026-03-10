@@ -24,21 +24,21 @@
                 <th>RBID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
-                <th>Level</th>
-                <th>Active Status</th>
-                <th>Type</th>
+                <th class="hide-mobile">Level</th>
+                <th class="hide-mobile">Active Status</th>
+                <th class="hide-mobile">Type</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for student in page_obj %}
             <tr>
-                <td>{{ student.rbid }}</td>
-                <td>{{ student.first_name }}</td>
-                <td>{{ student.last_name }}</td>
-                <td>{{ student.level_name }}</td>
-                <td>{{ student.student_type_name }}</td>
-                <td>{{ student.active_ind|default:"—" }}</td>
+                <td data-label="RBID">{{ student.rbid }}</td>
+                <td data-label="First Name">{{ student.first_name }}</td>
+                <td data-label="Last Name">{{ student.last_name }}</td>
+                <td data-label="Level" class="hide-mobile">{{ student.level_name }}</td>
+                <td data-label="Active Status" class="hide-mobile">{{ student.student_type_name }}</td>
+                <td data-label="Type" class="hide-mobile">{{ student.active_ind|default:"—" }}</td>
                 <td>
                     {% if student.rbid %}
                         <a href="{% url 'sis:student_detail' student.rbid %}" class="btn">View</a>

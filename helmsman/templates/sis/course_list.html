@@ -22,26 +22,26 @@
         <thead>
             <tr>
                 <th>CRID</th>
-                <th>SBID</th>
-                <th>Number</th>
-                <th>Subject</th>
+                <th class="hide-mobile">SBID</th>
+                <th class="hide-mobile">Number</th>
+                <th class="hide-mobile">Subject</th>
                 <th>Name</th>
-                <th>Departmemt</th>
-                <th>Status</th>
+                <th class="hide-mobile">Departmemt</th>
+                <th class="hide-mobile">Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for course in page_obj %}
             <tr>
-                <td>{{ course.crid }}</td>
-                <td>{{ course.sbid }}</td>
-                <td>{{ course.number }}</td>
-                <td>{{ course.subject }}</td>
-                <td>{{ course.name }}</td>
-                <td>{{ course.department }}</td>
-                <td>{{ course.status }}</td>
-                <td>
+                <td data-label="CRID">{{ course.crid }}</td>
+                <td data-label="SBID" class="hide-mobile">{{ course.sbid }}</td>
+                <td data-label="Number" class="hide-mobile">{{ course.number }}</td>
+                <td data-label="Subject" class="hide-mobile">{{ course.subject }}</td>
+                <td data-label="Name">{{ course.name }}</td>
+                <td data-label="Department" class="hide-mobile">{{ course.department }}</td>
+                <td data-label="Status" class="hide-mobile">{{ course.status }}</td>
+                <td data-label="Actions" class="hide-mobile">
                     {% if course.crid %}
                         <a href="{% url 'sis:course_detail' course.crid %}" class="btn">View</a>
                     {% else %}
