@@ -39,7 +39,7 @@
                 <td data-label="Birthday" class="hide-mobile">{{ person.birthday }}</td>
                 <td data-label="National ID" class="hide-mobile">{{ person.id_num }}</td>
                 <td data-label="Nation" class="hide-mobile">{{ person.id_country }}</td>
-                <td>
+                <td data-label="Actions">
                     {% if person.rbid %}
                         <a href="{% url 'sis:person_detail' person.rbid %}" class="btn">View</a>
                     {% else %}
