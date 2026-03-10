@@ -303,7 +303,7 @@ def make_course_record(allcr: Optional[HsvAllcr]) -> CourseRecord:
     status=status,
     )
 
-def make_course_detail_record(search_crid: str) -> PersonDetail:
+def make_course_detail_record(search_crid: str) -> CourseDetail:
     """
     Build StudentDetail from HsvLtsts and its select_related objects.
     """
@@ -330,7 +330,7 @@ def make_course_detail_record(search_crid: str) -> PersonDetail:
         credit_hours = cours.srl_cours_credit_hours
 
 
-    return PersonDetail(
+    return CourseDetail(
         crid=crid,
         sbid=sbid,
         number=number,
@@ -583,17 +583,17 @@ def course_list(request):
     """List all courses with search and pagination"""
     search_query = request.GET.get('search', '').strip()
 
-    course_qs = HsvActcr.objects.using('sis').all()
+    course_qs = HsvAllcr.objects.using('sis').all()
 
     if search_query:
         course_qs = course_qs.filter(
-            models.Q(hsv_actcr_crid__icontains=search_query) |
-            models.Q(hsv_actcr_name__icontains=search_query) |
-            models.Q(hsv_actcr_number__icontains=search_query) |
-            models.Q(hsv_actcr_sbid__icontains=search_query)
+            models.Q(hsv_allcr_crid__icontains=search_query) |
+            models.Q(hsv_allcr_name__icontains=search_query) |
+            models.Q(hsv_allcr_number__icontains=search_query) |
+            models.Q(hsv_allcr_sbid__icontains=search_query)
         )
 
-    course_qs = course_qs.order_by('hsv_actcr_crid')
+    course_qs = course_qs.order_by('hsv_allcr_crid')
 
     # Build simple course objects for template convenience
     course_list = course_qs[:2000]
@@ -612,24 +612,22 @@ def course_list(request):
     return render(request, 'sis/course_list.html', context)
 
 @login_required
-def course_detail(request, course_id):
+def course_detail(request, course_crid):
     """View/edit individual course by CRID"""
     # Get course (SrlCours)
-    course = get_object_or_404(SrlCours.objects.using('sis'), pk=course_id)
-
+    record = make_course_detail_record(course_crid)
     if request.method == 'POST':
         # Only allow limited updates: course title and inactive indicator
-        course_title = request.POST.get('course_name')
-        inactive = request.POST.get('inactive_ind')
+        cours = record.cours
         try:
-            course.save(using='sis')
+            #course.save(using='sis')
             messages.success(request, 'Course updated successfully.')
-            return redirect('sis:course_detail', course_id=course_id)
+            return redirect('sis:course_detail', course_crid=course_crid)
         except Exception as e:
             messages.error(request, f'Error updating course: {e}')
 
     context = {
-        'course': course,
+        'course': record,
     }
     return render(request, 'sis/course_detail.html', context)
 
@@ -682,8 +680,6 @@ def person_detail(request, person_rbid):
     """View/edit individual student by RBID"""
     record = make_person_detail_record(person_rbid)
     countries = GglCount.objects.using('sis').all()
-    print(f"id_coid: '{record.id_coid}' type: {type(record.id_coid)}")
-    print(f"ggl_count_coid sample: '{countries.first().ggl_count_coid}' type: {type(countries.first().ggl_count_coid)}")
     if not record:
         return get_object_or_404(GumIdent, gum_ident_rbid=person_rbid)
 
