@@ -317,7 +317,7 @@ def make_course_detail_record(search_crid: str) -> CourseDetail:
     name = None
     status = None
     credit_hours = None
-    cours = SrlCours.objects.using('sis').filter(srl_cours_crid=search_crid).select_related('srl_cours_sbid', 'srl_subjs_dpid').first()
+    cours = SrlCours.objects.using('sis').filter(srl_cours_crid=search_crid).select_related('srl_cours_sbid', 'srl_cours_sbid__srl_subjs_dpid').first()
     if cours:
         crid = cours.srl_cours_crid
         sbid = cours.srl_cours_sbid_id
