@@ -26,7 +26,7 @@
         <!-- Course Number -->
         <div class="form-group">
             <label>Course Number</label>
-            <input type="text" value="{{ course.subject }}" 
+            <input type="text" value="{{ course.number }}" 
                    data-db-field="srl_cours.srl_cours_crse_numb" disabled>
         </div>
 
@@ -41,7 +41,7 @@
         <div class="form-group">
             <label for="name">Course Name</label>
             <input type="text" id="name" name="name"
-                   value="{{ cours.name }}" required
+                   value="{{ course.name }}" required
                    data-db-field="srl_cours.srl_cours_hr_name">
         </div>
 
@@ -49,7 +49,7 @@
         <div class="form-group">
             <label for="credit_hr">Credit Hours</label>
             <input type="number" min="1" step="1" max="9" id="credit_hr" name="credit_hr"
-                   value="{{ cours.credit_hours }}" required
+                   value="{{ course.credit_hours }}" required
                    data-db-field="srl_cours.srl_cours_credit_hours" >
         </div>
 
