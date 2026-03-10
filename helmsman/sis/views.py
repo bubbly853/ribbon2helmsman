@@ -558,7 +558,6 @@ def student_detail(request, student_rbid):
         try:
             with transaction.atomic(using='sis'):
                 scid = request.POST.get('scid')
-                print(scid)
                 stucv = ScmStucv.objects.using('sis').filter(
                     scm_stucv_scid=scid
                 ).first()
@@ -619,14 +618,18 @@ def course_detail(request, course_crid):
     record = make_course_detail_record(course_crid)
     subjects = SrlSubjs.objects.using('sis').all()
     if request.method == 'POST':
-        # Only allow limited updates: course title and inactive indicator
         cours = record.cours
         try:
-            #course.save(using='sis')
-            messages.success(request, 'Course updated successfully.')
+            with transaction.atomic(using='sis'):
+                if cours:
+                    cours.srl_cours_hr_name = request.POST.get('name', cours.srl_cours_hr_name)
+                    cours.srl_cours_credit_hours = request.POST.get('credit_hr', cours.srl_cours_credit_hours )
+                    cours.srl_cours_inactive_ind = request.POST.get('inactive_ind', cours.srl_cours_inactive_ind)
+                    cours.save(using='sis')
+            messages.success(request, 'Persson updated successfully.')
             return redirect('sis:course_detail', course_crid=course_crid)
         except Exception as e:
-            messages.error(request, f'Error updating course: {e}')
+            messages.error(request, f'Error updating student: {e}')
 
     context = {
         'course': record,
@@ -689,8 +692,6 @@ def person_detail(request, person_rbid):
     if request.method == 'POST':
         ident = record.gum_ident
         adinf = record.gum_adinf
-
-        # use transaction to keep changes consistent
         try:
             with transaction.atomic(using='sis'):
                 if ident:

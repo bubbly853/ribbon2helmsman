@@ -48,15 +48,15 @@
         <!-- Editable: Credit Hours -->
         <div class="form-group">
             <label for="credit_hr">Credit Hours</label>
-            <input type="number" min="1" step="1" max="9" id="credit_hr" name="credit_hr"
+            <input type="number" min="0" step="1" max="9" id="credit_hr" name="credit_hr"
                    value="{{ course.credit_hours }}" required
                    data-db-field="srl_cours.srl_cours_credit_hours" >
         </div>
 
         <!-- Editable: Inactive Indicator -->
         <div class="form-group">
-            <label for="active_ind">Inactive</label>
-            <select id="active_ind" name="active_ind"
+            <label for="inactive_ind">Inactive</label>
+            <select id="inactive_ind" name="inactive_ind"
             data-db-field="srl_cours.srl_cours_inactive_ind">
                 <option value="Y" {% if course.status == "Y" %}selected{% endif %}>Yes</option>
                 <option value="N" {% if course.status == "N" %}selected{% endif %}>No</option>
