@@ -7,7 +7,7 @@
 <div class="card">
     <h2>Create Enrollment</h2>
 
-    <form method="POST" action="{% url 'sis:enrollment_create_term_select' %}">
+    <form method="POST">
         {% csrf_token %}
         <!--   RBID -->
         <div class="form-group">
