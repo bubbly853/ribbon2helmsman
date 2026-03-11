@@ -911,7 +911,7 @@ def enrollment_create_term_select(request):
     # HTMX request - return terms dropdown options
     if request.method == 'GET' and request.headers.get('HX-Request'):
         student_id = request.GET.get('student')
-        terms = SrhSterm.objects.using('sis').filter(srh_sterm_rbid=student_id)
+        terms = SrhSterm.objects.using('sis').select_related('srh_sterm_tmid').filter(srh_sterm_rbid=student_id)
         return render(request, 'sis/partials/enroll_term.html', {'terms': terms})
 
     if request.method == 'POST':

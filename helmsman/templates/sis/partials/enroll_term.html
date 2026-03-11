@@ -1,6 +1,6 @@
 <option value="">-- Select a Term --</option>
 {% for term in terms %}
     <option value="{{ term.srh_sterm_tsid }}">
-        {{ term.sgl_terms_hr_name }}
+        {{ term.srh_sterm_tmid.sgl_terms_hr_name }}
     </option>
 {% endfor %}
