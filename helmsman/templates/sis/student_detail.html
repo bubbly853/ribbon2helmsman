@@ -146,14 +146,14 @@
                         {{ e.srh_enrol_scid.srb_sects_crid.srl_cours_sbid.srl_subjs_sbid }}
                         {{ e.srh_enrol_scid.srb_sects_crid.srl_cours_crse_num }}
                 </td>
-                <td data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_hr_name">{{ e.srh_enrol_scid.srb_sects_crid.srl_cours_hr_name }}</td>
-                <td data-db-field="srh_enrol.srh_enrol_scid | srb_sects.srb_sects_scid">{{ e.srh_enrol_scid.srb_sects_scid }}</td>
-                <td data-db-field="srb_sects.srb_sects_tmid | sgl_terms.sgl_terms_hr_name">{{ e.srh_enrol_scid.srb_sects_tmid.sgl_terms_hr_name }}</td>
+                <td data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_hr_name">{{ e.srh_enrol_stid.srb_sects_crid.srl_cours_hr_name }}</td>
+                <td data-db-field="srh_enrol.srh_enrol_stid | srb_sects.srb_sects_stid">{{ e.srh_enrol_stid }}</td>
+                <td data-db-field="srb_sects.srb_sects_tmid | sgl_terms.sgl_terms_hr_name">{{ e.srh_enrol_stid.srb_sects_tmid.sgl_terms_hr_name }}</td>
                 <td data-db-field="srh_enrol.srh_enrol_esid | srl_enrst.srl_enrst_hr_name">{{ e.srh_enrol_esid.srl_enrst_hr_name }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4" style="text-align: center; padding: 20px;">
+                <td colspan="5" style="text-align: center; padding: 20px;">
                     No enrollments found
                 </td>
             </tr>
