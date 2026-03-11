@@ -17,9 +17,16 @@
 
         <!--   Name -->
         <div class="form-group">
-            <label>First Name</label>
+            <label>Name</label>
             <input type="text" value="{{ sterm.srh_sterm_rbid.gum_ident_first_name }} {{ sterm.srh_sterm_rbid.gum_ident_last_name }}" disabled
                    data-db-field="gum_ident.gum_ident_first_name | gum_ident.gum_ident_last_name">
+        </div>
+
+        <!--   Term -->
+        <div class="form-group">
+            <label>Term</label>
+            <input type="text" value="{{ sterm.srh_sterm_tmid }} {{ sterm.srh_sterm_tmid.sgl_terms_hr_name }}" disabled
+                   data-db-field="srh_sterm.srh_sterm_rbid | sgl_terms.sgl_terms_hr_name">
         </div>
 
         <!-- Select: Course -->
