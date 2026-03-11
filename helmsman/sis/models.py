@@ -474,7 +474,7 @@ class SrhEnrol(models.Model):
 
 class SrhSterm(models.Model):
     srh_sterm_tsid = models.CharField(primary_key=True, max_length=15, db_comment='Student/Term ID (auto-generated)')
-    srh_sterm_rbid = models.CharField(max_length=9, db_comment='Ribbon ID')
+    srh_sterm_rbid = models.ForeignKey(GumIdent, models.DO_NOTHING, db_column='srh_sterm_rbid', db_comment='Ribbon ID')
     srh_sterm_tmid = models.ForeignKey(SglTerms, models.DO_NOTHING, db_column='srh_sterm_tmid', db_comment='Term ID')
     srh_sterm_rgid = models.ForeignKey('SrlRgtyp', models.DO_NOTHING, db_column='srh_sterm_rgid', db_comment='Registration Type ID')
     srh_sterm_created_date = models.DateField()

@@ -931,11 +931,11 @@ def enrollment_create_term_select(request):
     return render(request, 'sis/enrollment_create_term_select.html', {'persons': persons})
 
 def enrollment_create(request, student_term_tsid):
-    sterm = SrhSterm.objects.using('sis').filter(srh_sterm_tsid=student_term_tsid).first()
+    sterm = SrhSterm.objects.using('sis').filter(srh_sterm_tsid=student_term_tsid).select_related('srh_sterm_rbid').first()
     term = sterm.srh_sterm_tmid_id
-    sects = SrbSects.objects.using('sis').filter(srb_sects_tmid=term).all()
+    sects = SrbSects.objects.using('sis').filter(srb_sects_tmid=term).select_related('srb_sects_crid').all()
     context = {
         'sterm': sterm,
         'sects': sects,
     }
-    return render(request, 'sis/person_detail.html', context)
+    return render(request, 'sis/enrollment_create.html', context)

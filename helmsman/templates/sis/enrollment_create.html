@@ -1,0 +1,28 @@
+{% extends 'sis/detail_base.html' %}
+
+{% block title %}Enroll Student {{ sterm.srh_sterm_rbid_id }}: {{ sterm.srh_sterm_rbid.gum_ident_first_name }} {{ sterm.srh_sterm_rbid.gum_ident_first_name }} - Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Create Section</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Select: Course -->
+        <div class="form-group">
+            <label for="course">Course</label>
+            <select id="course" name="course"
+            data-db-field="srb_sects.srb_sects_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">
+                {% for sect in sects %}
+                    <option value="{{ sects.srb_sects_stid }}">
+                        {{ sects.srb_sects_crid.srl_cours_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn">Save Changes</button>
+        <a href="{% url 'sis:section_list' %}" class="btn btn-secondary">Go to List</a>
+    </form>
+</div>
+{% endblock %}
