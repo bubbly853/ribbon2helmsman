@@ -881,10 +881,23 @@ def section_create(request):
     if request.method == 'POST':
         
         try:
-            messages.success(request, 'Persson updated successfully.')
+            course = None
+            term = None
+            prim_inst = None
+            scnd_inst = None
+            if request.POST.get('scnd_inst') != 'NULL':
+                scnd_inst = request.POST.get('scnd_inst')
+            course = request.POST.get('course')
+            term = request.POST.get('term')
+            prim_inst = request.POST.get('prim_inst')
+            sect = SrbSects.objects.using('sis')
+            with transaction.atomic(using='sis'):
+                if sect:
+                    sect.create(srb_sect_crid=course, srb_sect_tmid=term, srb_sect_prim_inst=prim_inst, srb_sect_scnd_inst=scnd_inst)
+            messages.success(request, 'Section created successfully.')
             return redirect('sis:section_create')
         except Exception as e:
-            messages.error(request, f'Error updating student: {e}')
+            messages.error(request, f'Error creating section: {e}')
 
     context = {
         'courses': courses,
