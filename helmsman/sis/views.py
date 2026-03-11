@@ -893,6 +893,7 @@ def section_create(request):
             sect = SrbSects.objects.using('sis')
             with transaction.atomic(using='sis'):
                 if sect:
+                    print (course + ' ' + term + ' ' + prim_inst)
                     sect.create(srb_sect_crid=course, srb_sect_tmid=term, srb_sect_prim_inst=prim_inst, srb_sect_scnd_inst=scnd_inst)
             messages.success(request, 'Section created successfully.')
             return redirect('sis:section_create')
