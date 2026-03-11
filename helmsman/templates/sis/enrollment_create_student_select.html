@@ -1,10 +1,10 @@
 {% extends 'sis/base.html' %}
 
-{% block title %}Students - Helmsman{% endblock %}
+{% block title %}Select Student to Enroll - Helmsman{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Student List</h1>
+    <h1>Select a student to enroll</h1>
     
     <form method="get" class="search-form">
         <input type="text" 
@@ -41,7 +41,7 @@
                 <td data-label="Type" class="hide-mobile">{{ student.active_ind|default:"—" }}</td>
                 <td>
                     {% if student.rbid %}
-                        <a href="{% url 'sis:student_detail' student.rbid %}" class="btn">View</a>
+                        <a href="{% url 'sis:enrollment_create_term_select' student.rbid %}" class="btn">Enroll</a>
                     {% else %}
                         <span class="text-muted">No RBID</span>
                     {% endif %}
