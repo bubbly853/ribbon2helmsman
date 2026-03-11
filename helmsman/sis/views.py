@@ -543,7 +543,7 @@ def make_person_detail_record(search_rbid: str) -> PersonDetail:
         gum_adinf=adinf,
     )
 
-# --- Views ---
+# --- Search and Update Views ---
 @login_required
 def dashboard(request):
     """Main dashboard/home page"""
@@ -869,3 +869,26 @@ def person_detail(request, person_rbid):
         'countries': countries,
     }
     return render(request, 'sis/person_detail.html', context)
+
+# --- Create Views ---
+@login_required
+def section_create(request):
+    courses = SrlCours.objects.using('sis').all().order_by('srl_cours_crid')
+    courses = courses.filter(srl_cours_active_ind__exact='Y')
+    terms = SglTerms.objects.using('sis').all().order_by('-sgl_terms_tmid')
+    persons = GumIdent.objects.using('sis').all().order_by('gum_ident_last_name', 'gum_ident_first_name')
+
+    if request.method == 'POST':
+        
+        try:
+            messages.success(request, 'Persson updated successfully.')
+            return redirect('sis:section_create')
+        except Exception as e:
+            messages.error(request, f'Error updating student: {e}')
+
+    context = {
+        'courses': courses,
+        'terms': terms,
+        'persons': persons,
+    }
+    return render(request, 'sis/section_create.html', context)
