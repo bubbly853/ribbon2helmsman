@@ -941,15 +941,13 @@ def enrollment_create(request, student_term_tsid):
     if request.method == 'POST':
         
         try:
-            rbid = None
-            stid = None
             esid = 'RA'
             stid = request.POST.get('section')
             rbid = sterm.srh_sterm_rbid
             enrol = SrhEnrol.objects.using('sis')
             with transaction.atomic(using='sis'):
                 #print (course + ' ' + term + ' ' + prim_inst)
-                enrol.create(srh_enrol_rbid=rbid, srh_enrol_rbid=stid, srh_enrol_rbid=esid)
+                enrol.create(srh_enrol_rbid=rbid, srh_enrol_stid=stid, srh_enrol_rbid=esid)
             messages.success(request, 'Enrollment created successfully.')
             return redirect('sis:enrollment_create', student_term_tsid=student_term_tsid)
         except Exception as e:
