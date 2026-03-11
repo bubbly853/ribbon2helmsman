@@ -1,6 +1,6 @@
 {% extends 'sis/detail_base.html' %}
 
-{% block title %}Enroll Student {{ sterm.srh_sterm_rbid_id }}: {{ sterm.srh_sterm_rbid.gum_ident_first_name }} {{ sterm.srh_sterm_rbid.gum_ident_first_name }} - Helmsman{% endblock %}
+{% block title %}Enroll Student {{ sterm.srh_sterm_rbid_id }}: {{ sterm.srh_sterm_rbid.gum_ident_first_name }} {{ sterm.srh_sterm_rbid.gum_ident_last_name }} - Helmsman{% endblock %}
 
 {% block content %}
 <div class="card">
@@ -11,12 +11,12 @@
 
         <!-- Select: Course -->
         <div class="form-group">
-            <label for="course">Course</label>
-            <select id="course" name="course"
-            data-db-field="srb_sects.srb_sects_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">
+            <label for="section">Course</label>
+            <select id="section" name="section"
+            data-db-field="srh_enrol.srh_enrol_stid | srb_sects.srb_sects_stid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">
                 {% for sect in sects %}
                     <option value="{{ sects.srb_sects_stid }}">
-                        {{ sects.srb_sects_crid.srl_cours_hr_name }}
+                        {{ sect.srb_sects_crid.srl_cours_hr_name }}
                     </option>
                 {% empty %}
                     <option value="NULL">-- No sections available --</option>

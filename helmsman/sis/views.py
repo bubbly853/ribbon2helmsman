@@ -919,9 +919,9 @@ def enrollment_create_term_select(request):
 
         if not tsid:
             persons = GumIdent.objects.using('sis').filter(sgmstubi__isnull=False).order_by('gum_ident_last_name', 'gum_ident_first_name').distinct()
+            messages.error(request, 'Please select both a student and a term.')
             return render(request, 'sis/enrollment_create_term_select.html', {
                 'persons': persons,
-                'error': 'Please select both a student and a term.'
             })
     
         return redirect('sis:enrollment_create', student_term_tsid=tsid)
@@ -938,4 +938,20 @@ def enrollment_create(request, student_term_tsid):
         'sterm': sterm,
         'sects': sects,
     }
+    if request.method == 'POST':
+        
+        try:
+            rbid = None
+            stid = None
+            esid = 'RA'
+            stid = request.POST.get('section')
+            rbid = sterm.srh_sterm_rbid
+            enrol = SrhEnrol.objects.using('sis')
+            with transaction.atomic(using='sis'):
+                #print (course + ' ' + term + ' ' + prim_inst)
+                enrol.create(srh_enrol_rbid=rbid, srh_enrol_rbid=stid, srh_enrol_rbid=esid)
+            messages.success(request, 'Enrollment created successfully.')
+            return redirect('sis:enrollment_create', student_term_tsid=student_term_tsid)
+        except Exception as e:
+            messages.error(request, f'Error creating enrollment: {e}')
     return render(request, 'sis/enrollment_create.html', context)
