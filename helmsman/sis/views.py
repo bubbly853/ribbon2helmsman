@@ -750,7 +750,7 @@ def section_list(request):
             models.Q(hsv_sects_crid__icontains=search_query)
         )
 
-    sections_qs = sections_qs.order_by('hsv_allcr_crid')
+    sections_qs = sections_qs.order_by('hsv_sects_tmid')
 
     section_list = sections_qs[:2000]
     sections: List = []
