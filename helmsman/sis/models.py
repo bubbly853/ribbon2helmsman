@@ -446,8 +446,8 @@ class SrbSects(models.Model):
     srb_sects_tmid = models.ForeignKey(SglTerms, models.DO_NOTHING, db_column='srb_sects_tmid', db_comment='Term ID')
     srb_sects_crid = models.ForeignKey('SrlCours', models.DO_NOTHING, db_column='srb_sects_crid', db_comment='Course ID')
     srb_sects_section_seq = models.IntegerField(db_comment='Section Sequence Number')
-    srb_sects_prim_inst = models.ForeignKey(GumIdent, models.DO_NOTHING, db_column='srb_sects_prim_inst', db_comment='Primary Instructor')
-    srb_sects_scnd_inst = models.ForeignKey(GumIdent, models.DO_NOTHING, db_column='srb_sects_scnd_inst', blank=True, null=True, db_comment='Secondary Instructor')
+    srb_sects_prim_inst = models.ForeignKey(GumIdent, models.DO_NOTHING, related_name='primary', db_column='srb_sects_prim_inst', db_comment='Primary Instructor')
+    srb_sects_scnd_inst = models.ForeignKey(GumIdent, models.DO_NOTHING, related_name='secondary', db_column='srb_sects_scnd_inst', blank=True, null=True, db_comment='Secondary Instructor')
 
     class Meta:
         managed = False
