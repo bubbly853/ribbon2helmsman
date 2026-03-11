@@ -905,3 +905,20 @@ def section_create(request):
         'persons': persons,
     }
     return render(request, 'sis/section_create.html', context)
+
+@login_required
+def enrollment_create_term_select(request):
+    # HTMX request - return terms dropdown options
+    if request.method == 'GET' and request.headers.get('HX-Request'):
+        student_id = request.GET.get('student')
+        terms = SrhSterm.objects.using('sis').filter(srh_sterm_rbid=student_id)
+        return render(request, 'sis/partials/enroll_term.html', {'terms': terms})
+
+    # Form submission - redirect to enrollment with tsid
+    if request.method == 'POST':
+        tsid = request.POST.get('term')
+        return redirect('sis:create_enrollment', student_term_tsid=tsid)
+
+    # Initial page load
+    persons = GumIdent.objects.using('sis').filter(sgmstubi__isnull=False).order_by('gum_ident_last_name', 'gum_ident_first_name').distinct()
+    return render(request, 'sis/enrollment_create_term_select.html', {'persons': persons})

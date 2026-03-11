@@ -1,0 +1,39 @@
+{% extends 'sis/detail_base.html' %}
+
+{% block title %}Create Enrollment{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Create Enrollment</h2>
+
+    <form method="POST" action="{% url 'sis:enrollment_create_term_select' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="student">Student</label>
+            <select id="student" name="student"
+                    hx-get="{% url 'sis:enrollment_create_term_select' %}"
+                    hx-target="#terms-dropdown"
+                    hx-trigger="change">
+                <option value="">-- Select a Student --</option>
+                {% for person in persons %}
+                    <option value="{{ person.gum_ident_rbid }}">
+                        {{ person.gum_ident_last_name }}, {{ person.gum_ident_first_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="terms-dropdown">Term</label>
+            <select id="terms-dropdown" name="term">
+                <option value="">-- Select a Student First --</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn">Continue</button>
+        <a href="{% url 'sis:dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
+
