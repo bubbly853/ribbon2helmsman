@@ -18,8 +18,9 @@
                     <option value="{{ sects.srb_sects_stid }}">
                         {{ sects.srb_sects_crid.srl_cours_hr_name }}
                     </option>
+                {% empty %}
+                    <option value="NULL">-- No sections available --</option>
                 {% endfor %}
-                    <option value="NULL"></option>
             </select>
         </div>
         <button type="submit" class="btn">Save Changes</button>
