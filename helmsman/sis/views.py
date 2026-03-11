@@ -401,7 +401,7 @@ def make_section_record(sects: Optional[HsvSects]) -> SectionRecord:
     scnd_inst=scnd_inst,
     )
 
-def make_section_detail_record(search_stid: str) -> CourseDetail:
+def make_section_detail_record(search_stid: str) -> SectionDetail:
     """
     Build StudentDetail from HsvLtsts and its select_related objects.
     """
@@ -429,7 +429,7 @@ def make_section_detail_record(search_stid: str) -> CourseDetail:
             scnd_inst = sects.srb_sects_scnd_inst.gum_ident_first_name + ' ' + sects.srb_sects_scnd_inst.gum_ident_last_name
 
 
-    return CourseDetail(
+    return SectionDetail(
         stid=stid,
         tmid=tmid,
         crid=crid,
@@ -439,6 +439,7 @@ def make_section_detail_record(search_stid: str) -> CourseDetail:
         prim_inst=prim_inst,
         scnd_rbid=scnd_rbid,
         scnd_inst=scnd_inst,
+        sects=sects,
     )
 
 def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
@@ -733,6 +734,61 @@ def course_detail(request, course_crid):
         'subjects': subjects
     }
     return render(request, 'sis/course_detail.html', context)
+
+@login_required
+def section_list(request):
+    """List all courses with search and pagination"""
+    search_query = request.GET.get('search', '').strip()
+
+    sections_qs = HsvSects.objects.using('sis').all()
+
+    if search_query:
+        sections_qs = sections_qs.filter(
+            models.Q(hsv_sects_stid__icontains=search_query) |
+            models.Q(hsv_sects_name__icontains=search_query) |
+            models.Q(hsv_sects_tmid__icontains=search_query) |
+            models.Q(hsv_sects_crid__icontains=search_query)
+        )
+
+    sections_qs = sections_qs.order_by('hsv_allcr_crid')
+
+    section_list = sections_qs[:2000]
+    sections: List = []
+    for section in section_list:
+        sections.append(make_section_record(section))
+
+    paginator = Paginator(sections, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+    }
+    return render(request, 'sis/section_list.html', context)
+
+@login_required
+def section_detail(request, section_stid):
+    """View/edit individual course by CRID"""
+    # Get course (SrlCours)
+    record = make_section_detail_record(section_stid)
+    persons = GumIdent.objects.using('sis').all()
+    if request.method == 'POST':
+        sects = record.sects
+        try:
+            with transaction.atomic(using='sis'):
+                if sects:
+                    sects.save(using='sis')
+            messages.success(request, 'Course updated successfully.')
+            return redirect('sis:section_detail', section_stid=section_stid)
+        except Exception as e:
+            messages.error(request, f'Error updating student: {e}')
+
+    context = {
+        'section': record,
+        'persons': persons
+    }
+    return render(request, 'sis/section_detail.html', context)
 
 @login_required
 def person_list(request):

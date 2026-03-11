@@ -16,4 +16,6 @@ urlpatterns = [
     path('persons/<str:person_rbid>/', views.person_detail, name='person_detail'),
     path('courses/', views.course_list, name='course_list'),
     path('courses/<str:course_crid>/', views.course_detail, name='course_detail'),
+    path('sections/', views.section_list, name='section_list'),
+    path('sections/<str:section_stid>/', views.section_detail, name='section_detail'),
 ]
