@@ -28,7 +28,7 @@
             <select id="section" name="section"
             data-db-field="srh_enrol.srh_enrol_stid | srb_sects.srb_sects_stid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">
                 {% for sect in sects %}
-                    <option value="{{ sects.srb_sects_stid }}">
+                    <option value="{{ sect.srb_sects_stid }}">
                         {{ sect.srb_sects_crid.srl_cours_hr_name }}
                     </option>
                 {% empty %}
