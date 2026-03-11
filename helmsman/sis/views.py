@@ -917,7 +917,7 @@ def enrollment_create_term_select(request):
     # Form submission - redirect to enrollment with tsid
     if request.method == 'POST':
         tsid = request.POST.get('term')
-        return redirect('sis:create_enrollment', student_term_tsid=tsid)
+        return redirect('sis:enrollment_create', student_term_tsid=tsid)
 
     # Initial page load
     persons = GumIdent.objects.using('sis').filter(sgmstubi__isnull=False).order_by('gum_ident_last_name', 'gum_ident_first_name').distinct()
