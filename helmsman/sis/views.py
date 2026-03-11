@@ -946,7 +946,7 @@ def enrollment_create(request, student_term_tsid):
             rbid = sterm.srh_sterm_rbid
             enrol = SrhEnrol.objects.using('sis')
             with transaction.atomic(using='sis'):
-                #print (course + ' ' + term + ' ' + prim_inst)
+                print (rbid + ' ' + stid + ' ' + esid)
                 enrol.create(srh_enrol_rbid_id=rbid, srh_enrol_stid_id=stid, srh_enrol_esid_id=esid)
             messages.success(request, 'Enrollment created successfully.')
             return redirect('sis:enrollment_create', student_term_tsid=student_term_tsid)
