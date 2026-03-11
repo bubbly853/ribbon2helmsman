@@ -458,7 +458,7 @@ class SrbSects(models.Model):
 
 class SrhEnrol(models.Model):
     srh_enrol_erid = models.CharField(primary_key=True, max_length=27, db_comment='Enrollment ID (auto-generated)')
-    srh_enrol_rbid = models.CharField(max_length=9, db_comment='Ribbon ID')
+    srh_enrol_rbid = models.ForeignKey(GumIdent, models.DO_NOTHING, db_column='srh_enrol_rbid', db_comment='Ribbon ID')
     srh_enrol_stid = models.ForeignKey(SrbSects, models.DO_NOTHING, db_column='srh_enrol_stid', db_comment='Course section-term-sequence ID')
     srh_enrol_esid = models.ForeignKey('SrlEnrst', models.DO_NOTHING, db_column='srh_enrol_esid', db_comment='Enrollment status ID')
     srh_enrol_created_date = models.DateField(db_comment='Date record was created.')
