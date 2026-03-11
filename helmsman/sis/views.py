@@ -943,7 +943,7 @@ def enrollment_create(request, student_term_tsid):
         try:
             esid = 'RA'
             stid = request.POST.get('section')
-            rbid = sterm.srh_sterm_rbid
+            rbid = sterm.srh_sterm_rbid_id
             enrol = SrhEnrol.objects.using('sis')
             with transaction.atomic(using='sis'):
                 print (rbid + ' ' + stid + ' ' + esid)
