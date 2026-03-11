@@ -317,7 +317,7 @@ def make_course_record(allcr: Optional[HsvAllcr]) -> CourseRecord:
         subject = allcr.hsv_allcr_subject
         department = allcr.hsv_allcr_department
         name = allcr.hsv_allcr_name
-        status = allcr.hsv_allcr_inactive_ind
+        status = allcr.hsv_allcr_active_ind
     
     return CourseRecord (
     crid=crid,
@@ -352,7 +352,7 @@ def make_course_detail_record(search_crid: str) -> CourseDetail:
         dpid = cours.srl_cours_sbid.srl_subjs_dpid_id
         department = cours.srl_cours_sbid.srl_subjs_dpid.sdl_depts_hr_name
         name = cours.srl_cours_hr_name
-        status = cours.srl_cours_inactive_ind
+        status = cours.srl_cours_active_ind
         credit_hours = cours.srl_cours_credit_hours
 
 
@@ -401,44 +401,44 @@ def make_section_record(sects: Optional[HsvSects]) -> SectionRecord:
     scnd_inst=scnd_inst,
     )
 
-def make_section_detail_record(search_crid: str) -> CourseDetail:
+def make_section_detail_record(search_stid: str) -> CourseDetail:
     """
     Build StudentDetail from HsvLtsts and its select_related objects.
     """
 
+    stid = None
+    tmid = None
     crid = None
-    sbid = None
-    number = None
-    subject = None
-    dpid = None
-    department = None
+    seq = None
     name = None
-    status = None
-    credit_hours = None
-    cours = SrlCours.objects.using('sis').filter(srl_cours_crid=search_crid).select_related('srl_cours_sbid', 'srl_cours_sbid__srl_subjs_dpid').first()
-    if cours:
-        crid = cours.srl_cours_crid
-        sbid = cours.srl_cours_sbid_id
-        number = cours.srl_cours_crse_num
-        subject = cours.srl_cours_sbid.srl_subjs_hr_name
-        dpid = cours.srl_cours_sbid.srl_subjs_dpid_id
-        department = cours.srl_cours_sbid.srl_subjs_dpid.sdl_depts_hr_name
-        name = cours.srl_cours_hr_name
-        status = cours.srl_cours_inactive_ind
-        credit_hours = cours.srl_cours_credit_hours
+    prim_rbid = None
+    prim_inst = None
+    scnd_rbid = None
+    scnd_inst = None
+    sects = SrbSects.objects.using('sis').filter(srb_sects_stid=search_stid).select_related('srb_sects_prim_inst', 'srb_sects_scnd_inst', 'srb_sects_crid').first()
+    if sects:
+        stid = sects.srb_sects_stid
+        tmid = sects.srb_sects_tmid_id
+        crid = sects.srb_sects_crid_id
+        seq = sects.srb_sects_section_seq
+        name = sects.srb_sects_crid.srl_cours_hr_name
+        prim_rbid = sects.srb_sects_prim_inst.gum_ident_rbid
+        prim_inst = sects.srb_sects_prim_inst.gum_ident_first_name + ' ' + sects.srb_sects_prim_inst.gum_ident_last_name
+        if sects.srb_sects_scnd_inst:
+            scnd_rbid = sects.srb_sects_scnd_inst.gum_ident_rbid
+            scnd_inst = sects.srb_sects_scnd_inst.gum_ident_first_name + ' ' + sects.srb_sects_scnd_inst.gum_ident_last_name
 
 
     return CourseDetail(
+        stid=stid,
+        tmid=tmid,
         crid=crid,
-        sbid=sbid,
-        number=number,
-        subject=subject,
-        dpid=dpid,
-        department=department,
+        seq=seq,
         name=name,
-        status=status,
-        credit_hours=credit_hours,
-        cours=cours,
+        prim_rbid=prim_rbid,
+        prim_inst=prim_inst,
+        scnd_rbid=scnd_rbid,
+        scnd_inst=scnd_inst,
     )
 
 def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
@@ -721,7 +721,7 @@ def course_detail(request, course_crid):
                 if cours:
                     cours.srl_cours_hr_name = request.POST.get('name', cours.srl_cours_hr_name)
                     cours.srl_cours_credit_hours = request.POST.get('credit_hr', cours.srl_cours_credit_hours )
-                    cours.srl_cours_inactive_ind = request.POST.get('inactive_ind', cours.srl_cours_inactive_ind)
+                    cours.srl_cours_active_ind = request.POST.get('active_ind', cours.srl_cours_active_ind)
                     cours.save(using='sis')
             messages.success(request, 'Course updated successfully.')
             return redirect('sis:course_detail', course_crid=course_crid)

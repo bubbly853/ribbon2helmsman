@@ -55,9 +55,9 @@
 
         <!-- Editable: Inactive Indicator -->
         <div class="form-group">
-            <label for="inactive_ind">Inactive</label>
-            <select id="inactive_ind" name="inactive_ind"
-            data-db-field="srl_cours.srl_cours_inactive_ind">
+            <label for="active_ind">Active</label>
+            <select id="active_ind" name="active_ind"
+            data-db-field="srl_cours.srl_cours_active_ind">
                 <option value="Y" {% if course.status == "Y" %}selected{% endif %}>Yes</option>
                 <option value="N" {% if course.status == "N" %}selected{% endif %}>No</option>
             </select>

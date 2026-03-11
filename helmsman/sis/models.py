@@ -446,8 +446,8 @@ class SrbSects(models.Model):
     srb_sects_tmid = models.ForeignKey(SglTerms, models.DO_NOTHING, db_column='srb_sects_tmid', db_comment='Term ID')
     srb_sects_crid = models.ForeignKey('SrlCours', models.DO_NOTHING, db_column='srb_sects_crid', db_comment='Course ID')
     srb_sects_section_seq = models.IntegerField(db_comment='Section Sequence Number')
-    srb_sects_prim_inst = models.CharField(max_length=9, db_comment='Primary Instructor')
-    srb_sects_scnd_inst = models.CharField(max_length=9, blank=True, null=True, db_comment='Secondary Instructor')
+    srb_sects_prim_inst = models.ForeignKey(GumIdent, models.DO_NOTHING, db_column='srb_sects_prim_inst', db_comment='Primary Instructor')
+    srb_sects_scnd_inst = models.ForeignKey(GumIdent, models.DO_NOTHING, db_column='srb_sects_scnd_inst', blank=True, null=True, db_comment='Secondary Instructor')
 
     class Meta:
         managed = False
@@ -493,7 +493,7 @@ class SrlCours(models.Model):
     srl_cours_sbid = models.ForeignKey('SrlSubjs', models.DO_NOTHING, db_column='srl_cours_sbid', db_comment='Subject ID')
     srl_cours_crse_num = models.CharField(max_length=6, db_comment='Course Number')
     srl_cours_hr_name = models.CharField(max_length=64, db_comment='Course Title')
-    srl_cours_inactive_ind = models.CharField(max_length=1)
+    srl_cours_active_ind = models.CharField(max_length=1)
     srl_cours_credit_hours = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -613,7 +613,7 @@ class HsvActcr(models.Model):
     hsv_actcr_subject = models.CharField(max_length=64, blank=True, null=True, db_comment='Subject human-readable name.')
     hsv_actcr_department = models.CharField(max_length=64, db_comment='Department human-readable name.')
     hsv_actcr_name = models.CharField(max_length=64, db_comment='Course title.')
-    hsv_actcr_inactive_ind = models.CharField(max_length=1, db_comment='Inactive indicator - always N in this view.')
+    hsv_actcr_active_ind = models.CharField(max_length=1, db_comment='active indicator - always N in this view.')
 
     class Meta:
         managed = False
@@ -627,7 +627,7 @@ class HsvAllcr(models.Model):
     hsv_allcr_subject = models.CharField(max_length=64, blank=True, null=True, db_comment='Subject human-readable name.')
     hsv_allcr_department = models.CharField(max_length=64, db_comment='Department human-readable name.')
     hsv_allcr_name = models.CharField(max_length=64, db_comment='Course title.')
-    hsv_allcr_inactive_ind = models.CharField(max_length=1, db_comment='Inactive indicator.')
+    hsv_allcr_active_ind = models.CharField(max_length=1, db_comment='active indicator.')
 
     class Meta:
         managed = False
