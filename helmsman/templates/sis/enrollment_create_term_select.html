@@ -36,6 +36,8 @@
     </form>
 </div>
 {% endblock %}
+{% load static %}
+
 {% block extra_js %}
 {{ block.super }}
 <script src="{% static 'sis/js/htmx.min.js' %}"></script>
