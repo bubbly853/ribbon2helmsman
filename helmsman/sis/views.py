@@ -922,3 +922,13 @@ def enrollment_create_term_select(request):
     # Initial page load
     persons = GumIdent.objects.using('sis').filter(sgmstubi__isnull=False).order_by('gum_ident_last_name', 'gum_ident_first_name').distinct()
     return render(request, 'sis/enrollment_create_term_select.html', {'persons': persons})
+
+def enrollment_create(request, student_term_tsid):
+    sterm = SrhSterm.objects.using('sis').filter(srh_sterm_tsid=student_term_tsid).first()
+    term = sterm.srh_sterm_tmid_id
+    sects = SrbSects.objects.using('sis').filter(srb_sects_tmid=term).all()
+    context = {
+        'sterm': sterm,
+        'sects': sects,
+    }
+    return render(request, 'sis/person_detail.html', context)
