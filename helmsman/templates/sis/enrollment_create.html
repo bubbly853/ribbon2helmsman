@@ -8,6 +8,19 @@
 
     <form method="post">
         {% csrf_token %}
+        <!--   RBID -->
+        <div class="form-group">
+            <label>RBID</label>
+            <input type="text" value="{{ sterm.srh_sterm_rbid_id }}" disabled
+                   data-db-field="srh_sterm.srh_sterm_rbid | gum_ident.gum_ident_rbid">
+        </div>
+
+        <!--   Name -->
+        <div class="form-group">
+            <label>First Name</label>
+            <input type="text" value="{{ sterm.srh_sterm_rbid.gum_ident_first_name }} {{ sterm.srh_sterm_rbid.gum_ident_last_name }}" disabled
+                   data-db-field="gum_ident.gum_ident_first_name | gum_ident.gum_ident_last_name">
+        </div>
 
         <!-- Select: Course -->
         <div class="form-group">
