@@ -35,5 +35,8 @@
         <a href="{% url 'sis:dashboard' %}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+{% block extra_js %}
+{{ block.super }}
+<script src="https://unpkg.com/htmx.org@1.9.10"></script>
 {% endblock %}
 

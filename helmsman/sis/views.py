@@ -914,9 +914,16 @@ def enrollment_create_term_select(request):
         terms = SrhSterm.objects.using('sis').filter(srh_sterm_rbid=student_id)
         return render(request, 'sis/partials/enroll_term.html', {'terms': terms})
 
-    # Form submission - redirect to enrollment with tsid
     if request.method == 'POST':
         tsid = request.POST.get('term')
+
+        if not tsid:
+            persons = GumIdent.objects.using('sis').filter(sgmstubi__isnull=False).order_by('gum_ident_last_name', 'gum_ident_first_name').distinct()
+            return render(request, 'sis/enrollment_create_term_select.html', {
+                'persons': persons,
+                'error': 'Please select both a student and a term.'
+            })
+    
         return redirect('sis:enrollment_create', student_term_tsid=tsid)
 
     # Initial page load
