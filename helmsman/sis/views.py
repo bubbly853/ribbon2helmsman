@@ -947,7 +947,7 @@ def enrollment_create(request, student_term_tsid):
             enrol = SrhEnrol.objects.using('sis')
             with transaction.atomic(using='sis'):
                 #print (course + ' ' + term + ' ' + prim_inst)
-                enrol.create(srh_enrol_rbid=rbid, srh_enrol_stid=stid, srh_enrol_esid=esid)
+                enrol.create(srh_enrol_rbid_id=rbid, srh_enrol_stid_id=stid, srh_enrol_esid_id=esid)
             messages.success(request, 'Enrollment created successfully.')
             return redirect('sis:enrollment_create', student_term_tsid=student_term_tsid)
         except Exception as e:
