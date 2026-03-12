@@ -878,6 +878,29 @@ def person_detail(request, person_rbid):
 
 # --- Create Views ---
 @login_required
+def person_create(request):
+    countries = GglCount.objects.using('sis').all().order_by('ggl_count_hr_name')
+    craces = GrlRcens.objects.using('sis').all().order_by('grl_rcens_hr_name')
+    draces = GrlRdetl.objects.using('sis').all().order_by('grl_rdetl_hr_name')
+    czcodes = GglCitzn.objects.using('sis').all().order_by('ggl_citzn_hr_name')
+
+    if request.method == 'POST':
+        
+        try:
+            messages.success(request, 'Person created successfully.')
+            return redirect('sis:person_create')
+        except Exception as e:
+            messages.error(request, f'Error creating section: {e}')
+
+    context = {
+        'countries': countries,
+        'craces': craces,
+        'draces': draces,
+        'czcodes': czcodes,
+    }
+    return render(request, 'sis/person_create.html', context)
+
+@login_required
 def section_create(request):
     courses = SrlCours.objects.using('sis').all().order_by('srl_cours_crid')
     courses = courses.filter(srl_cours_active_ind__exact='Y')

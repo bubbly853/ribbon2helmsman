@@ -1,0 +1,159 @@
+{% extends 'sis/detail_base.html' %}
+
+{% block title %}Create Person - Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Create Person</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Editable: Preferred Name -->
+        <div class="form-group">
+            <label for="preferred_name">Preferred First Name</label>
+            <input type="text" id="preferred_name" name="preferred_name"
+                   data-db-field="gum_adinf.gum_adinf_pref_first_name">
+        </div>
+
+        <!-- Editable: Prefix -->
+        <div class="form-group">
+            <label for="prefix">Prefix</label>
+            <input type="text" id="prefix" name="prefix"
+                   data-db-field="gum_adinf.gum_adinf_prefix">
+        </div>
+
+        <!-- Editable: First Name -->
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name"
+                   required data-db-field="gum_ident.gum_ident_first_name">
+        </div>
+
+        <!-- Editable: Middle Name -->
+        <div class="form-group">
+            <label for="middle_name">Middle Name</label>
+            <input type="text" id="middle_name" name="middle_name"
+                   data-db-field="gum_ident.gum_ident_middle_name">
+        </div>
+
+        <!-- Editable: Last Name -->
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name"
+                   required data-db-field="gum_ident.gum_ident_last_name">
+        </div>
+
+        <!-- Editable: Suffix -->
+        <div class="form-group">
+            <label for="suffix">Suffix</label>
+            <input type="text" id="suffix" name="suffix"
+                   data-db-field="gum_adinf.gum_adinf_prefix">
+        </div>
+
+        <!-- Birthday -->
+        <div class="form-group">
+            <label for="birthday">Birthday</label>
+            <input type="date" id="birthday" name="birthday"
+            required data-db-field="gum_ident.gum_ident_birthday">
+        </div>
+
+        <!-- Editable: ID Num -->
+        <div class="form-group">
+            <label for="id_num">ID Number</label>
+            <input type="text" id="id_num" name="id_num"
+                   value="{{ person.id_num }}" required
+                   data-db-field="gum_ident.gum_ident_id_num">
+        </div>
+
+        <!-- Editable: Country -->
+        <div class="form-group">
+            <label for="id_country">ID Country</label>
+            <select id="id_country" name="id_country"
+            data-db-field="gum_ident.gum_ident_id_coid | ggl_count.ggl_count_hr_name">
+                {% for country in countries %}
+                    <option value="{{ country.ggl_count_coid }}">
+                        {{ country.ggl_count_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- Editable: Username -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username"
+                   data-db-field="gum_adinf.gum_adinf_username">
+        </div>
+
+        <!-- Editable: Census Race -->
+        <div class="form-group">
+            <label for="rcid">Census Race</label>
+            <select id="rcid" name="rcid"
+            data-db-field="gum_adinf.gum_adinf_rcid | grl_rcens.grl_rcens_hr_name">
+                {% for crace in craces %}
+                    <option value="{{ crace.grl_rcens_rcid }}">
+                        {{ crace.grl_rcens_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Race Detail 1-->
+        <div class="form-group">
+            <label for="rdid1">Race Detail 1</label>
+            <select id="rdid1" name="rdid1"
+            data-db-field="gum_adinf.gum_adinf_rdid_1 | grl_rcens.grl_rdetl_hr_name">
+                {% for drace in craces %}
+                    <option value="{{ drace.grl_rdetl_rdid }}">
+                        {{ drace.grl_rdetl_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Race Detail 2-->
+        <div class="form-group">
+            <label for="rdid2">Race Detail 2</label>
+            <select id="rdid2" name="rdid2"
+            data-db-field="gum_adinf.gum_adinf_rdid_2 | grl_rcens.grl_rdetl_hr_name">
+                {% for drace in craces %}
+                    <option value="{{ drace.grl_rdetl_rdid }}">
+                        {{ drace.grl_rdetl_hr_name }}
+                    </option>
+                    <option value="NULL"></option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Citizenship Code-->
+        <div class="form-group">
+            <label for="czid">Citizenship Code</label>
+            <select id="czid" name="czid"
+            data-db-field="gum_adinf.gum_adinf_czid | ggl_citzn.ggl_citzn_hr_name">
+                {% for czcode in czcodes %}
+                    <option value="{{ czcode.ggl_citzn_czid }}">
+                        {{ drace.ggl_citzn_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Country of Citizenship -->
+        <div class="form-group">
+            <label for="legal_country">Country of Citizenship</label>
+            <select id="legal_country" name="legal_country"
+            data-db-field="gum_ident.gum_ident_id_coid | ggl_count.ggl_count_hr_name">
+                {% for country in countries %}
+                    <option value="{{ country.ggl_count_coid }}">
+                        {{ country.ggl_count_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn">Save Changes</button>
+        <a href="{% url 'sis:person_list' %}" class="btn btn-secondary">Go to Person List</a>
+    </form>
+</div>
+{% endblock %}
