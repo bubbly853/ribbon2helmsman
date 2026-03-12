@@ -11,7 +11,7 @@
         <!--   RBID -->
         <div class="form-group">
             <label>RBID</label>
-            <input type="text" value="{{ sterm.srh_sterm_rbid_id }}" disabled
+            <input type="text" value="{{ person.gum_ident_rbid }}" disabled
                    data-db-field="srh_sterm.srh_sterm_rbid | gum_ident.gum_ident_rbid">
         </div>
 
@@ -44,7 +44,7 @@
             </select>
         </div>
         <button type="submit" class="btn">Save Changes</button>
-        <a href="{% url 'sis:section_list' %}" class="btn btn-secondary">Go to List</a>
+        <a href="{% url 'sis:enrollment_create_term_select' person.gum_ident_rbid %}" class="btn btn-secondary">Change Term</a>
     </form>
 </div>
 {% endblock %}
