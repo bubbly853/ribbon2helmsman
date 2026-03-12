@@ -933,7 +933,7 @@ def enrollment_create_term_select(request, student_id):
     return render(request, 'sis/enrollment_create_term_select.html', {'person': person,'terms': terms,})
 
 def enrollment_create(request, student_term_tsid):
-    sterm = SrhSterm.objects.using('sis').filter(srh_sterm_tsid=student_term_tsid).select_related('srh_sterm_rbid').first()
+    sterm = SrhSterm.objects.using('sis').filter(srh_sterm_tsid=student_term_tsid).select_related('srh_sterm_rbid.gumadinf').first()
     term = sterm.srh_sterm_tmid_id
     sects = SrbSects.objects.using('sis').filter(srb_sects_tmid=term).select_related('srb_sects_crid').all()
     context = {

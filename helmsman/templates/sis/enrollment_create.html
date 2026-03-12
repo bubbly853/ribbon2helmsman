@@ -1,6 +1,6 @@
 {% extends 'sis/detail_base.html' %}
 
-{% block title %}Enroll Student {{ sterm.gumadinf.gum_adinf_pref_first_name|default:sterm.gum_ident_first_name }} {{ sterm.srh_sterm_rbid.gum_ident_last_name }} - Helmsman{% endblock %}
+{% block title %}Enroll Student {{ sterm.srh_sterm_rbid.gumadinf.gum_adinf_pref_first_name|default:sterm.srh_sterm_rbid.gum_ident_first_name }} {{ sterm.srh_sterm_rbid.gum_ident_last_name }} - Helmsman{% endblock %}
 
 {% block content %}
 <div class="card">
