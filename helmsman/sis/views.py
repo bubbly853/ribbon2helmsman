@@ -557,6 +557,12 @@ def student_list(request):
     """List  students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
     rbid_query = request.GET.get('rbid', '').strip()
+    url_name = request.resolver_match.url_name
+    student_link_map = {
+        'student_list': 'sis/student_list.html',
+        'enrollment_create_student_select': 'sis/enrollment_create_student_select.html',
+    }
+    student_link = student_link_map.get(url_name, 'sis/student_list.html')
 
     # Base queryset: only students that have a SGM_stdnt record
     stdnt_qs = HsvStdnt.objects.using('sis').all()
@@ -594,7 +600,7 @@ def student_list(request):
         'page_obj': page_obj,
         'search_query': search_query,
     }
-    return render(request, 'sis/student_list.html', context)
+    return render(request, student_link, context)
 
 @login_required
 def student_detail(request, student_rbid):
