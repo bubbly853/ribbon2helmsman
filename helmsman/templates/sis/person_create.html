@@ -104,7 +104,7 @@
             <label for="rdid1">Race Detail 1</label>
             <select id="rdid1" name="rdid1"
             data-db-field="gum_adinf.gum_adinf_rdid_1 | grl_rcens.grl_rdetl_hr_name">
-                {% for drace in craces %}
+                {% for drace in draces %}
                     <option value="{{ drace.grl_rdetl_rdid }}">
                         {{ drace.grl_rdetl_hr_name }}
                     </option>
@@ -117,7 +117,7 @@
             <label for="rdid2">Race Detail 2</label>
             <select id="rdid2" name="rdid2"
             data-db-field="gum_adinf.gum_adinf_rdid_2 | grl_rcens.grl_rdetl_hr_name">
-                {% for drace in craces %}
+                {% for drace in draces %}
                     <option value="{{ drace.grl_rdetl_rdid }}">
                         {{ drace.grl_rdetl_hr_name }}
                     </option>
@@ -133,7 +133,7 @@
             data-db-field="gum_adinf.gum_adinf_czid | ggl_citzn.ggl_citzn_hr_name">
                 {% for czcode in czcodes %}
                     <option value="{{ czcode.ggl_citzn_czid }}">
-                        {{ drace.ggl_citzn_hr_name }}
+                        {{ czcode.ggl_citzn_hr_name }}
                     </option>
                 {% endfor %}
             </select>
