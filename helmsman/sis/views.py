@@ -907,7 +907,6 @@ def section_create(request):
     return render(request, 'sis/section_create.html', context)
 
 @login_required
-@login_required
 def enrollment_create_student_select(request):
     """List  students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
