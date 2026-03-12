@@ -912,52 +912,8 @@ def section_create(request):
     }
     return render(request, 'sis/section_create.html', context)
 
-@login_required
-def enrollment_create_student_select(request):
-    """List  students with search and pagination"""
-    search_query = request.GET.get('search', '').strip()
-    rbid_query = request.GET.get('rbid', '').strip()
-
-    # Base queryset: only students that have a SGM_stdnt record
-    stdnt_qs = HsvStdnt.objects.using('sis').all()
-
-    # Search by name or RBID through GumIdent
-    if search_query:
-        stdnt_qs = stdnt_qs.filter(
-            models.Q(hsv_stdnt_first_name__icontains=search_query) |
-            models.Q(hsv_stdnt_last_name__icontains=search_query)
-        )
-
-    if rbid_query:
-        stdnt_qs = stdnt_qs.filter(hsv_stdnt_rbid__icontains=rbid_query)
-
-    # Order by last_name, first_name from GumIdent
-    stdnt_qs = stdnt_qs.order_by(
-        'hsv_stdnt_last_name',
-        'hsv_stdnt_first_name'
-    )
-
-    # Limit to 2000 results for safety
-    stdnt_list = stdnt_qs[:2000]
-
-    # Build student records
-    students: List = []
-    for stdnt in stdnt_list:
-        students.append(make_student_record(stdnt))
-
-    # Pagination
-    paginator = Paginator(students, 25)  # 25 per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    context = {
-        'page_obj': page_obj,
-        'search_query': search_query,
-    }
-    return render(request, 'sis/enrollment_create_student_select.html', context)
-
 def enrollment_create_term_select(request, student_id):
-    person = GumIdent.objects.using('sis').filter(gum_ident_rbid=student_id).first()
+    person = GumIdent.objects.using('sis').select_related('gumadinf').filter(gum_ident_rbid=student_id).first()
     terms = SrhSterm.objects.using('sis').select_related('srh_sterm_tmid').filter(srh_sterm_rbid=student_id)
 
     if request.method == 'POST':
