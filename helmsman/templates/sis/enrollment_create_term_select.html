@@ -1,6 +1,6 @@
 {% extends 'sis/detail_base.html' %}
 
-{% block title %}Select term for {{ persom.gumadinf.gum_ident_pref_first_name|default:person.gum_ident_first_name }} {{ person.gum_ident_last_name }} {% endblock %}
+{% block title %}Select term for {{ persom.gumadinf.gum_adinf_pref_first_name|default:person.gum_ident_first_name }} {{ person.gum_ident_last_name }} {% endblock %}
 
 {% block content %}
 <div class="card">
@@ -18,7 +18,7 @@
         <!--   Name -->
         <div class="form-group">
             <label>First Name</label>
-            <input type="text" value="{{ persom.gumadinf.gum_ident_pref_first_name|default:person.gum_ident_first_name }} {{ person.gum_ident_last_name }}" disabled
+            <input type="text" value="{{ persom.gumadinf.gum_adinf_pref_first_name|default:person.gum_ident_first_name }} {{ person.gum_ident_last_name }}" disabled
                    data-db-field="gum_ident.gum_ident_first_name | gum_ident.gum_ident_last_name">
         </div>
 
