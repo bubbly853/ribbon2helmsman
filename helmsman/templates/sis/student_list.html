@@ -7,11 +7,15 @@
     <h1>Student List</h1>
     
     <form method="get" class="search-form">
-        <input type="text" 
-               name="search" 
-               placeholder="Search by name or RBID..." 
-               value="{{ search_query }}"
-               autofocus>
+        <div class="search-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="search-input" 
+                   id="search" 
+                   type="text"
+                   placeholder="Search by name or RBID..."
+                   value="{{ search_query }}"
+                   autofocus/>
+        </div>
         <button type="submit" class="btn">Search</button>
         {% if search_query %}
         <a href="{% url 'sis:student_list' %}" class="btn btn-secondary">Clear</a>

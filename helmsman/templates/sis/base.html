@@ -270,6 +270,28 @@
             font-family: inherit;
             font-size: inherit;
         }
+
+        .search-icon {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .search-wrap {
+            position: relative;
+            max-width: 480px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
