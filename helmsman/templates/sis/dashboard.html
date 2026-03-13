@@ -109,10 +109,6 @@
     .suggestion-item.active {
         background: #f5f5f5;
     }
-
-    .dash-card.hidden {
-        display: none;
-    }
 </style>
 
 <div class="dashboard-header">
@@ -143,21 +139,14 @@ const suggestions = document.getElementById('suggestions');
 const cards = Array.from(document.querySelectorAll('.dashboard-card'));
 let activeIdx = -1;
 
-function match(card, q) {
-  return card.dataset.title.toLowerCase().includes(q)
-      || card.dataset.desc.toLowerCase().includes(q);
-}
+
 
 search.addEventListener('input', () => {
   const q = search.value.trim().toLowerCase();
 
-  // Filter cards
-  cards.forEach(c => c.classList.toggle('hidden', !!q && !match(c, q)));
-
-  // Build suggestions
   suggestions.innerHTML = '';
   if (!q) { suggestions.style.display = 'none'; return; }
-  const hits = cards.filter(c => match(c, q)).slice(0, 5);
+  const hits = cards.filter(c => c.dataset.title.toLowerCase().includes(q)).slice(0, 5);;
   hits.forEach(c => {
     const a = document.createElement('a');
     a.href = c.href;
