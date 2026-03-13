@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import transaction
+from django.urls import reverse
 
 # Import your real models
 from .models import (
@@ -547,7 +548,17 @@ def make_person_detail_record(search_rbid: str) -> PersonDetail:
 @login_required
 def dashboard(request):
     """Main dashboard/home page"""
+    cards = [
+        {"url": reverse("sis:student_list"), "title": "Students", "desc": "View and manage student records", "icon": "👨‍🎓"},
+        {"url": reverse("sis:person_list"), "title": "Persons",  "desc": "View and manage person records",  "icon": "🧑"},
+        {"url": reverse("sis:person_list"), "title": "Courses",  "desc": "View and manage course records",  "icon": "📚"},
+        {"url": reverse("sis:person_list"), "title": "Sections",  "desc": "View and manage section records",  "icon": "📅"},
+        {"url": reverse("sis:person_list"), "title": "Create Section",  "desc": "Create a new section record",  "icon": "📅✚"},
+        {"url": reverse("sis:person_list"), "title": "Create Enrollment",  "desc": "Enroll a student in a section",  "icon": "👨‍🎓📅✚"},
+        {"url": reverse("sis:person_list"), "title": "Admin",  "desc": "Django administration panels",  "icon": "⚙️"},
+    ]
     context = {
+        'cards': cards,
         'user': request.user,
     }
     return render(request, 'sis/dashboard.html', context)

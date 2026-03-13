@@ -3,55 +3,6 @@
 {% block title %}Dashboard - Helmsman{% endblock %}
 
 {% block content %}
-<div class="dashboard-header">
-    <h1>Welcome to Helmsman</h1>
-    <p class="subtitle">SIS Management Portal</p>
-</div>
-
-<div class="dashboard-cards">
-    <a href="{% url 'sis:student_list' %}" class="dashboard-card">
-        <div class="card-icon">👨‍🎓</div>
-        <h2>Students</h2>
-        <p>View and manage student records</p>
-    </a>
-    
-    <a href="{% url 'sis:person_list' %}" class="dashboard-card">
-        <div class="card-icon">🧑</div>
-        <h2>Persons</h2>
-        <p>View and manage person records</p>
-    </a>
-
-    <a href="{% url 'sis:course_list' %}" class="dashboard-card">
-        <div class="card-icon">📚</div>
-        <h2>Courses</h2>
-        <p>View and manage course records</p>
-    </a>
-
-    <a href="{% url 'sis:section_list' %}" class="dashboard-card">
-        <div class="card-icon">📅</div>
-        <h2>Sections</h2>
-        <p>View and manage section records</p>
-    </a>
-    
-    <a href="{% url 'sis:section_create' %}" class="dashboard-card">
-        <div class="card-icon">📅✚</div>
-        <h2>Create Section</h2>
-        <p>Create a new section records</p>
-    </a>
-
-    <a href="{% url 'sis:enrollment_create_student_select' %}" class="dashboard-card">
-        <div class="card-icon">👨‍🎓📅✚</div>
-        <h2>Create Enrollment</h2>
-        <p>Enroll a student in a section</p>
-    </a>
-
-    <a href="/admin/" class="dashboard-card">
-        <div class="card-icon">⚙️</div>
-        <h2>Admin</h2>
-        <p>Django administration panel</p>
-    </a>
-</div>
-
 <style>
     .dashboard-header {
         text-align: center;
@@ -110,5 +61,126 @@
         color: #666;
         font-size: 0.95em;
     }
+    .search-wrap {
+        position: relative;
+        max-width: 480px;
+        margin: 0 auto 2rem;
+    }
+
+    .search-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 16px 10px 40px;
+        font-size: 15px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    .suggestions {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        z-index: 10;
+        display: none;
+    }
+
+    .suggestion-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.active {
+        background: #f5f5f5;
+    }
+
+    .dash-card.hidden {
+        display: none;
+    }
 </style>
+
+<div class="dashboard-header">
+    <h1>Welcome to Helmsman</h1>
+    <p class="subtitle">SIS Management Portal</p>
+</div>
+
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input class="search-input" id="dash-search" type="text"
+         placeholder="Search or navigate..." autocomplete="off" />
+  <div class="suggestions" id="suggestions"></div>
+</div>
+
+<div class="dashboard-cards">
+    {% for card in cards %}
+    <a href="{{ card.url }}" class="dashboard-card" data-title="{{ card.title }}" data-desc="{{ card.desc }}">
+        <div class="card-icon">{{ card.icon }}</div>
+        <h2>{{ card.title }}</h2>
+        <p>{{ card.desc }}</p>
+    </a>
+    {% endfor %}
+</div>
+
+<script>
+const search = document.getElementById('dash-search');
+const suggestions = document.getElementById('suggestions');
+const cards = Array.from(document.querySelectorAll('.dashboard-card'));
+let activeIdx = -1;
+
+function match(card, q) {
+  return card.dataset.title.toLowerCase().includes(q)
+      || card.dataset.desc.toLowerCase().includes(q);
+}
+
+search.addEventListener('input', () => {
+  const q = search.value.trim().toLowerCase();
+
+  // Filter cards
+  cards.forEach(c => c.classList.toggle('hidden', !!q && !match(c, q)));
+
+  // Build suggestions
+  suggestions.innerHTML = '';
+  if (!q) { suggestions.style.display = 'none'; return; }
+  const hits = cards.filter(c => match(c, q)).slice(0, 5);
+  hits.forEach(c => {
+    const a = document.createElement('a');
+    a.href = c.href;
+    a.className = 'suggestion-item';
+    a.textContent = c.dataset.title;
+    suggestions.appendChild(a);
+  });
+  suggestions.style.display = hits.length ? 'block' : 'none';
+  activeIdx = -1;
+});
+
+search.addEventListener('keydown', e => {
+  const items = suggestions.querySelectorAll('.suggestion-item');
+  if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx+1, items.length-1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx-1, -1); }
+  else if (e.key === 'Enter' && items[activeIdx]) { window.location.href = items[activeIdx].href; return; }
+  else if (e.key === 'Escape') { suggestions.style.display = 'none'; return; }
+  items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+});
+
+document.addEventListener('click', e => {
+  if (!suggestions.contains(e.target) && e.target !== search)
+    suggestions.style.display = 'none';
+});
+</script>
 {% endblock %}
