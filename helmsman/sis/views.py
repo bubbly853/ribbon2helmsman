@@ -792,9 +792,14 @@ def section_detail(request, section_stid):
     persons = GumIdent.objects.using('sis').all()
     if request.method == 'POST':
         sects = record.sects
+        scnd_inst = None
+        if request.POST.get('scnd_inst') != 'NULL':
+            scnd_inst = request.POST.get('scnd_inst')
         try:
             with transaction.atomic(using='sis'):
                 if sects:
+                    sects.srb_sects_prim_inst_id = request.POST.get('prim_inst', sects.srb_sects_prim_inst_id)
+                    sects.srb_sects_scnd_inst_id = scnd_inst
                     sects.save(using='sis')
             messages.success(request, 'Course updated successfully.')
             return redirect('sis:section_detail', section_stid=section_stid)
