@@ -939,7 +939,7 @@ def person_create(request):
             })
             with transaction.atomic(using='sis'):    
                 new_ident = ident.create(gum_ident_first_name=first_name, gum_ident_middle_name=middle_name, gum_ident_last_name=last_name, gum_ident_birthday=birthday, gum_ident_idnum=id_num, gum_ident_id_coid_id=id_country)
-                adinf.create(gum_adinf_rbid=new_ident.gum_ident_rbid, gum_adinf_pref_first_name=preferred_name, gum_adinf_prefix=prefix, gum_adinf_suffix=suffix, gum_adinf_username=username, gum_adinf_rcid_id=rcid, gum_adinf_hispanic_ind=hispanic, gum_adinf_rdid_1_id=rdid1, gum_adinf_rdid2_id=rdid2, gum_adinf_czid_id=czid, gum_adinf_citizen_coid=legal_country)
+                adinf.create(gum_adinf_rbid_id=new_ident.gum_ident_rbid, gum_adinf_pref_first_name=preferred_name, gum_adinf_prefix=prefix, gum_adinf_suffix=suffix, gum_adinf_username=username, gum_adinf_rcid_id=rcid, gum_adinf_hispanic_ind=hispanic, gum_adinf_rdid_1_id=rdid1, gum_adinf_rdid2_id=rdid2, gum_adinf_czid_id=czid, gum_adinf_citizen_coid=legal_country)
             messages.success(request, 'Person created successfully.')
             return redirect('sis:person_create')
         except Exception as e:
