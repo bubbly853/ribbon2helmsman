@@ -5,7 +5,6 @@ Place this in /srv/ribbon2helmsman/helmsman/sis/views.py
 from django.db import models
 from dataclasses import dataclass
 from typing import Optional, List
-import traceback
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -13,6 +12,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.urls import reverse
+from datetime import datetime
 
 # Import your real models
 from .models import (
@@ -899,10 +899,45 @@ def person_create(request):
     craces = GrlRcens.objects.using('sis').all().order_by('grl_rcens_hr_name')
     draces = GrlRdetl.objects.using('sis').all().order_by('grl_rdetl_hr_name')
     czcodes = GglCitzn.objects.using('sis').all().order_by('ggl_citzn_hr_name')
-
     if request.method == 'POST':
-        
+        preferred_name = request.POST.get('preferred_name') if request.POST.get('preferred_name') != '' else None
+        prefix = request.POST.get('prefix') if request.POST.get('prefix') != '' else None
+        first_name = request.POST.get('first_name')
+        middle_name = request.POST.get('middle_name') if request.POST.get('middle_name') != '' else None
+        last_name = request.POST.get('last_name')
+        suffix = request.POST.get('suffix') if request.POST.get('suffix') != '' else None
+        birthday = datetime.strptime(request.POST.get('birthday'), '%Y-%m-%d').date()
+        id_num = request.POST.get('id_num')
+        id_country = request.POST.get('id_country')
+        username = request.POST.get('username') if request.POST.get('username') != '' else None
+        rcid = request.POST.get('rcid')
+        rdid1 = request.POST.get('rdid1')
+        rdid2 = request.POST.get('rdid2') if request.POST.get('rdid2') != '' else None
+        czid = request.POST.get('czid')
+        legal_country = request.POST.get('legal_country')
         try:
+            #ident = GumIdent.objects.using('sis')
+            #adinf = GumAdinf.objects.using('sis')
+
+            print({
+                "preferred_name": preferred_name,
+                "prefix": prefix,
+                "first_name": first_name,
+                "middle_name": middle_name,
+                "last_name": last_name,
+                "suffix": suffix,
+                "birthday": birthday,
+                "id_num": id_num,
+                "id_country": id_country,
+                "username": username,
+                "rcid": rcid,
+                "rdid1": rdid1,
+                "rdid2": rdid2,
+                "czid": czid,
+                "legal_country": legal_country,
+            })
+            #with transaction.atomic(using='sis'):    
+                #ident.create(srb_sects_crid_id=course, srb_sects_tmid_id=term, srb_sects_prim_inst_id=prim_inst, srb_sects_scnd_inst_id=scnd_inst)
             messages.success(request, 'Person created successfully.')
             return redirect('sis:person_create')
         except Exception as e:
@@ -951,6 +986,7 @@ def section_create(request):
     }
     return render(request, 'sis/section_create.html', context)
 
+@login_required
 def enrollment_create_term_select(request, student_id):
     person = GumIdent.objects.using('sis').select_related('gumadinf').filter(gum_ident_rbid=student_id).first()
     terms = SrhSterm.objects.using('sis').select_related('srh_sterm_tmid').filter(srh_sterm_rbid=student_id)
@@ -971,6 +1007,7 @@ def enrollment_create_term_select(request, student_id):
     persons = GumIdent.objects.using('sis').filter(sgmstubi__isnull=False).order_by('gum_ident_last_name', 'gum_ident_first_name').distinct()
     return render(request, 'sis/enrollment_create_term_select.html', {'person': person,'terms': terms,})
 
+@login_required
 def enrollment_create(request, student_term_tsid):
     sterm = SrhSterm.objects.using('sis').filter(srh_sterm_tsid=student_term_tsid).select_related('srh_sterm_rbid').first()
     person = GumIdent.objects.using('sis').select_related('gumadinf').filter(gum_ident_rbid=sterm.srh_sterm_rbid_id).first()
