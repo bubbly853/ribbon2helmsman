@@ -551,11 +551,11 @@ def dashboard(request):
     cards = [
         {"url": reverse("sis:student_list"), "title": "Students", "desc": "View and manage student records", "icon": "👨‍🎓"},
         {"url": reverse("sis:person_list"), "title": "Persons",  "desc": "View and manage person records",  "icon": "🧑"},
-        {"url": reverse("sis:person_list"), "title": "Courses",  "desc": "View and manage course records",  "icon": "📚"},
-        {"url": reverse("sis:person_list"), "title": "Sections",  "desc": "View and manage section records",  "icon": "📅"},
-        {"url": reverse("sis:person_list"), "title": "Create Section",  "desc": "Create a new section record",  "icon": "📅✚"},
-        {"url": reverse("sis:person_list"), "title": "Create Enrollment",  "desc": "Enroll a student in a section",  "icon": "👨‍🎓📅✚"},
-        {"url": reverse("sis:person_list"), "title": "Admin",  "desc": "Django administration panels",  "icon": "⚙️"},
+        {"url": reverse("sis:course_list"), "title": "Courses",  "desc": "View and manage course records",  "icon": "📚"},
+        {"url": reverse("sis:section_list"), "title": "Sections",  "desc": "View and manage section records",  "icon": "📅"},
+        {"url": reverse("sis:section_create"), "title": "Create Section",  "desc": "Create a new section record",  "icon": "📅✚"},
+        {"url": reverse("sis:enrollment_create_student_select"), "title": "Create Enrollment",  "desc": "Enroll a student in a section",  "icon": "👨‍🎓📅✚"},
+        {"url": reverse("/admin/"), "title": "Admin",  "desc": "Django administration panels",  "icon": "⚙️"},
     ]
     context = {
         'cards': cards,
