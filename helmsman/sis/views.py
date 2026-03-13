@@ -911,6 +911,7 @@ def person_create(request):
         id_country = request.POST.get('id_country')
         username = request.POST.get('username') if request.POST.get('username') != '' else None
         rcid = request.POST.get('rcid')
+        hispanic = request.POST.get('hispanic')
         rdid1 = request.POST.get('rdid1')
         rdid2 = request.POST.get('rdid2') if request.POST.get('rdid2') != 'NULL' else None
         czid = request.POST.get('czid')
@@ -937,8 +938,8 @@ def person_create(request):
                 "legal_country": legal_country,
             })
             with transaction.atomic(using='sis'):    
-                new_ident = ident.create(gum_ident_first_name=first_name, gum_ident_middle_name=middle_name, gum_ident_last_name=last_name, gum_ident_birthday=birthday, gum_ident_idnum=id_num, gum_ident_id_coid=id_country)
-                adinf.create(gum_adinf_rbid=new_ident.gum_ident_rbid, gum_adinf_pref_first_name=preferred_name, gum_adinf_prefix=prefix, gum_adinf_suffix=suffix, gum_adinf_username=username, gum_adinf_rcid=rcid, gum_adinf_rdid_1=rdid1, gum_adinf_rdid2=rdid2, gum_adinf_czid=czid, gum_adinf_citizen_coid=legal_country)
+                new_ident = ident.create(gum_ident_first_name=first_name, gum_ident_middle_name=middle_name, gum_ident_last_name=last_name, gum_ident_birthday=birthday, gum_ident_idnum=id_num, gum_ident_id_coid_id=id_country)
+                adinf.create(gum_adinf_rbid=new_ident.gum_ident_rbid, gum_adinf_pref_first_name=preferred_name, gum_adinf_prefix=prefix, gum_adinf_suffix=suffix, gum_adinf_username=username, gum_adinf_rcid_id=rcid, gum_adinf_hispanic_ind=hispanic, gum_adinf_rdid_1_id=rdid1, gum_adinf_rdid2_id=rdid2, gum_adinf_czid_id=czid, gum_adinf_citizen_coid=legal_country)
             messages.success(request, 'Person created successfully.')
             return redirect('sis:person_create')
         except Exception as e:
