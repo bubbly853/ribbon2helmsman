@@ -555,7 +555,7 @@ def dashboard(request):
         {"url": reverse("sis:section_list"), "title": "Sections",  "desc": "View and manage section records",  "icon": "📅"},
         {"url": reverse("sis:section_create"), "title": "Create Section",  "desc": "Create a new section record",  "icon": "📅✚"},
         {"url": reverse("sis:enrollment_create_student_select"), "title": "Create Enrollment",  "desc": "Enroll a student in a section",  "icon": "👨‍🎓📅✚"},
-        {"url": reverse("/admin/"), "title": "Admin",  "desc": "Django administration panels",  "icon": "⚙️"},
+        {"url": "/admin/", "title": "Admin",  "desc": "Django administration panels",  "icon": "⚙️"},
     ]
     context = {
         'cards': cards,
