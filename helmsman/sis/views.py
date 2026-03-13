@@ -6,6 +6,7 @@ from django.db import models
 from dataclasses import dataclass
 from typing import Optional, List
 
+from django.db import connections
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -937,10 +938,19 @@ def person_create(request):
                 "czid": czid,
                 "legal_country": legal_country,
             })
-            with transaction.atomic(using='sis'):    
-                new_ident = ident.create(gum_ident_first_name=first_name, gum_ident_middle_name=middle_name, gum_ident_last_name=last_name, gum_ident_birthday=birthday, gum_ident_idnum=id_num, gum_ident_id_coid_id=id_country)
-                new_ident.refresh_from_db()
-                adinf.create(gum_adinf_rbid_id=new_ident.gum_ident_rbid, gum_adinf_pref_first_name=preferred_name, gum_adinf_prefix=prefix, gum_adinf_suffix=suffix, gum_adinf_username=username, gum_adinf_rcid_id=rcid, gum_adinf_hispanic_ind=hispanic, gum_adinf_rdid_1_id=rdid1, gum_adinf_rdid_2_id=rdid2, gum_adinf_czid_id=czid, gum_adinf_citizen_coid_id=legal_country)
+            with transaction.atomic(using='sis'):
+                new_rbid = None
+                with connections['sis'].cursor() as cursor:
+                    cursor.execute("""
+                        INSERT INTO general.gum_ident 
+                        (gum_ident_first_name, gum_ident_middle_name, gum_ident_last_name, 
+                        gum_ident_birthday, gum_ident_idnum, gum_ident_id_coid)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                        RETURNING gum_ident_rbid
+                    """, [first_name, middle_name, last_name, birthday, id_num, id_country])
+                    
+                    new_rbid = cursor.fetchone()[0]
+                adinf.create(gum_adinf_rbid_id=new_rbid, gum_adinf_pref_first_name=preferred_name, gum_adinf_prefix=prefix, gum_adinf_suffix=suffix, gum_adinf_username=username, gum_adinf_rcid_id=rcid, gum_adinf_hispanic_ind=hispanic, gum_adinf_rdid_1_id=rdid1, gum_adinf_rdid_2_id=rdid2, gum_adinf_czid_id=czid, gum_adinf_citizen_coid_id=legal_country)
             messages.success(request, 'Person created successfully.')
             return redirect('sis:person_create')
         except Exception as e:
