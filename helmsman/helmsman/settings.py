@@ -89,7 +89,7 @@ DATABASES = {
         'HOST': os.getenv('SIS_DB_HOST'),
         'PORT': os.getenv('SIS_DB_PORT'),
         'OPTIONS': {
-            'options': '-c search_path=helmsman,general,finance,student'
+            'options': '-c search_path=helmsman,general,finance,student,public'
         },
     }
 }
