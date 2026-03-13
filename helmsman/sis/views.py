@@ -912,12 +912,12 @@ def person_create(request):
         username = request.POST.get('username') if request.POST.get('username') != '' else None
         rcid = request.POST.get('rcid')
         rdid1 = request.POST.get('rdid1')
-        rdid2 = request.POST.get('rdid2') if request.POST.get('rdid2') != '' else None
+        rdid2 = request.POST.get('rdid2') if request.POST.get('rdid2') != 'NULL' else None
         czid = request.POST.get('czid')
         legal_country = request.POST.get('legal_country')
         try:
-            #ident = GumIdent.objects.using('sis')
-            #adinf = GumAdinf.objects.using('sis')
+            ident = GumIdent.objects.using('sis')
+            adinf = GumAdinf.objects.using('sis')
 
             print({
                 "preferred_name": preferred_name,
@@ -936,8 +936,9 @@ def person_create(request):
                 "czid": czid,
                 "legal_country": legal_country,
             })
-            #with transaction.atomic(using='sis'):    
-                #ident.create(srb_sects_crid_id=course, srb_sects_tmid_id=term, srb_sects_prim_inst_id=prim_inst, srb_sects_scnd_inst_id=scnd_inst)
+            with transaction.atomic(using='sis'):    
+                new_ident = ident.create(gum_ident_first_name=first_name, gum_ident_middle_name=middle_name, gum_ident_last_name=last_name, gum_ident_birthday=birthday, gum_ident_idnum=id_num, gum_ident_id_coid=id_country)
+                adinf.create(gum_adinf_rbid=new_ident.gum_ident_rbid, gum_adinf_pref_first_name=preferred_name, gum_adinf_prefix=prefix, gum_adinf_suffix=suffix, gum_adinf_username=username, gum_adinf_rcid=rcid, gum_adinf_rdid_1=rdid1, gum_adinf_rdid2=rdid2, gum_adinf_czid=czid, gum_adinf_citizen_coid=legal_country)
             messages.success(request, 'Person created successfully.')
             return redirect('sis:person_create')
         except Exception as e:
