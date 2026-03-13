@@ -7,16 +7,20 @@
     <h1>Section List</h1>
     
     <form method="get" class="search-form">
-        <input type="text" 
-               name="search" 
-               placeholder="Search by Title, CRID, SBID, or Number..." 
-               value="{{ search_query }}"
-               autofocus>
-        <button type="submit" class="btn">Search</button>
-        {% if search_query %}
-        <a href="{% url 'sis:section_list' %}" class="btn btn-secondary">Clear</a>
-        {% endif %}
-        <a href="{% url 'sis:section_create' %}" class="btn btn-secondary">Create a section</a>
+        <div class="search-grid">
+            <input class="search-input search-grid1" 
+                   name="search" 
+                   type="text"
+                   placeholder="Search by Title, CRID, SBID, or Number..."
+                   value="{{ search_query }}"
+                   autofocus/>
+            <button type="submit" class="btn search-grid2">Search</button>
+            {% if search_query %}
+            <a href="{% url 'sis:student_list' %}" class="btn btn-secondary search-grid3">Clear</a>
+            {% else %}
+            <a href="{% url 'sis:dashboard' %}" class="btn btn-secondary search-grid3">Return</a>
+            {% endif %}
+        </div>
     </form>
     
     <table>
