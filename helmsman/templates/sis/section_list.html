@@ -16,7 +16,7 @@
                    autofocus/>
             <button type="submit" class="btn search-grid2">Search</button>
             {% if search_query %}
-            <a href="{% url 'sis:student_list' %}" class="btn btn-secondary search-grid3">Clear</a>
+            <a href="{% url 'sis:section_list' %}" class="btn btn-secondary search-grid3">Clear</a>
             {% else %}
             <a href="{% url 'sis:dashboard' %}" class="btn btn-secondary search-grid3">Return</a>
             {% endif %}
@@ -48,7 +48,7 @@
                 <td data-label="Secondary Instructor" class="hide-mobile">{{ section.scnd_inst }}</td>
                 <td data-label="Actions">
                     {% if section.stid %}
-                        <a href="{% url 'sis:course_detail' section.stid %}" class="btn">View</a>
+                        <a href="{% url 'sis:section_detail' section.stid %}" class="btn">View</a>
                     {% else %}
                         <span class="text-muted">No STID</span>
                     {% endif %}

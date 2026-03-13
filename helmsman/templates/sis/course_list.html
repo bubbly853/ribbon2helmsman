@@ -16,7 +16,7 @@
                    autofocus/>
             <button type="submit" class="btn search-grid2">Search</button>
             {% if search_query %}
-            <a href="{% url 'sis:student_list' %}" class="btn btn-secondary search-grid3">Clear</a>
+            <a href="{% url 'sis:course_list' %}" class="btn btn-secondary search-grid3">Clear</a>
             {% else %}
             <a href="{% url 'sis:dashboard' %}" class="btn btn-secondary search-grid3">Return</a>
             {% endif %}
