@@ -292,6 +292,20 @@
             border-radius: 6px;
             font-size: 14px;
         }
+
+        .search-grid{
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: 1fr;
+            grid-column-gap: 0px;
+            grid-row-gap: 0px;
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        .search-grid1 { grid-area: 1 / 5 / 2 / 6; }
+        .search-grid2 { grid-area: 1 / 1 / 2 / 5; }
+        .search-grid3 { grid-area: 1 / 6 / 2 / 7; }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
