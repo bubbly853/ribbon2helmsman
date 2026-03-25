@@ -145,8 +145,14 @@ SESSION_SAVE_EVERY_REQUEST = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-CSRF_COOKIE_DOMAIN = "192.168.56.25"
-SESSION_COOKIE_DOMAIN = "192.168.56.25"
+CSRF_COOKIE_DOMAIN = None
+SESSION_COOKIE_DOMAIN = None
+CSRF_TRUSTED_ORIGINS = [
+    "https://192.168.56.25",
+    "https://localhost",
+    "http://localhost",
+    "http://127.0.0.1",
+]
 
 # Security settings for production
 if not DEBUG:
