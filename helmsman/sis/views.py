@@ -1079,7 +1079,7 @@ def student_create_term_select(request, person_rbid):
             tmid = tmid
             sterm = SrhSterm.objects.using('sis')
             with transaction.atomic(using='sis'):
-                sterm.create(srh_sterm_rbid=rbid, srh_sterm_tmid=tmid, srh_sterm_rgid='NS')
+                sterm.create(srh_sterm_rbid_id=rbid, srh_sterm_tmid_id=tmid, srh_sterm_rgid='NS')
             messages.success(request, 'Student term record created successfully.')
         except Exception as e:
             messages.error(request, f'Error creating stduent_record: {e}')
