@@ -354,6 +354,7 @@
         <span>DB Field: </span><code id="db-field-display">—</code>
     </div>
     {% block extra_js %}
+    {% endblock %}
     <script>
         document.querySelectorAll('[data-db-field]').forEach(el => {
             el.addEventListener('mouseenter', function() {
@@ -364,8 +365,6 @@
             });
         });
     </script>
-    {% endblock %}
-
     <script>
     document.getElementById('nav-toggle').addEventListener('click', function () {
         document.getElementById('navbar-nav').classList.toggle('open');
