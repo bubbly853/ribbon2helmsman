@@ -1,0 +1,12 @@
+{% extends 'sis/base.html' %}
+
+{% block title %}Access Denied - Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+<h1>503: Internal Server Error</h1>
+<br>
+<p>Could not connect to the <strong>{{ service }}</strong>.</p>
+<pre>{{ detail }}</pre>
+</div>
+{% endblock %}
