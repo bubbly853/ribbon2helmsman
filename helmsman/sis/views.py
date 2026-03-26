@@ -819,6 +819,13 @@ def person_list(request):
     """List all students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
     rbid_query = request.GET.get('rbid', '').strip()
+    url_name = request.resolver_match.url_name
+    person_link_map = {
+        'person_list': 'sis/person_list.html',
+        'student_create_person_select': 'sis/student_create_person_select.html',
+    }
+    person_link = person_link_map.get(url_name, 'sis/person_list.html')
+
 
     # Base queryset: only students that have a SGM_STUBI record
     prson_qs = HgvPrson.objects.using('sis').all()
@@ -856,7 +863,7 @@ def person_list(request):
         'page_obj': page_obj,
         'search_query': search_query,
     }
-    return render(request, 'sis/person_list.html', context)
+    return render(request, person_link, context)
 
 @login_required
 def person_detail(request, person_rbid):
@@ -1047,3 +1054,36 @@ def enrollment_create(request, student_term_tsid):
         except Exception as e:
             messages.error(request, f'Error creating enrollment: {e}')
     return render(request, 'sis/enrollment_create.html', context)
+
+@login_required
+def student_create_term_select(request, person_rbid):
+    person = GumIdent.objects.using('sis').select_related('gumadinf').filter(gum_ident_rbid=person_rbid).first()
+    srh_tmids = SrhSterm.objects.using('sis').filter(srh_sterm_rbid=person_rbid).values_list('srh_sterm_tmid', flat=True)
+    terms = SglTerms.objects.using('sis').exclude(sgl_terms_tmid__in=srh_tmids)
+    if request.method == 'POST':
+        tmid = request.POST.get('term')
+
+        if not tmid:
+            messages.error(request, 'Please select a term.')
+            return render(request, 'sis/student_create_term_select.html', {
+                'person': person,
+            })
+        
+        if tmid == "NULL":
+            messages.error(request, 'Student record found for all available terms.')
+            return render(request, 'sis/student_create_term_select.html', {
+                'person': person,
+            })
+        try:
+            rbid = person.gum_ident_rbid
+            tmid = tmid
+            sterm = SrhEnrol.objects.using('sis')
+            with transaction.atomic(using='sis'):
+                sterm.create(srh_sterm_rbid=rbid, srh_sterm_tmid=tmid, srh_sterm_rgid='NS')
+            messages.success(request, 'Student term record created successfully.')
+        except Exception as e:
+            messages.error(request, f'Error creating stduent_record: {e}')
+    
+        return render(request, 'sis/student_create_term_select.html', {'person': person,'terms': terms,})
+
+    return render(request, 'sis/student_create_term_select.html', {'person': person,'terms': terms,})
