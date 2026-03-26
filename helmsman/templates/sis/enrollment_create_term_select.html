@@ -24,9 +24,10 @@
 
         <div class="form-group">
             <label for="terms-dropdown">Term</label>
-            <select id="terms-dropdown" name="term">
+            <select id="terms-dropdown" name="term"
+                    data-db-field="srh_sterm.srh_sterm_tsid | srh_sterm.srh_sterm_tmid |sgl_terms.sgl_terms_tmid">
             {% for term in terms %}
-                <option value="{{ term.srh_sterm_tsid }}">
+                <option value="{{ term.srh_sterm_tsid }}"></option>>
                     {{ term.srh_sterm_tmid.sgl_terms_hr_name }}
                 </option>
             {% endfor %}
