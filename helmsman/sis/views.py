@@ -1077,7 +1077,7 @@ def student_create_term_select(request, person_rbid):
         try:
             rbid = person.gum_ident_rbid
             tmid = tmid
-            sterm = SrhEnrol.objects.using('sis')
+            sterm = SrhSterm.objects.using('sis')
             with transaction.atomic(using='sis'):
                 sterm.create(srh_sterm_rbid=rbid, srh_sterm_tmid=tmid, srh_sterm_rgid='NS')
             messages.success(request, 'Student term record created successfully.')
