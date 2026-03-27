@@ -869,26 +869,55 @@ def person_list(request):
 @login_required
 def person_detail(request, person_rbid):
     """View/edit individual student by RBID"""
-    record = make_person_detail_record(person_rbid)
-    countries = GglCount.objects.using('sis').all()
-    if not record:
+    ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=person_rbid).first()
+    adinf = GumAdinf.objects.using('sis').filter(gum_adinf_rbid_id=person_rbid).first()
+    countries = GglCount.objects.using('sis').all().order_by('ggl_count_hr_name')
+    craces = GrlRcens.objects.using('sis').all().order_by('grl_rcens_hr_name')
+    draces = GrlRdetl.objects.using('sis').all().order_by('grl_rdetl_hr_name')
+    czcodes = GglCitzn.objects.using('sis').all().order_by('ggl_citzn_hr_name')
+    if not ident:
         return get_object_or_404(GumIdent, gum_ident_rbid=person_rbid)
+    if not adinf:
+        return get_object_or_404(GumAdinf, gum_adinf_rbid_id=person_rbid)
 
     if request.method == 'POST':
-        ident = record.gum_ident
-        adinf = record.gum_adinf
         try:
+            preferred_name = request.POST.get('preferred_name') if request.POST.get('preferred_name') != '' else None
+            prefix = request.POST.get('prefix') if request.POST.get('prefix') != '' else None
+            first_name = request.POST.get('first_name')
+            middle_name = request.POST.get('middle_name') if request.POST.get('middle_name') != '' else None
+            last_name = request.POST.get('last_name')
+            suffix = request.POST.get('suffix') if request.POST.get('suffix') != '' else None
+            birthday = datetime.strptime(request.POST.get('birthday'), '%Y-%m-%d').date()
+            id_num = request.POST.get('id_num')
+            id_country = request.POST.get('id_country')
+            username = request.POST.get('username') if request.POST.get('username') != '' else None
+            rcid = request.POST.get('rcid')
+            hispanic = request.POST.get('hispanic')
+            rdid1 = request.POST.get('rdid1')
+            rdid2 = request.POST.get('rdid2') if request.POST.get('rdid2') != 'NULL' else None
+            czid = request.POST.get('czid')
+            legal_country = request.POST.get('legal_country')
             with transaction.atomic(using='sis'):
                 if ident:
-                    ident.gum_ident_first_name = request.POST.get('first_name', ident.gum_ident_first_name)
-                    ident.gum_ident_middle_name = request.POST.get('middle_name', ident.gum_ident_middle_name)
-                    ident.gum_ident_last_name = request.POST.get('last_name', ident.gum_ident_last_name)
-                    ident.gum_ident_idnum = request.POST.get('id_num', ident.gum_ident_idnum)
-                    ident.gum_ident_id_coid_id = request.POST.get('id_country', ident.gum_ident_id_coid_id)
+                    ident.gum_ident_first_name = first_name
+                    ident.gum_ident_middle_name = middle_name
+                    ident.gum_ident_last_name = last_name
+                    ident.gum_ident_birthday = birthday
+                    ident.gum_ident_idnum = id_num
+                    ident.gum_ident_id_coid_id = id_country
                     ident.save(using='sis')
                 if adinf:
-                    adinf.gum_adinf_pref_first_name = request.POST.get('preferred_name', adinf.gum_adinf_pref_first_name)
-                    adinf.gum_adinf_username = request.POST.get('username', adinf.gum_adinf_username)
+                    adinf.gum_adinf_pref_first_name = preferred_name
+                    adinf.gum_adinf_prefix = prefix
+                    adinf.gum_adinf_suffix = suffix
+                    adinf.gum_adinf_username = username
+                    adinf.gum_adinf_rcid_id = rcid
+                    adinf.gum_adinf_hispanic_ind = hispanic
+                    adinf.gum_adinf_rdid_1_id = rdid1
+                    adinf.gum_adinf_rdid_2_id =rdid2
+                    adinf.gum_adinf_czid_id = czid
+                    adinf.gum_adinf_citizen_coid_id = legal_country
                     adinf.save(using='sis')
 
             messages.success(request, 'Persson updated successfully.')
@@ -897,8 +926,12 @@ def person_detail(request, person_rbid):
             messages.error(request, f'Error updating student: {e}')
 
     context = {
-        'person': record,
+        'ident': ident,
+        'adinf': adinf,
         'countries': countries,
+        'craces': craces,
+        'draces': draces,
+        'czcodes': czcodes
     }
     return render(request, 'sis/person_detail.html', context)
 
@@ -976,7 +1009,7 @@ def person_create(request):
 @login_required
 def section_create(request):
     courses = SrlCours.objects.using('sis').all().order_by('srl_cours_crid')
-    courses = courses.filter(srl_cours_active_ind__exact='Y')
+    courses = courses.filter(f__exact='Y')
     terms = SglTerms.objects.using('sis').all().order_by('-sgl_terms_tmid')
     persons = GumIdent.objects.using('sis').all().order_by('gum_ident_last_name', 'gum_ident_first_name')
 

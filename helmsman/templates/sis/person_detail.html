@@ -1,6 +1,6 @@
 {% extends 'sis/detail_base.html' %}
 
-{% block title %}{{ person.preferred_name|default:person.first_name }} {{ person.last_name }} - Helmsman{% endblock %}
+{% block title %}{{ adinf.gum_adinf_pref_first_name|default:ident.gum_ident_first_name }} {{ ident.gum_ident_last_name }} - Helmsman{% endblock %}
 
 {% block content %}
 <div class="card">
@@ -12,15 +12,15 @@
         <!-- RBID (Primary Banner ID) -->
         <div class="form-group">
             <label>RBID</label>
-            <input type="text" value="{{ person.rbid }}" disabled
-                   data-db-field="gum_ident.gum_idtent_rbid">
+            <input type="text" value="{{ ident.gum_ident_rbid }}" disabled
+                   data-db-field="gum_ident.gum_ident_rbid">
         </div>
 
         <!-- Editable: Preferred Name -->
         <div class="form-group">
             <label for="preferred_name">Preferred First Name</label>
             <input type="text" id="preferred_name" name="preferred_name"
-                   value="{{ person.preferred_name|default:'' }}"
+                   value="{{ adinf.gum_adinf_pref_first_name|default:'' }}"
                    data-db-field="gum_adinf.gum_adinf_pref_first_name">
         </div>
 
@@ -28,7 +28,7 @@
         <div class="form-group">
             <label for="first_name">First Name</label>
             <input type="text" id="first_name" name="first_name"
-                   value="{{ person.first_name|default:'' }}" required
+                   value="{{ ident.gum_ident_first_name|default:'' }}" required
                    data-db-field="gum_ident.gum_ident_first_name">
         </div>
 
@@ -36,7 +36,7 @@
         <div class="form-group">
             <label for="middle_name">Middle Name</label>
             <input type="text" id="middle_name" name="middle_name"
-                   value="{{ person.middle_name|default:'' }}"
+                   value="{{ ident.gum_ident_middle_name|default:'' }}"
                    data-db-field="gum_ident.gum_ident_middle_name">
         </div>
 
@@ -44,30 +44,23 @@
         <div class="form-group">
             <label for="last_name">Last Name</label>
             <input type="text" id="last_name" name="last_name"
-                   value="{{ person.last_name|default:'' }}" required
+                   value="{{ ident.gum_ident_last_name|default:'' }}" required
                    data-db-field="gum_ident.gum_ident_last_name">
         </div>
 
-        <!-- Birthday -->
+        <!-- Editable Birthday -->
         <div class="form-group">
-            <label>Birthday</label>
-            <input type="text" value="{{ person.birthday }}" disabled
-            data-db-field="gum_ident.gum_ident_birthday">
-        </div>
-
-        <!-- Editable: Username -->
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username"
-                   value="{{ person.username }}" required
-                   data-db-field="gum_adinf.gum_adinf_username">
+            <label for="birthday">Birthday</label>
+            <input type="date" id="birthday" 
+                   value="{{ ident.gum_ident_birthday|date:'Y-m-d' }}" name="birthday"
+                   required data-db-field="gum_ident.gum_ident_birthday">
         </div>
 
         <!-- Editable: ID Num -->
         <div class="form-group">
             <label for="id_num">ID Number</label>
             <input type="text" id="id_num" name="id_num"
-                   value="{{ person.id_num }}" required
+                   value="{{ ident.gum_ident_idnum }}" required
                    data-db-field="gum_ident.gum_ident_id_num">
         </div>
 
@@ -78,7 +71,99 @@
             data-db-field="gum_ident.gum_ident_id_coid | ggl_count.ggl_count_hr_name">
                 {% for country in countries %}
                     <option value="{{ country.ggl_count_coid }}"
-                        {% if country.ggl_count_coid == person.id_coid %}selected{% endif %}>
+                        {% if country.ggl_count_coid == ident.gum_ident_id_coid_id %}selected{% endif %}>
+                        {{ country.ggl_count_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Username -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username"
+                   value="{{ adinf.gum_adinf_username }}" required
+                   data-db-field="gum_adinf.gum_adinf_username">
+        </div>        
+        
+        <!-- Editable: Census Race -->
+        <div class="form-group">
+            <label for="rcid">Census Race</label>
+            <select id="rcid" name="rcid"
+            data-db-field="gum_adinf.gum_adinf_rcid | grl_rcens.grl_rcens_hr_name">
+                {% for crace in craces %}
+                    <option value="{{ crace.grl_rcens_rcid }}"
+                    {% if crace.grl_rcens_rcid == adinf.gum_adinf_rcid_id %}selected{% endif %}>
+                        {{ crace.grl_rcens_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Hispanic Indicator -->
+        <div class="form-group">
+            <label for="hispanic">Hispanic</label>
+            <select id="hispanic" name="hispanic"
+            data-db-field="gum_adinf.gum_adinf_hispanic_inf">
+                <option value="Y" {% if adinf.gum_adinf_hispanic_ind == 'Y' %}selected{% endif %}>Yes</option>
+                <option value="N" {% if adinf.gum_adinf_hispanic_ind == 'N' %}selected{% endif %}>No</option>
+            </select>
+        </div>
+
+        <!-- Editable: Race Detail 1-->
+        <div class="form-group">
+            <label for="rdid1">Race Detail 1</label>
+            <select id="rdid1" name="rdid1"
+            data-db-field="gum_adinf.gum_adinf_rdid_1 | grl_rcens.grl_rdetl_hr_name">
+                {% for drace in draces %}
+                    <option value="{{ drace.grl_rdetl_rdid }}"
+                    {% if drace.grl_rdetl_rdid == adinf.gum_adinf_rdid_1_id %}selected{% endif %}>
+                        {{ drace.grl_rdetl_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Race Detail 2-->
+        <div class="form-group">
+            <label for="rdid2">Race Detail 2</label>
+            <select id="rdid2" name="rdid2"
+            data-db-field="gum_adinf.gum_adinf_rdid_2 | grl_rcens.grl_rdetl_hr_name">
+                {% for drace in draces %}
+                    <option value="{{ drace.grl_rdetl_rdid }}"
+                    {% if drace.grl_rdetl_rdid == adinf.gum_adinf_rdid_2_id %}selected{% endif %}>
+                        {{ drace.grl_rdetl_hr_name }}
+                    </option>>
+                        {{ drace.grl_rdetl_hr_name }}
+                    </option>
+                {% endfor %}
+                    <option value="NULL"
+                    {% if not adinf.gum_adinf_rdid_2_id %}selected{% endif %}></option></option>
+            </select>
+        </div>
+
+        <!-- Editable: Citizenship Code-->
+        <div class="form-group">
+            <label for="czid">Citizenship Code</label>
+            <select id="czid" name="czid"
+            data-db-field="gum_adinf.gum_adinf_czid | ggl_citzn.ggl_citzn_hr_name">
+                {% for czcode in czcodes %}
+                    <option value="{{ czcode.ggl_citzn_czid }}"
+                    {% if czcode.ggl_citzn_czid == adinf.gum_adinf_czid_id %}selected{% endif %}>
+                        {{ czcode.ggl_citzn_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Country of Citizenship -->
+        <div class="form-group">
+            <label for="legal_country">Country of Citizenship</label>
+            <select id="legal_country" name="legal_country"
+            data-db-field="gum_ident.gum_ident_id_coid | ggl_count.ggl_count_hr_name">
+                {% for country in countries %}
+                    <option value="{{ country.ggl_count_coid }}"
+                    {% if country.ggl_count_coid == adinf.gum_adinf_citizen_coid_id %}selected{% endif %}>
                         {{ country.ggl_count_hr_name }}
                     </option>
                 {% endfor %}
