@@ -558,6 +558,7 @@ def dashboard(request):
         {"url": reverse("sis:section_create"), "title": "Create Section",  "desc": "Create a new section record",  "icon": "📅✚"},
         {"url": reverse("sis:enrollment_create_student_select"), "title": "Create Enrollment",  "desc": "Enroll a student in a section",  "icon": "👨‍🎓📅✚"},
         {"url": reverse("sis:student_create_person_select"), "title": "Create Student Term Record",  "desc": "Create a term record for a student, creates a student record if needed",  "icon": "👨‍🎓✚"},
+        {"url": reverse("sis:marks_enter_section_select"), "title": "Enter or Update Final Marks",  "desc": "Enter or update final marks for a section",  "icon": "✅📝"},
         {"url": "/admin/", "title": "Admin",  "desc": "Django administration panels",  "icon": "⚙️"},
     ]
     context = {
@@ -759,7 +760,14 @@ def course_detail(request, course_crid):
 def section_list(request):
     """List all courses with search and pagination"""
     search_query = request.GET.get('search', '').strip()
+    search_query = request.GET.get('search', '').strip()
+    url_name = request.resolver_match.url_name
+    section_link_map = {
+        'section_list': 'sis/section_list.html',
+        'marks_enter_section_select': 'sis/marks_enter_section_select.html',
+    }
 
+    section_link = section_link_map.get(url_name, 'sis/section_list.html')
     sections_qs = HsvSects.objects.using('sis').all()
 
     if search_query:
@@ -785,7 +793,7 @@ def section_list(request):
         'page_obj': page_obj,
         'search_query': search_query,
     }
-    return render(request, 'sis/section_list.html', context)
+    return render(request, section_link, context)
 
 @login_required
 def section_detail(request, section_stid):
@@ -934,6 +942,59 @@ def person_detail(request, person_rbid):
         'czcodes': czcodes
     }
     return render(request, 'sis/person_detail.html', context)
+
+@login_required
+def marks_enter(request, section_stid):
+    enrol = SrhEnrol.objects.using('sis').filter(
+        srh_enrol_stid_id=section_stid
+    ).select_related(
+        'srh_enrol_rbid__gumadinf',
+        'sthcrtrn'
+    ).order_by(
+        'srh_enrol_rbid__gum_ident_last_name',
+        'srh_enrol_rbid__gumadinf__gum_adinf_pref_first_name',
+        'srh_enrol_rbid__gum_ident_first_name'
+    ).all()
+    marks = StlMarks.objects.using('sis').all().order_by('stl_marks_mkid')
+    context = {
+        'enrol': enrol,
+        'stid': section_stid,
+        'marks': marks
+    }
+
+    if request.method == 'POST':
+        i = 1
+        errors = []
+        while True:
+            erid = request.POST.get(f'erid_{i}')
+            if erid is None:
+                break
+
+            mark_avg  = request.POST.get(f'mark_avg_{i}') or None
+            final_mkid = request.POST.get(f'final_mkid_{i}') if request.POST.get(f'final_mkid_{i}') != 'NULL' else None
+
+            try:
+                SthCrtrn.objects.using('sis').update_or_create(
+                    sth_crtrn_erid_id=erid,
+                    defaults={
+                        'sth_crtrn_final_mark_avg': mark_avg,
+                        'sth_crtrn_final_mkid_id': final_mkid,
+                    }
+                )
+            except Exception as e:
+                errors.append(f'Row {i} (erid {erid}): {e}')
+            
+            i += 1
+
+        if errors:
+            for error in errors:
+                messages.error(request, f'Error updating marks: {error}')
+        else:
+            messages.success(request, 'marks updated successfully.')
+        return redirect('sis:marks_enter', section_stid=section_stid)
+    
+    return render(request, 'sis/marks_enter.html', context)
+    
 
 # --- Create Views ---
 @login_required

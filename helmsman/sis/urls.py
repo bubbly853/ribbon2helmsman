@@ -25,4 +25,6 @@ urlpatterns = [
     path('create_enrollment/enroll/<str:student_term_tsid>', views.enrollment_create, name='enrollment_create'),
     path('create_student/', views.person_list, name='student_create_person_select'),
     path('create_student/<str:person_rbid>', views.student_create_term_select, name='student_create_term_select'),
+    path('enter_marks/', views.section_list, name='marks_enter_section_select'),
+    path('enter_marks/<str:section_stid>', views.marks_enter, name='marks_enter'),
 ]
