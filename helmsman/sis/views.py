@@ -943,43 +943,38 @@ def person_detail(request, person_rbid):
 def curriculum_list(request):
     """List  students with search and pagination"""
     search_query = request.GET.get('search', '').strip()
-    rbid_query = request.GET.get('rbid', '').strip()
     url_name = request.resolver_match.url_name
-    student_link_map = {
+    curriculum_link_map = {
         'student_list': 'sis/student_list.html',
         'enrollment_create_student_select': 'sis/enrollment_create_student_select.html',
     }
-    student_link = student_link_map.get(url_name, 'sis/student_list.html')
+    curriculum_link = curriculum_link_map.get(url_name, 'sis/student_list.html')
 
-    # Base queryset: only students that have a SGM_stdnt record
-    stdnt_qs = HsvStdnt.objects.using('sis').all()
+    crcrc_qs = HsvCrcrc.objects.using('sis').all()
 
-    # Search by name or RBID through GumIdent
+    # Search by name or RBID through HsvCrcrc
     if search_query:
-        stdnt_qs = stdnt_qs.filter(
-            models.Q(hsv_stdnt_first_name__icontains=search_query) |
-            models.Q(hsv_stdnt_last_name__icontains=search_query)
+        crcrc_qs = crcrc_qs.filter(
+            models.Q(hsv_crcrc_cvid__contains=search_query) |
+            models.Q(hsv_crcrc_mrid__contains=search_query) |
+            models.Q(hsv_crcrc_hr_name__icontains=search_query)
         )
 
-    if rbid_query:
-        stdnt_qs = stdnt_qs.filter(hsv_stdnt_rbid__icontains=rbid_query)
-
-    # Order by last_name, first_name from GumIdent
-    stdnt_qs = stdnt_qs.order_by(
-        'hsv_stdnt_last_name',
-        'hsv_stdnt_first_name'
+    # Order by major name HsvCrcrc
+    crcrc_qs = crcrc_qs.order_by(
+        'hsv_crcrc_hr_name'
     )
 
     # Limit to 2000 results for safety
-    stdnt_list = stdnt_qs[:2000]
+    crcrc_list = crcrc_qs[:2000]
 
     # Build student records
-    students: List = []
-    for stdnt in stdnt_list:
-        students.append(make_student_record(stdnt))
+    curriculums: List = []
+    for crcrc in crcrc_list:
+        curriculums.append(make_student_record(crcrc))
 
     # Pagination
-    paginator = Paginator(students, 25)  # 25 per page
+    paginator = Paginator(curriculums, 25)  # 25 per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -987,7 +982,7 @@ def curriculum_list(request):
         'page_obj': page_obj,
         'search_query': search_query,
     }
-    return render(request, student_link, context)
+    return render(request, curriculum_link, context)
 
 @login_required
 def marks_enter(request, section_stid):
