@@ -161,8 +161,6 @@ class PersonRecord:
     id_country: Optional[str]
     hgv_prson: Optional[HgvPrson] = None
 
-@dataclass
-class PersonDetail:
     rbid: str
     preferred_name: Optional[str]
     first_name: Optional[str]
@@ -175,6 +173,18 @@ class PersonDetail:
     id_country: Optional[str]
     gum_ident: Optional[GumIdent] = None
     gum_adinf: Optional[GumAdinf] = None
+
+@dataclass
+class CurriculumRecord:
+    curriculum_version_id: str
+    major_id: Optional[str]
+    effective_term: Optional[str]
+    name: Optional[str]
+    type_id: Optional[str]
+    type: Optional[str]
+    mark_average: Optional[str]
+    gpa_min: Optional[str]
+    min_credits: Optional[str]
 
 
 # --- Utility functions ---
@@ -490,59 +500,45 @@ def make_person_record(prson: Optional[HgvPrson]) -> PersonRecord:
         hgv_prson=prson,
     )
 
-def make_person_detail_record(search_rbid: str) -> PersonDetail:
+def make_curriculum_record(crcrc: Optional[HsvCrcrc]) -> PersonRecord:
     """
-    Build StudentDetail from HsvLtsts and its select_related objects.
+    Build PersonRecord from hsv_prson.
     """
 
-    def safe_date(d):
-        if d is None:
-            return None
-        if d.year < 1900:
-            return None
-        return d
+    # --------------------
+    # HsvCrcrc fields
+    # --------------------
+    curriculum_version_id = None
+    major_id = None
+    effective_term = None
+    name = None
+    type_id = None
+    type = None
+    mark_average = None
+    gpa_min = None
+    min_credits = None
 
-    rbid = None
-    preferred_name = None
-    first_name = None
-    middle_name = None
-    last_name = None
-    username = None
-    birthday = None
-    id_num = None
-    id_coid = None
-    id_country = None
-    ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=search_rbid).first()
-    adinf = None 
-    if ident:
-        adinf = GumAdinf.objects.using('sis').filter(gum_adinf_rbid_id=ident.gum_ident_rbid).first()
-        count = GglCount.objects.using('sis').filter(ggl_count_coid=ident.gum_ident_id_coid_id).first()
+    if crcrc:
+        curriculum_version_id = crcrc.hsv_crcrc_cvid
+        major_id = crcrc.hsv_crcrc_mrid
+        effective_term = crcrc.hsv_crcrc_effective_term
+        name = crcrc.hsv_crcrc_hr_name
+        type_id = crcrc.hsv_crcrc_ctid
+        type = crcrc.hsv_crcrc_curr_type
+        mark_average = crcrc.hsv_crcrc_mark_avg
+        gpa_min = crcrc.hsv_crcrc_min_gpa
+        min_credits = crcrc.hsv_crcrc_min_credits
 
-        rbid = ident.gum_ident_rbid
-        preferred_name = adinf.gum_adinf_pref_first_name
-        first_name = ident.gum_ident_first_name
-        middle_name = ident.gum_ident_middle_name
-        last_name = ident.gum_ident_last_name
-        birthday = safe_date(ident.gum_ident_birthday)
-        username = adinf.gum_adinf_username
-        id_num = ident.gum_ident_idnum
-        id_coid = ident.gum_ident_id_coid_id
-        id_country =count.ggl_count_hr_name
-
-
-    return PersonDetail(
-        rbid=rbid,
-        preferred_name=preferred_name,
-        first_name=first_name,
-        middle_name=middle_name,
-        last_name=last_name,
-        username=username,
-        birthday=birthday,
-        id_num=id_num,
-        id_coid=id_coid,
-        id_country=id_country,
-        gum_ident=ident,
-        gum_adinf=adinf,
+    return CurriculumRecord(
+        curriculum_version_id=curriculum_version_id,
+        major_id=major_id,
+        effective_term=effective_term,
+        name=name,
+        type_id=type_id,
+        type=type,
+        mark_average=mark_average,
+        gpa_min=gpa_min,
+        min_credits=min_credits,
     )
 
 # --- Search and Update Views ---
@@ -942,6 +938,56 @@ def person_detail(request, person_rbid):
         'czcodes': czcodes
     }
     return render(request, 'sis/person_detail.html', context)
+
+@login_required
+def curriculum_list(request):
+    """List  students with search and pagination"""
+    search_query = request.GET.get('search', '').strip()
+    rbid_query = request.GET.get('rbid', '').strip()
+    url_name = request.resolver_match.url_name
+    student_link_map = {
+        'student_list': 'sis/student_list.html',
+        'enrollment_create_student_select': 'sis/enrollment_create_student_select.html',
+    }
+    student_link = student_link_map.get(url_name, 'sis/student_list.html')
+
+    # Base queryset: only students that have a SGM_stdnt record
+    stdnt_qs = HsvStdnt.objects.using('sis').all()
+
+    # Search by name or RBID through GumIdent
+    if search_query:
+        stdnt_qs = stdnt_qs.filter(
+            models.Q(hsv_stdnt_first_name__icontains=search_query) |
+            models.Q(hsv_stdnt_last_name__icontains=search_query)
+        )
+
+    if rbid_query:
+        stdnt_qs = stdnt_qs.filter(hsv_stdnt_rbid__icontains=rbid_query)
+
+    # Order by last_name, first_name from GumIdent
+    stdnt_qs = stdnt_qs.order_by(
+        'hsv_stdnt_last_name',
+        'hsv_stdnt_first_name'
+    )
+
+    # Limit to 2000 results for safety
+    stdnt_list = stdnt_qs[:2000]
+
+    # Build student records
+    students: List = []
+    for stdnt in stdnt_list:
+        students.append(make_student_record(stdnt))
+
+    # Pagination
+    paginator = Paginator(students, 25)  # 25 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+    }
+    return render(request, student_link, context)
 
 @login_required
 def marks_enter(request, section_stid):
