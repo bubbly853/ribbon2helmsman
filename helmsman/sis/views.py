@@ -161,22 +161,9 @@ class PersonRecord:
     id_country: Optional[str]
     hgv_prson: Optional[HgvPrson] = None
 
-    rbid: str
-    preferred_name: Optional[str]
-    first_name: Optional[str]
-    middle_name: Optional[str]
-    last_name: Optional[str]
-    username: Optional[str]
-    birthday: Optional[str]
-    id_num: Optional[str]
-    id_coid: Optional[str]
-    id_country: Optional[str]
-    gum_ident: Optional[GumIdent] = None
-    gum_adinf: Optional[GumAdinf] = None
-
 @dataclass
 class CurriculumRecord:
-    curriculum_version_id: str
+    curriculum_version_id: str 
     major_id: Optional[str]
     effective_term: Optional[str]
     name: Optional[str]
