@@ -1022,7 +1022,7 @@ def curriculum_detail(request, curriculum_cvid):
                 cg_courses = int(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
                 cg_credits = int(v_course) if (v_course := request.POST.get('min_grp_credits')) != '' else None
                 cg_marks = int(v_course) if (v_course := request.POST.get('min_grp_mark')) != '' else None
-                with transaction.Atomic(using='sis'):
+                with transaction.atomic(using='sis'):
                     cg_rqgrp.create(scr_rqgrp_cvid=curriculum_cvid, scr_rqgrp_rtid=cg_type, scr_rqgrp_hr_name=cg_name, scr_rqgrp_min_courses=cg_courses, scr_rqgrp_min_credits=cg_credits, scr_rqgrp_min_mark_avg=cg_marks)
                 messages.success(request, 'Group created successfully.')
             except Exception as e:
