@@ -1014,7 +1014,20 @@ def curriculum_detail(request, curriculum_cvid):
     }
 
     if request.method == 'POST':
-        print('place: holder')
+        if 'create_rqgrp' in request.POST:
+            try:
+                cg_rqgrp = ScrRqgrp.objects.using('sis')
+                cg_name =  request.POST.get('rqgrp_name')
+                cg_type = request.POST.get('rqgrp_rtid')
+                cg_courses = int(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
+                cg_credits = int(v_course) if (v_course := request.POST.get('min_grp_credits')) != '' else None
+                cg_marks = int(v_course) if (v_course := request.POST.get('min_grp_mark')) != '' else None
+                with transaction.Atomic(using='sis'):
+                    cg_rqgrp.create(scr_rqgrp_cvid=curriculum_cvid, scr_rqgrp_rtid=cg_type, scr_rqgrp_hr_name=cg_name, scr_rqgrp_min_courses=cg_courses, scr_rqgrp_min_credits=cg_credits, scr_rqgrp_min_mark_avg=cg_marks)
+                messages.success(request, 'Group created successfully.')
+            except Exception as e:
+                messages.error(request, f'Error creating group: {e}')
+
     
     return render(request, 'sis/curriculum_detail.html', context)
 
@@ -1132,7 +1145,7 @@ def person_create(request):
             messages.success(request, 'Person created successfully.')
             return redirect('sis:person_create')
         except Exception as e:
-            messages.error(request, f'Error creating section: {e}')
+            messages.error(request, f'Error creating person: {e}')
 
     context = {
         'countries': countries,

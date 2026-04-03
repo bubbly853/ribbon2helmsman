@@ -101,7 +101,7 @@
                 <th data-db-field="scr_creqs.scr_creqs_min_mark_avg">Minimum Average Mark</th>
                 <th data-db-field="scr_creqs.scr_creqs_min_mkid | stl_marks.stl_marks_mkid">Minimum Letter Mark</th>
                 <th data-db-field="scr_creqs.scr_creqs_min_credits">Minimum Credits</th>
-                <th>Save</th>
+                <th>Save or Add</th>
             </tr>
         </thead>
         <tbody>
@@ -183,7 +183,7 @@
                         <input type="number" step="0.5" min="0" max="4" 
                                id="min_credits" name="min_credits">
                     </td>
-                    <td><button type="submit" name="create_creq" class="btn">Save</button></td>
+                    <td><button type="submit" name="create_creq" class="btn">Add</button></td>
                 </form>
             </tr>
         </tbody>
@@ -248,7 +248,7 @@
                         <input type="text" id="rqgrp_name" name="rqgrp_name" required>
                     </td>
                     <td data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
-                        <select name="rtid">
+                        <select name="rqgrp_rtid">
                             {% for rqtyp in grqtyps %}
                             <option value="{{ rqtyp.srl_rqtyp_rtid }}" >
                                 {{ rqtyp.srl_rqtyp_hr_name }}
@@ -268,7 +268,7 @@
                         <input type="number" step="0.01" min="0" max="100" 
                                id="min_grp_mark" name="min_grp_mark">
                     </td>
-                    <td><button type="submit" name="create_rqgrp" class="btn">Save</button></td>
+                    <td><button type="submit" name="create_rqgrp" class="btn">Save or Add</button></td>
                 </form>
             </tr>
         </tbody>
