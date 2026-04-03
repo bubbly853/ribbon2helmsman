@@ -977,7 +977,7 @@ def curriculum_detail(request, curriculum_cvid):
     ).first()
 
     creqs = ScrCreqs.objects.using('sis').filter(
-        scl_currv_cvid=curriculum_cvid
+        scl_creqs_cvid=curriculum_cvid
     ).all().order_by(
         'scr_creqs_rtid__srl_rqtyp_hr_name',
         'scr_creqs_crid__scl_crs_name'
