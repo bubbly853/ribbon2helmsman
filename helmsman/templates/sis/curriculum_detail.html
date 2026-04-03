@@ -112,7 +112,7 @@
                     <input type="hidden" name="rqid" value="{{ creq.scr_creqs_rqid }}">
                     <td data-db-field="scr_creqs.scr_creqs_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name"><input type="text" disabled value="{{ creq.scr_creqs_crid.srl_cours_hr_name }}"></td>
                     <td data-db-field="scr_creqs.scr_creqs_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
-                        <select name="rtid">
+                        <select name="creq_rtid">
                             {% for rqtyp in rqtyps %}
                             <option value="{{ rqtyp.srl_rqtyp_rtid }}" 
                                 {% if rqtyp.srl_rqtyp_rtid == creq.scr_creqs_rtid_id %}selected{% endif %}>
@@ -123,10 +123,10 @@
                     </td>
                     <td data-db-field="scr_creqs.scr_creqs_min_mark_avg">
                         <input type="number" step="0.01" min="0" max="100" 
-                               id="min_crse_mark" name="min_crse_mark" value="{{ creq.scr_creqs_min_mark_avg }}">
+                               id="min_creq_mark_avg" name="min_creq_mark_avg" value="{{ creq.scr_creqs_min_mark_avg }}">
                     </td>
                     <td data-db-field="scr_creqs.scr_creqs_min_mkid | stl_marks.stl_marks_mkid">
-                        <select name="min_crse_letter_mark">
+                        <select name="min_creq_letter_mark">
                             {% for mark in marks %}
                             <option value="{{ mark.stl_marks_mkid }}" 
                                 {% if mark.stl_marks_mkid == creq.scr_creqs_min_mkid_id %}selected{% endif %}>
@@ -138,7 +138,7 @@
                     </td>
                     <td data-db-field="scr_creqs.scr_creqs_min_credits">
                         <input type="number" step="0.5" min="0" max="4" 
-                               id="min_credits" name="min_credits" value="{{ creq.scr_creqs_min_credits }}">
+                               id="min_credits" name="min_creq_credits" value="{{ creq.scr_creqs_min_credits }}">
                     </td>
                     <td><button type="submit" name="update_creq" class="btn">Save</button></td>
                 </form>

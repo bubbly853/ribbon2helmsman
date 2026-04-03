@@ -1014,19 +1014,82 @@ def curriculum_detail(request, curriculum_cvid):
     }
 
     if request.method == 'POST':
+        if 'update_currv' in request.POST:
+            try:
+                um_currv = SclCurrv.objects.using('sis').filter(
+                scl_currv_cvid=curriculum_cvid
+            ).first()
+                um_eff_term = request.POST.get('eff_term')
+                um_crtyp = request.POST.get('crtyp')
+                um_end_term = v_term if (v_term := request.POST.get('end_term')) != 'NULL' else None
+                um_marks = int(v_mark) if (v_mark := request.POST.get('mark_avg')) != '' else None
+                um_gpa = int(v_gpa) if (v_gpa := request.POST.get('min_gpa')) != '' else None
+                um_credits = int(v_credit) if (v_credit := request.POST.get('min_credits')) != '' else None               
+                messages.success(request, 'Curriculum updated successfully.')
+                with transaction.atomic(using='sis'):
+                    um_currv.scl_currv_ctid=um_crtyp
+                    um_currv.scl_currv_effective_term=um_eff_term
+                    um_currv.scl_currv_end_term=um_end_term
+                    um_currv.scl_currv_min_mark_avg=um_marks
+                    um_currv.scl_currv_min_gpa=um_gpa
+                    um_currv.scl_currv_min_credits=um_credits
+                    um_currv.save()
+            except Exception as e:
+                messages.error(request, f'Error updating curriculum: {e}')
+
+        if 'update_creq' in request.POST:
+            try:
+                uc_creqs = ScrCreqs.objects.using('sis').filter(
+                    scr_creqs_rqid_id=request.POST.get('rqid')
+                ).first()
+                uc_type = request.POST.get('creq_rtid')
+                uc_marks = int(v_mark) if (v_mark := request.POST.get('min_creq_mark_avg')) != '' else None
+                uc_mkid = v_mkid if (v_mkid := request.POST.get('min_creq_letter_mark')) != 'NULL' else None
+                uc_credits = int(v_credit) if (v_credit := request.POST.get('min_creq_credits')) != '' else None
+                with transaction.atomic(using='sis'):
+                    uc_creqs.scr_cres_rtid=uc_type
+                    uc_creqs.scr_creqs_min_mark_avg=uc_marks
+                    uc_creqs.scr_creqs_min_mkid=uc_mkid
+                    uc_creqs.scr_creqs_min_credits=uc_credits
+                    uc_creqs.save()
+                messages.success(request, 'Requirement updated successfully.')
+            except Exception as e:
+                messages.error(request, f'Error updating requirement: {e}')
+
         if 'create_creq' in request.POST:
             try:
                 cc_creqs = ScrCreqs.objects.using('sis')
                 cc_crid =  request.POST.get('creq_crid')
                 cc_type = request.POST.get('creq_rtid')
-                cc_marks = int(v_course) if (v_course := request.POST.get('min_creq_mark_avg')) != '' else None
-                cc_mkid = int(v_course) if (v_course := request.POST.get('min_creq_letter_mark')) != 'NULL' else None
+                cc_marks = int(v_mark) if (v_mark := request.POST.get('min_creq_mark_avg')) != '' else None
+                cc_mkid = v_mkid if (v_mkid := request.POST.get('min_creq_letter_mark')) != 'NULL' else None
                 cc_credits = int(v_course) if (v_course := request.POST.get('min_creq_credits')) != '' else None
                 with transaction.atomic(using='sis'):
                     cc_creqs.create(scr_creqs_cvid_id=curriculum_cvid, scr_creqs_crid_id=cc_crid, scr_creqs_rtid_id=cc_type, scr_creqs_min_credits=cc_credits, scr_creqs_min_mkid_id=cc_mkid, scr_creqs_min_mark_avg=cc_marks)
-                messages.success(request, 'Group created successfully.')
+                messages.success(request, 'Requirement created successfully.')
             except Exception as e:
-                messages.error(request, f'Error creating group: {e}')
+                messages.error(request, f'Error creating requirement: {e}')
+
+        if 'update_rqgrp' in request.POST:
+            try:
+                ug_rqgrp = ScrRqgrp.objects.using('sis').filter(
+                    scr_rqgrp_rgid_id=request.POST.get('rgid')
+                ).first()
+                ug_name =  request.POST.get('rqgrp_name')
+                ug_type = request.POST.get('rqgrp_rtid')
+                ug_courses = int(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
+                ug_credits = int(v_credit) if (v_credit := request.POST.get('min_grp_credits')) != '' else None
+                ug_marks = int(v_mark) if (v_mark := request.POST.get('min_grp_mark')) != '' else None
+                with transaction.atomic(using='sis'):
+                    ug_rqgrp.scr_rqgrp_rtid_id=ug_type
+                    ug_rqgrp.scr_rqgrp_hr_name=ug_name
+                    ug_rqgrp.scr_rqgrp_min_courses=ug_courses
+                    ug_rqgrp.scr_rqgrp_min_credits=ug_credits
+                    ug_rqgrp.scr_rqgrp_min_mark_avg=ug_marks
+                    ug_rqgrp.save()
+                messages.success(request, 'Requirement updated successfully.')
+            except Exception as e:
+                messages.error(request, f'Error updating requirement: {e}')
 
         if 'create_rqgrp' in request.POST:
             try:
@@ -1034,8 +1097,8 @@ def curriculum_detail(request, curriculum_cvid):
                 cg_name =  request.POST.get('rqgrp_name')
                 cg_type = request.POST.get('rqgrp_rtid')
                 cg_courses = int(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
-                cg_credits = int(v_course) if (v_course := request.POST.get('min_grp_credits')) != '' else None
-                cg_marks = int(v_course) if (v_course := request.POST.get('min_grp_mark')) != '' else None
+                cg_credits = int(v_credit) if (v_credit := request.POST.get('min_grp_credits')) != '' else None
+                cg_marks = int(v_mark) if (v_mark := request.POST.get('min_grp_mark')) != '' else None
                 with transaction.atomic(using='sis'):
                     cg_rqgrp.create(scr_rqgrp_cvid_id=curriculum_cvid, scr_rqgrp_rtid_id=cg_type, scr_rqgrp_hr_name=cg_name, scr_rqgrp_min_courses=cg_courses, scr_rqgrp_min_credits=cg_credits, scr_rqgrp_min_mark_avg=cg_marks)
                 messages.success(request, 'Group created successfully.')
