@@ -957,7 +957,7 @@ def curriculum_list(request):
     # Build student records
     curriculums: List = []
     for crcrc in crcrc_list:
-        curriculums.append(make_student_record(crcrc))
+        curriculums.append(make_curriculum_record(crcrc))
 
     # Pagination
     paginator = Paginator(curriculums, 25)  # 25 per page
