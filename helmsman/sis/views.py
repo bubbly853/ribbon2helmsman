@@ -987,6 +987,10 @@ def curriculum_detail(request, curriculum_cvid):
         scr_rqgrp_cvid=curriculum_cvid
     ).all().order_by('scr_rqgrp_hr_name')
 
+    grqtyps = SrlRqtyp.objects.using('sis').filter(
+        srl_rqtyp_group_ind='Y'
+    ).all().order_by('srl_rqtyp_hr_name')
+
     rqtyps = SrlRqtyp.objects.using('sis').all().order_by('srl_rqtyp_hr_name')
 
     crtyps = SclCrtyp.objects.using('sis').all().order_by('scl_crtyp_hr_name')
@@ -1000,6 +1004,7 @@ def curriculum_detail(request, curriculum_cvid):
         'currv': currv,
         'creqs': creqs,
         'rqtyps': rqtyps,
+        'grqtyps': grqtyps,
         'rqgrps': rqgrps,
         'crtyps': crtyps,
         'terms': terms,
