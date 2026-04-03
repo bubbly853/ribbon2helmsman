@@ -537,6 +537,7 @@ def dashboard(request):
         {"url": reverse("sis:person_list"), "title": "Persons",  "desc": "View and manage person records",  "icon": "🧑"},
         {"url": reverse("sis:course_list"), "title": "Courses",  "desc": "View and manage course records",  "icon": "📚"},
         {"url": reverse("sis:section_list"), "title": "Sections",  "desc": "View and manage section records",  "icon": "📅"},
+        {"url": reverse("sis:curriculum_list"), "title": "Curriculums",  "desc": "View and manage curriculum",  "icon": "📋"},
         {"url": reverse("sis:person_create"), "title": "Create Person",  "desc": "Create a person records",  "icon": "🧑✚"},
         {"url": reverse("sis:section_create"), "title": "Create Section",  "desc": "Create a new section record",  "icon": "📅✚"},
         {"url": reverse("sis:enrollment_create_student_select"), "title": "Create Enrollment",  "desc": "Enroll a student in a section",  "icon": "👨‍🎓📅✚"},
