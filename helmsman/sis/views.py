@@ -994,6 +994,8 @@ def curriculum_detail(request, curriculum_cvid):
     terms = SglTerms.objects.using('sis').all().order_by('sgl_terms_hr_name')
 
     marks = StlMarks.objects.using('sis').all().order_by('stl_marks_mkid')
+
+    courses = SrlCours.objects.using('sis').all().order_by('srl_cours_hr_name')
     context = {
         'currv': currv,
         'creqs': creqs,
@@ -1002,6 +1004,7 @@ def curriculum_detail(request, curriculum_cvid):
         'crtyps': crtyps,
         'terms': terms,
         'marks': marks,
+        'courses': courses,
         'cvid': curriculum_cvid
     }
 
