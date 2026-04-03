@@ -1025,15 +1025,15 @@ def curriculum_detail(request, curriculum_cvid):
                 um_marks = float(v_mark) if (v_mark := request.POST.get('mark_avg')) != '' else None
                 um_gpa = float(v_gpa) if (v_gpa := request.POST.get('min_gpa')) != '' else None
                 um_credits = float(v_credit) if (v_credit := request.POST.get('min_credits')) != '' else None               
-                messages.success(request, 'Curriculum updated successfully.')
                 with transaction.atomic(using='sis'):
-                    um_currv.scl_currv_ctid=um_crtyp
+                    um_currv.scl_currv_ctid_id=um_crtyp
                     um_currv.scl_currv_effective_term=um_eff_term
                     um_currv.scl_currv_end_term=um_end_term
                     um_currv.scl_currv_min_mark_avg=um_marks
                     um_currv.scl_currv_min_gpa=um_gpa
                     um_currv.scl_currv_min_credits=um_credits
                     um_currv.save()
+                    messages.success(request, 'Curriculum updated successfully.')
             except Exception as e:
                 messages.error(request, f'Error updating curriculum: {e}')
 
