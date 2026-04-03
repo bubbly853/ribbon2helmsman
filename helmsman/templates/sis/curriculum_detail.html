@@ -29,9 +29,9 @@
             <select id="eff_term" name="eff_term"
             data-db-field="scl_currv.scl_currv_effective_term | sgl_term.sgl_term_tmid | sgl_term.sgl_term_hr_name">
                 {% for term in terms %}
-                    <option value="{{ term.sgl_term_tmid }}"
-                        {% if term.sgl_term_tmid == currv.scl_currv_effective_term_id %}selected{% endif %}>
-                        {{ term.sgl_term_hr_name }}
+                    <option value="{{ term.sgl_terms_tmid }}"
+                        {% if term.sgl_terms_tmid == currv.scl_currv_effective_term_id %}selected{% endif %}>
+                        {{ term.sgl_terms_hr_name }}
                     </option>
                 {% endfor %}
             </select>
@@ -44,7 +44,7 @@
             data-db-field="scl_currv.scl_currv_ctid | scl_crtyp.scl_crtyp_ctid | scl_crtyp.scl_crtyp_hr_name">
                 {% for crtyp in crtyps %}
                     <option value="{{ crtyp.scl_crtyp_ctid }}"
-                        {% if crtyp.scl_crtyp_ctid == currv.scl_currv_cvid_id %}selected{% endif %}>
+                        {% if crtyp.scl_crtyp_ctid == currv.scl_currv_ctid_id %}selected{% endif %}>
                         {{ crtyp.scl_crtyp_hr_name }}
                     </option>
                 {% endfor %}
@@ -57,9 +57,9 @@
             <select id="end_term" name="end_term"
             data-db-field="scl_currv.scl_currv_end_term | sgl_term.sgl_term_tmid | sgl_term.sgl_term_hr_name">
                 {% for term in terms %}
-                    <option value="{{ term.sgl_term_tmid }}"
-                        {% if term.sgl_term_tmid == currv.scl_currv_end_term_id %}selected{% endif %}>
-                        {{ term.sgl_term_hr_name }}
+                    <option value="{{ term.sgl_terms_tmid }}"
+                        {% if term.sgl_terms_tmid == currv.scl_currv_end_term_id %}selected{% endif %}>
+                        {{ term.sgl_terms_hr_name }}
                     </option>
                 {% endfor %}
                     <option value=" NULL" {% if not currv.scl_currv_end_term_id %}selected{% endif %}> - </option>
@@ -146,7 +146,7 @@
             {% empty %}
             <tr>
                 <td colspan="6" style="text-align: center; padding: 20px;">
-                    No majors found
+                    No requirments found
                 </td>
             </tr>
             {% endfor %}
