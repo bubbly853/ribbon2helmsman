@@ -1014,6 +1014,20 @@ def curriculum_detail(request, curriculum_cvid):
     }
 
     if request.method == 'POST':
+        if 'create_creq' in request.POST:
+            try:
+                cc_creqs = ScrCreqs.objects.using('sis')
+                cc_crid =  request.POST.get('creq_crid')
+                cc_type = request.POST.get('creq_rtid')
+                cc_marks = int(v_course) if (v_course := request.POST.get('min_creq_mark_avg')) != '' else None
+                cc_mkid = int(v_course) if (v_course := request.POST.get('min_creq_letter_mark')) != 'NULL' else None
+                cc_credits = int(v_course) if (v_course := request.POST.get('min_creq_credits')) != '' else None
+                with transaction.atomic(using='sis'):
+                    cc_creqs.create(scr_creqs_cvid_id=curriculum_cvid, scr_creqs_crid_id=cc_crid, scr_creqs_rtid_id=cc_type, scr_creqs_min_credits=cc_credits, scr_creqs_min_mkid_id=cc_mkid, scr_creqs_min_mark_avg=cc_marks)
+                messages.success(request, 'Group created successfully.')
+            except Exception as e:
+                messages.error(request, f'Error creating group: {e}')
+
         if 'create_rqgrp' in request.POST:
             try:
                 cg_rqgrp = ScrRqgrp.objects.using('sis')
