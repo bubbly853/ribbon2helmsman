@@ -1034,6 +1034,7 @@ def curriculum_detail(request, curriculum_cvid):
                     um_currv.scl_currv_min_credits=um_credits
                     um_currv.save()
                     messages.success(request, 'Curriculum updated successfully.')
+                    return redirect('sis:curriculum_detail', curriculum_cvid=curriculum_cvid)
             except Exception as e:
                 messages.error(request, f'Error updating curriculum: {e}')
 
@@ -1053,6 +1054,7 @@ def curriculum_detail(request, curriculum_cvid):
                     uc_creqs.scr_creqs_min_credits=uc_credits
                     uc_creqs.save()
                 messages.success(request, 'Requirement updated successfully.')
+                return redirect('sis:curriculum_detail', curriculum_cvid=curriculum_cvid)
             except Exception as e:
                 messages.error(request, f'Error updating requirement: {e}')
 
@@ -1067,6 +1069,7 @@ def curriculum_detail(request, curriculum_cvid):
                 with transaction.atomic(using='sis'):
                     cc_creqs.create(scr_creqs_cvid_id=curriculum_cvid, scr_creqs_crid_id=cc_crid, scr_creqs_rtid_id=cc_type, scr_creqs_min_credits=cc_credits, scr_creqs_min_mkid_id=cc_mkid, scr_creqs_min_mark_avg=cc_marks)
                 messages.success(request, 'Requirement created successfully.')
+                return redirect('sis:curriculum_detail', curriculum_cvid=curriculum_cvid)
             except Exception as e:
                 messages.error(request, f'Error creating requirement: {e}')
 
@@ -1088,6 +1091,7 @@ def curriculum_detail(request, curriculum_cvid):
                     ug_rqgrp.scr_rqgrp_min_mark_avg=ug_marks
                     ug_rqgrp.save()
                 messages.success(request, 'Requirement updated successfully.')
+                return redirect('sis:curriculum_detail', curriculum_cvid=curriculum_cvid)
             except Exception as e:
                 messages.error(request, f'Error updating requirement: {e}')
 
@@ -1102,6 +1106,7 @@ def curriculum_detail(request, curriculum_cvid):
                 with transaction.atomic(using='sis'):
                     cg_rqgrp.create(scr_rqgrp_cvid_id=curriculum_cvid, scr_rqgrp_rtid_id=cg_type, scr_rqgrp_hr_name=cg_name, scr_rqgrp_min_courses=cg_courses, scr_rqgrp_min_credits=cg_credits, scr_rqgrp_min_mark_avg=cg_marks)
                 messages.success(request, 'Group created successfully.')
+                return redirect('sis:curriculum_detail', curriculum_cvid=curriculum_cvid)
             except Exception as e:
                 messages.error(request, f'Error creating group: {e}')
 
