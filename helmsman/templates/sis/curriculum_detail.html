@@ -214,7 +214,7 @@
                                value="{{ rqgrp.scr_rqgrp_hr_name }}" required>
                     </td>
                     <td data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
-                        <select name="rtid">
+                        <select name="rqgrp_rtid">
                             {% for rqtyp in grqtyps %}
                             <option value="{{ rqtyp.srl_rqtyp_rtid }}" 
                                 {% if rqtyp.srl_rqtyp_rtid == rqgrp.scr_rqgrp_rtid_id %}selected{% endif %}>
