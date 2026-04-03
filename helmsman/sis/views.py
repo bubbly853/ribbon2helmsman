@@ -980,7 +980,7 @@ def curriculum_detail(request, curriculum_cvid):
         scr_creqs_cvid_id=curriculum_cvid
     ).all().order_by(
         'scr_creqs_rtid__srl_rqtyp_hr_name',
-        'scr_creqs_crid__scl_crs_name'
+        'scr_creqs_crid__scl_cours_hr_name'
     )
 
     rqgrps= ScrRqgrp.objects.using('sis').filter(
