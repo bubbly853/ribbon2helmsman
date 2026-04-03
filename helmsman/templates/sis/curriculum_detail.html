@@ -153,42 +153,4 @@
         </tbody>
     </table>
 </div>
-<!--
-<div class="card">
-    <h2>Enrollments</h2>
-    <table>
-        <thead>
-            <tr>
-                <th data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_crid | srl_subjs.srl_subjs_sbid | srl_cours.srl_cours_crse_numb">Course</th>
-                <th data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_hr_name">Title</th>
-                <th data-db-field="srh_enrol.srh_enrol_scid | srb_sects.srb_sects_scid">Section</th>
-                <th data-db-field="srb_sects.srb_sects_tmid | sgl_terms.sgl_terms_hr_name">Term</th>
-                <th data-db-field="srh_enrol.srh_enrol_esid | srl_enrst.srl_enrst_hr_name">Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for e in enrollments %}
-            <tr>
-                <td data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_crid | srl_subjs.srl_subjs_sbid | srl_cours.srl_cours_crse_numb">
-                        {{ e.srh_enrol_stid.srb_sects_crid.srl_cours_sbid_id }}
-                        {{ e.srh_enrol_stid.srb_sects_crid.srl_cours_crse_num }}
-                </td>
-                <td data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_hr_name">{{ e.srh_enrol_stid.srb_sects_crid.srl_cours_hr_name }}</td>
-                <td data-db-field="srh_enrol.srh_enrol_stid | srb_sects.srb_sects_stid">{{ e.srh_enrol_stid_id }}</td>
-                <td data-db-field="srb_sects.srb_sects_tmid | sgl_terms.sgl_terms_hr_name">{{ e.srh_enrol_stid.srb_sects_tmid.sgl_terms_hr_name }}</td>
-                <td data-db-field="srh_enrol.srh_enrol_esid | srl_enrst.srl_enrst_hr_name">{{ e.srh_enrol_esid.srl_enrst_hr_name }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" style="text-align: center; padding: 20px;">
-                    No enrollments found
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <br>
-    <a href="{% url 'sis:enrollment_create_term_select' student.rbid %}" class="btn btn-secondary">Enroll Student</a>
-</div>
--->
 {% endblock %}
