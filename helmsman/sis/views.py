@@ -1041,7 +1041,7 @@ def curriculum_detail(request, curriculum_cvid):
         if 'update_creq' in request.POST:
             try:
                 uc_creqs = ScrCreqs.objects.using('sis').filter(
-                    scr_creqs_rqid_id=request.POST.get('rqid')
+                    scr_creqs_rqid=request.POST.get('rqid')
                 ).first()
                 uc_type = request.POST.get('creq_rtid')
                 uc_marks = float(v_mark) if (v_mark := request.POST.get('min_creq_mark_avg')) != '' else None
@@ -1076,7 +1076,7 @@ def curriculum_detail(request, curriculum_cvid):
         if 'update_rqgrp' in request.POST:
             try:
                 ug_rqgrp = ScrRqgrp.objects.using('sis').filter(
-                    scr_rqgrp_rgid_id=request.POST.get('rgid')
+                    scr_rqgrp_rgid=request.POST.get('rgid')
                 ).first()
                 ug_name =  request.POST.get('rqgrp_name')
                 ug_type = request.POST.get('rqgrp_rtid')
