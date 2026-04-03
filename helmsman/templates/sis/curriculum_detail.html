@@ -134,7 +134,7 @@
                                 {{ mark.stl_marks_mkid }}
                             </option>
                             {% endfor %}
-                            <option {% value="NULL" if not creq.scr_creqs_min_mkid_id %}selected{% endif %}></option>
+                            <option value="NULL" {% if not creq.scr_creqs_min_mkid_id %}selected{% endif %}></option>
                         </select>
                     </td>
                     <td data-db-field="scr_creqs.scr_creqs_min_credits">
