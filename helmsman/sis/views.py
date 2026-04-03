@@ -1078,12 +1078,12 @@ def curriculum_detail(request, curriculum_cvid):
                 ug_rqgrp = ScrRqgrp.objects.using('sis').filter(
                     scr_rqgrp_rgid=request.POST.get('rgid')
                 ).first()
-                print(request.POST.get('rgid'))
                 ug_name =  request.POST.get('rqgrp_name')
                 ug_type = request.POST.get('rqgrp_rtid')
                 ug_courses = float(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
                 ug_credits = float(v_credit) if (v_credit := request.POST.get('min_grp_credits')) != '' else None
                 ug_marks = float(v_mark) if (v_mark := request.POST.get('min_grp_mark')) != '' else None
+                print(ug_type)
                 with transaction.atomic(using='sis'):
                     ug_rqgrp.scr_rqgrp_rtid_id=ug_type
                     ug_rqgrp.scr_rqgrp_hr_name=ug_name
