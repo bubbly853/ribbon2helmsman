@@ -110,7 +110,7 @@
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="rqid" value="{{ creq.scr_creqs_rqid }}">
-                    <td data-db-field="scr_creqs.scr_creqs_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">{{ creq.src_creqs_crid.srl_cours_hr_name }}</td>
+                    <td data-db-field="scr_creqs.scr_creqs_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">{{ creq.scr_creqs_crid.srl_cours_hr_name }}</td>
                     <td data-db-field="scr_creqs.scr_creqs_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
                         <select name="rtid">
                             {% for rqtyp in rqtyps %}
