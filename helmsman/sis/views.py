@@ -971,56 +971,88 @@ def curriculum_list(request):
     return render(request, curriculum_link, context)
 
 @login_required
-def marks_enter(request, section_stid):
-    enrol = SrhEnrol.objects.using('sis').filter(
-        srh_enrol_stid_id=section_stid
-    ).select_related(
-        'srh_enrol_rbid__gumadinf',
-        'sthcrtrn'
-    ).order_by(
-        'srh_enrol_rbid__gum_ident_last_name',
-        'srh_enrol_rbid__gumadinf__gum_adinf_pref_first_name',
-        'srh_enrol_rbid__gum_ident_first_name'
-    ).all()
+def curriculum_list(request):
+    """List  students with search and pagination"""
+    search_query = request.GET.get('search', '').strip()
+    url_name = request.resolver_match.url_name
+    curriculum_link_map = {
+        'curriculum_list': 'sis/curriculum_list.html',
+    }
+    curriculum_link = curriculum_link_map.get(url_name, 'sis/curriculum_list.html')
+
+    crcrc_qs = HsvCrcrc.objects.using('sis').all()
+
+    # Search by name or RBID through HsvCrcrc
+    if search_query:
+        crcrc_qs = crcrc_qs.filter(
+            models.Q(hsv_crcrc_cvid__contains=search_query) |
+            models.Q(hsv_crcrc_mrid__contains=search_query) |
+            models.Q(hsv_crcrc_hr_name__icontains=search_query)
+        )
+
+    # Order by major name HsvCrcrc
+    crcrc_qs = crcrc_qs.order_by(
+        'hsv_crcrc_hr_name'
+    )
+
+    # Limit to 2000 results for safety
+    crcrc_list = crcrc_qs[:2000]
+
+    # Build student records
+    curriculums: List = []
+    for crcrc in crcrc_list:
+        curriculums.append(make_curriculum_record(crcrc))
+
+    # Pagination
+    paginator = Paginator(curriculums, 25)  # 25 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+    }
+    return render(request, curriculum_link, context)
+
+@login_required
+def curriculum_detail(request, curriculum_cvid):
+    currv = SclCurrv.objects.using('sis').filter(
+        scl_currv_cvid=curriculum_cvid
+    ).first()
+
+    creqs = ScrCreqs.objects.using('sis').filter(
+        scl_currv_cvid=curriculum_cvid
+    ).all().order_by(
+        'scr_creqs_rtid__srl_rqtyp_hr_name',
+        'scr_creqs_crid__scl_crs_name'
+    )
+
+    rqgrps= ScrRqgrp.objects.using('sis').filter(
+        scr_rqgrp_cvid=curriculum_cvid
+    ).all().order_by('scr_rqgrp_hr_name')
+
+    rqtyps = SrlRqtyp.objects.using('sis').all().order_by('srl_rqtyp_hr_name')
+
+    crtyps = SclCrtyp.objects.using('sis').all().order_by('scl_crtyp_hr_name')
+    
+    terms = SglTerms.objects.using('sis').all().order_by('sgl_terms_hr_name')
+
     marks = StlMarks.objects.using('sis').all().order_by('stl_marks_mkid')
     context = {
-        'enrol': enrol,
-        'stid': section_stid,
-        'marks': marks
+        'currv': currv,
+        'creqs': creqs,
+        'rqtyps': rqtyps,
+        'rqgrps': rqgrps,
+        'crtyps': crtyps,
+        'terms': terms,
+        'marks': marks,
+        'cvid': curriculum_cvid
     }
 
     if request.method == 'POST':
-        i = 1
-        errors = []
-        while True:
-            erid = request.POST.get(f'erid_{i}')
-            if erid is None:
-                break
-
-            mark_avg  = request.POST.get(f'mark_avg_{i}') or None
-            final_mkid = request.POST.get(f'final_mkid_{i}') if request.POST.get(f'final_mkid_{i}') != 'NULL' else None
-
-            try:
-                SthCrtrn.objects.using('sis').update_or_create(
-                    sth_crtrn_erid_id=erid,
-                    defaults={
-                        'sth_crtrn_final_mark_avg': mark_avg,
-                        'sth_crtrn_final_mkid_id': final_mkid,
-                    }
-                )
-            except Exception as e:
-                errors.append(f'Row {i} (erid {erid}): {e}')
-            
-            i += 1
-
-        if errors:
-            for error in errors:
-                messages.error(request, f'Error updating marks: {error}')
-        else:
-            messages.success(request, 'marks updated successfully.')
-        return redirect('sis:marks_enter', section_stid=section_stid)
+        print('place: holder')
     
-    return render(request, 'sis/marks_enter.html', context)
+    return render(request, 'sis/curriculum_detail.html', context)
     
 
 # --- Create Views ---

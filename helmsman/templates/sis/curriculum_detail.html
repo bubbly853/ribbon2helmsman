@@ -1,0 +1,194 @@
+{% extends 'sis/detail_base.html' %}
+
+{% block title %}{{ currv.scl_currv_mrid.scl_major_hr_name }} - Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Curriculum/Major Details</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- CVID (Curriculum ID) -->
+        <div class="form-group">
+            <label>CVID</label>
+            <input type="text" value="{{ currv.scl_currv_cvid }}" disabled
+                   data-db-field="scl_currv.scl_currv_cvid">
+        </div>
+
+        <!--   Name -->
+        <div class="form-group">
+            <label>MRID</label>
+            <input type="text" value="{{ currv.scl_currv_mrid_id }}" disabled
+                   data-db-field="scl_currv.scl_currv_mrid | scl_major.scl_major_mrid">
+        </div>
+
+        <!-- Effective Term -->
+        <div class="form-group">
+            <label for="eff_term">Effective Term</label>
+            <select id="eff_term" name="eff_term"
+            data-db-field="scl_currv.scl_currv_effective_term | sgl_term.sgl_term_tmid | sgl_term.sgl_term_hr_name">
+                {% for term in terms %}
+                    <option value="{{ term.sgl_term_tmid }}"
+                        {% if term.sgl_term_tmid == currv.scl_currv_effective_term_id %}selected{% endif %}>
+                        {{ term.sgl_term_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Crtyp -->
+        <div class="form-group">
+            <label for="crtyp">Curriculum Type</label>
+            <select id="crtyp" name="crtyp"
+            data-db-field="scl_currv.scl_currv_ctid | scl_crtyp.scl_crtyp_ctid | scl_crtyp.scl_crtyp_hr_name">
+                {% for crtyp in crtyps %}
+                    <option value="{{ crtyp.scl_crtyp_ctid }}"
+                        {% if crtyp.scl_crtyp_ctid == currv.scl_currv_cvid_id %}selected{% endif %}>
+                        {{ crtyp.scl_crtyp_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: End Term -->
+        <div class="form-group">
+            <label for="end_term">End Term</label>
+            <select id="end_term" name="end_term"
+            data-db-field="scl_currv.scl_currv_end_term | sgl_term.sgl_term_tmid | sgl_term.sgl_term_hr_name">
+                {% for term in terms %}
+                    <option value="{{ term.sgl_term_tmid }}"
+                        {% if term.sgl_term_tmid == currv.scl_currv_end_term_id %}selected{% endif %}>
+                        {{ term.sgl_term_hr_name }}
+                    </option>
+                {% endfor %}
+                    <option value=" NULL" {% if not currv.scl_currv_end_term_id %}selected{% endif %}> - </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="mark_avg">Mininum Mark Average</label>
+            <input type="number" step="0.01" min="0" max="100" 
+                   id="active_ind" name="active_ind" value="{{ currv.scl_currv_min_mark_avg }}"
+                   data-db-field="scl_currv.scl_currv_min_mark_avg">
+        </div>
+
+        <div class="form-group">
+            <label for="min_gpa">Minimum GPA</label>
+            <input type="number" step="0.05" min="0" max="4" 
+                   id="min_gpa" name="min_gpa" value="{{ currv.scl_currv_min_gpa }}"
+                   data-db-field="scl_currv.scl_currv_min_mark_avg">
+        </div>
+
+        <div class="form-group">
+            <label for="min_credits">Minimum Credit Hour</label>
+            <input type="number" step="1" min="0" max="160" 
+                   id="min_credits" name="min_credits" value="{{ currv.scl_currv_min_gpa }}"
+                   data-db-field="scl_currv.scl_currv_min_mark_avg">
+        </div>
+
+        <button type="submit" class="btn" name="stubi-post">Save Changes</button>
+        <a href="{% url 'sis:student_list' %}" class="btn btn-secondary">Back to List</a>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Requirements</h2>
+    <table>
+        <thead>
+            <tr>
+                <th data-db-field="scr_creqs.scr_creqs_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">Course Name</th>
+                <th data-db-field="scr_creqs.scr_creqs_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">Type</th>
+                <th data-db-field="scr_creqs.scr_creqs_min_mark_avg">Minimum Average Mark</th>
+                <th data-db-field="scr_creqs.scr_creqs_min_mkid | stl_marks.stl_marks_mkid">Minimum Letter Mark</th>
+                <th data-db-field="scr_creqs.scr_creqs_min_credits">Minimum Credits</th>
+                <th>Save</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for creq in creqs %}
+            <tr class="form-group">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="rqid" value="{{ creq.scr_creqs_rqid }}">
+                    <td data-db-field="scr_creqs.scr_creqs_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">{{ creq.src_creqs_crid.srl_cours_hr_name }}</td>
+                    <td data-db-field="scr_creqs.scr_creqs_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
+                        <select name="rtid">
+                            {% for rqtyp in rqtyps %}
+                            <option value="{{ rqtyp.srl_rqtyp_rtid }}" 
+                                {% if rqtyp.srl_rqtyp_rtid == creq.scr_creqs_rtid_id %}selected{% endif %}>
+                                {{ camp.sdl_camps_hr_name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td data-db-field="scr_creqs.scr_creqs_min_mark_avg">
+                        <input type="number" step="0.01" min="0" max="100" 
+                               id="min_crse_mark" name="min_crse_mark" value="{{ creq.scr_creqs_min_mark_avg }}">
+                    </td>
+                    <td data-db-field="scr_creqs.scr_creqs_min_mkid | stl_marks.stl_marks_mkid">
+                        <select name="min_crse_letter_mark">
+                            {% for mark in marks %}
+                            <option value="{{ mark.stl_marks_mkid }}" 
+                                {% if mark.stl_marks_mkid == creq.scr_creqs_min_mkid_id %}selected{% endif %}>
+                                {{ mark.stl_marks_mkid }}
+                            </option>
+                            {% endfor %}
+                            <option {% value="NULL" if not creq.scr_creqs_min_mkid_id %}selected{% endif %}></option>
+                        </select>
+                    </td>
+                    <td data-db-field="scr_creqs.scr_creqs_min_credits">
+                        <input type="number" step="0.5" min="0" max="4" 
+                               id="min_credits" name="min_credits" value="{{ creq.scr_creqs_min_credits }}">
+                    </td>
+                </form>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 20px;">
+                    No majors found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<!--
+<div class="card">
+    <h2>Enrollments</h2>
+    <table>
+        <thead>
+            <tr>
+                <th data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_crid | srl_subjs.srl_subjs_sbid | srl_cours.srl_cours_crse_numb">Course</th>
+                <th data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_hr_name">Title</th>
+                <th data-db-field="srh_enrol.srh_enrol_scid | srb_sects.srb_sects_scid">Section</th>
+                <th data-db-field="srb_sects.srb_sects_tmid | sgl_terms.sgl_terms_hr_name">Term</th>
+                <th data-db-field="srh_enrol.srh_enrol_esid | srl_enrst.srl_enrst_hr_name">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in enrollments %}
+            <tr>
+                <td data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_crid | srl_subjs.srl_subjs_sbid | srl_cours.srl_cours_crse_numb">
+                        {{ e.srh_enrol_stid.srb_sects_crid.srl_cours_sbid_id }}
+                        {{ e.srh_enrol_stid.srb_sects_crid.srl_cours_crse_num }}
+                </td>
+                <td data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_hr_name">{{ e.srh_enrol_stid.srb_sects_crid.srl_cours_hr_name }}</td>
+                <td data-db-field="srh_enrol.srh_enrol_stid | srb_sects.srb_sects_stid">{{ e.srh_enrol_stid_id }}</td>
+                <td data-db-field="srb_sects.srb_sects_tmid | sgl_terms.sgl_terms_hr_name">{{ e.srh_enrol_stid.srb_sects_tmid.sgl_terms_hr_name }}</td>
+                <td data-db-field="srh_enrol.srh_enrol_esid | srl_enrst.srl_enrst_hr_name">{{ e.srh_enrol_esid.srl_enrst_hr_name }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">
+                    No enrollments found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="{% url 'sis:enrollment_create_term_select' student.rbid %}" class="btn btn-secondary">Enroll Student</a>
+</div>
+-->
+{% endblock %}

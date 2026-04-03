@@ -49,8 +49,8 @@
                 <td data-label="Minimum Average GPA" class="hide-mobile">{{ curriculum.gpa_min }}</td>
                 <td data-label="Minimum Credit Hours" class="hide-mobile">{{ curriculum.min_credits }}</td>
                 <td data-label="Actions">
-                    {% if section.stid %}
-                        <a href="{% url 'sis:section_detail' curriculum.curriculum_version_id %}" class="btn">View</a>
+                    {% if curriculum.curriculum_version_id %}
+                        <a href="{% url 'sis:curriculum_detail' curriculum.curriculum_version_id %}" class="btn">View</a>
                     {% else %}
                         <span class="text-muted">No STID</span>
                     {% endif %}
