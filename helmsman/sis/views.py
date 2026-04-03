@@ -945,10 +945,9 @@ def curriculum_list(request):
     search_query = request.GET.get('search', '').strip()
     url_name = request.resolver_match.url_name
     curriculum_link_map = {
-        'student_list': 'sis/student_list.html',
-        'enrollment_create_student_select': 'sis/enrollment_create_student_select.html',
+        'curriculum_list': 'sis/curriculum_list.html',
     }
-    curriculum_link = curriculum_link_map.get(url_name, 'sis/student_list.html')
+    curriculum_link = curriculum_link_map.get(url_name, 'sis/curriculum_list.html')
 
     crcrc_qs = HsvCrcrc.objects.using('sis').all()
 

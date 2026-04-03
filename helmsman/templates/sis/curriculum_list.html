@@ -1,0 +1,89 @@
+{% extends 'sis/base.html' %}
+
+{% block title %}Majors/Curriculums - Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Majors/Curriculum List</h1>
+    <br>
+    <form method="get" class="search-form">
+        <div class="search-grid">
+            <input class="search-input search-grid1" 
+                   name="search" 
+                   type="text"
+                   placeholder="Search by Title, CRID, SBID, or Number..."
+                   value="{{ search_query }}"
+                   autofocus/>
+            <button type="submit" class="btn search-grid2">Search</button>
+            {% if search_query %}
+            <a href="{% url 'sis:curriculum_list' %}" class="btn btn-secondary search-grid3">Clear</a>
+            {% else %}
+            <a href="{% url 'sis:dashboard' %}" class="btn btn-secondary search-grid3">Return</a>
+            {% endif %}
+        </div>
+    </form>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Curriculum ID</th>
+                <th>Major ID</th>
+                <th>Term ID</th>
+                <th>Major Name</th>
+                <th class="hide-mobile">Curriculum Type</th>
+                <th class="hide-mobile">Average Mark</th>
+                <th class="hide-mobile">Minimum Average GPA</th>
+                <th class="hide-mobile">Minimum Credit Hours</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for curriculum in page_obj %}
+            <tr>
+                <td data-label="Curriculum ID">{{ curriculum.curriculum_version_id }}</td>
+                <td data-label="Major ID">{{ curriculum.major_id }}</td>
+                <td data-label="Term ID">{{ curriculum.effective_term }}</td>
+                <td data-label="Major Name">{{ curriculum.name }}</td>
+                <td data-label="Curriculum Type" calss="hide-mobile">{{ curriculum.type }}</td>
+                <td data-label="Average Mark" class="hide-mobile">{{ curriculum.mark_average }}</td>
+                <td data-label="Minimum Average GPA" class="hide-mobile">{{ curriculum.gpa_min }}</td>
+                <td data-label="Minimum Credit Hours" class="hide-mobile">{{ curriculum.min_credits }}</td>
+                <td data-label="Actions">
+                    {% if section.stid %}
+                        <a href="{% url 'sis:section_detail' curriculum.curriculum_version_id %}" class="btn">View</a>
+                    {% else %}
+                        <span class="text-muted">No STID</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9" style="text-align: center; padding: 40px;">
+                    {% if search_query %}
+                    No sections found matching "{{ search_query }}"
+                    {% else %}
+                    No sections found
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+        {% endif %}
+        
+        <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">Last</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
