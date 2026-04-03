@@ -1078,6 +1078,7 @@ def curriculum_detail(request, curriculum_cvid):
                 ug_rqgrp = ScrRqgrp.objects.using('sis').filter(
                     scr_rqgrp_rgid=request.POST.get('rgid')
                 ).first()
+                print('rgid')
                 ug_name =  request.POST.get('rqgrp_name')
                 ug_type = request.POST.get('rqgrp_rtid')
                 ug_courses = float(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
