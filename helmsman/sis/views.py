@@ -1022,9 +1022,9 @@ def curriculum_detail(request, curriculum_cvid):
                 um_eff_term = request.POST.get('eff_term')
                 um_crtyp = request.POST.get('crtyp')
                 um_end_term = v_term if (v_term := request.POST.get('end_term')) != 'NULL' else None
-                um_marks = int(v_mark) if (v_mark := request.POST.get('mark_avg')) != '' else None
-                um_gpa = int(v_gpa) if (v_gpa := request.POST.get('min_gpa')) != '' else None
-                um_credits = int(v_credit) if (v_credit := request.POST.get('min_credits')) != '' else None               
+                um_marks = float(v_mark) if (v_mark := request.POST.get('mark_avg')) != '' else None
+                um_gpa = float(v_gpa) if (v_gpa := request.POST.get('min_gpa')) != '' else None
+                um_credits = float(v_credit) if (v_credit := request.POST.get('min_credits')) != '' else None               
                 messages.success(request, 'Curriculum updated successfully.')
                 with transaction.atomic(using='sis'):
                     um_currv.scl_currv_ctid=um_crtyp
@@ -1043,9 +1043,9 @@ def curriculum_detail(request, curriculum_cvid):
                     scr_creqs_rqid_id=request.POST.get('rqid')
                 ).first()
                 uc_type = request.POST.get('creq_rtid')
-                uc_marks = int(v_mark) if (v_mark := request.POST.get('min_creq_mark_avg')) != '' else None
+                uc_marks = float(v_mark) if (v_mark := request.POST.get('min_creq_mark_avg')) != '' else None
                 uc_mkid = v_mkid if (v_mkid := request.POST.get('min_creq_letter_mark')) != 'NULL' else None
-                uc_credits = int(v_credit) if (v_credit := request.POST.get('min_creq_credits')) != '' else None
+                uc_credits = float(v_credit) if (v_credit := request.POST.get('min_creq_credits')) != '' else None
                 with transaction.atomic(using='sis'):
                     uc_creqs.scr_cres_rtid=uc_type
                     uc_creqs.scr_creqs_min_mark_avg=uc_marks
@@ -1061,9 +1061,9 @@ def curriculum_detail(request, curriculum_cvid):
                 cc_creqs = ScrCreqs.objects.using('sis')
                 cc_crid =  request.POST.get('creq_crid')
                 cc_type = request.POST.get('creq_rtid')
-                cc_marks = int(v_mark) if (v_mark := request.POST.get('min_creq_mark_avg')) != '' else None
+                cc_marks = float(v_mark) if (v_mark := request.POST.get('min_creq_mark_avg')) != '' else None
                 cc_mkid = v_mkid if (v_mkid := request.POST.get('min_creq_letter_mark')) != 'NULL' else None
-                cc_credits = int(v_course) if (v_course := request.POST.get('min_creq_credits')) != '' else None
+                cc_credits = float(v_credit) if (v_credit := request.POST.get('min_creq_credits')) != '' else None
                 with transaction.atomic(using='sis'):
                     cc_creqs.create(scr_creqs_cvid_id=curriculum_cvid, scr_creqs_crid_id=cc_crid, scr_creqs_rtid_id=cc_type, scr_creqs_min_credits=cc_credits, scr_creqs_min_mkid_id=cc_mkid, scr_creqs_min_mark_avg=cc_marks)
                 messages.success(request, 'Requirement created successfully.')
@@ -1077,9 +1077,9 @@ def curriculum_detail(request, curriculum_cvid):
                 ).first()
                 ug_name =  request.POST.get('rqgrp_name')
                 ug_type = request.POST.get('rqgrp_rtid')
-                ug_courses = int(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
-                ug_credits = int(v_credit) if (v_credit := request.POST.get('min_grp_credits')) != '' else None
-                ug_marks = int(v_mark) if (v_mark := request.POST.get('min_grp_mark')) != '' else None
+                ug_courses = float(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
+                ug_credits = float(v_credit) if (v_credit := request.POST.get('min_grp_credits')) != '' else None
+                ug_marks = float(v_mark) if (v_mark := request.POST.get('min_grp_mark')) != '' else None
                 with transaction.atomic(using='sis'):
                     ug_rqgrp.scr_rqgrp_rtid_id=ug_type
                     ug_rqgrp.scr_rqgrp_hr_name=ug_name
@@ -1096,9 +1096,9 @@ def curriculum_detail(request, curriculum_cvid):
                 cg_rqgrp = ScrRqgrp.objects.using('sis')
                 cg_name =  request.POST.get('rqgrp_name')
                 cg_type = request.POST.get('rqgrp_rtid')
-                cg_courses = int(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
-                cg_credits = int(v_credit) if (v_credit := request.POST.get('min_grp_credits')) != '' else None
-                cg_marks = int(v_mark) if (v_mark := request.POST.get('min_grp_mark')) != '' else None
+                cg_courses = float(v_course) if (v_course := request.POST.get('min_grp_courses')) != '' else None
+                cg_credits = float(v_credit) if (v_credit := request.POST.get('min_grp_credits')) != '' else None
+                cg_marks = float(v_mark) if (v_mark := request.POST.get('min_grp_mark')) != '' else None
                 with transaction.atomic(using='sis'):
                     cg_rqgrp.create(scr_rqgrp_cvid_id=curriculum_cvid, scr_rqgrp_rtid_id=cg_type, scr_rqgrp_hr_name=cg_name, scr_rqgrp_min_courses=cg_courses, scr_rqgrp_min_credits=cg_credits, scr_rqgrp_min_mark_avg=cg_marks)
                 messages.success(request, 'Group created successfully.')
