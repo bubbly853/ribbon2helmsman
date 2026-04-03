@@ -1027,8 +1027,8 @@ def curriculum_detail(request, curriculum_cvid):
                 um_credits = float(v_credit) if (v_credit := request.POST.get('min_credits')) != '' else None               
                 with transaction.atomic(using='sis'):
                     um_currv.scl_currv_ctid_id=um_crtyp
-                    um_currv.scl_currv_effective_term=um_eff_term
-                    um_currv.scl_currv_end_term=um_end_term
+                    um_currv.scl_currv_effective_term_id=um_eff_term
+                    um_currv.scl_currv_end_term_id=um_end_term
                     um_currv.scl_currv_min_mark_avg=um_marks
                     um_currv.scl_currv_min_gpa=um_gpa
                     um_currv.scl_currv_min_credits=um_credits
