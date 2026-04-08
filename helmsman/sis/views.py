@@ -1139,6 +1139,8 @@ def marks_enter(request, section_stid):
         errors = []
         while True:
             erid = request.POST.get(f'erid_{i}')
+            stid = section_stid
+            rbid = request.POST.get(f'rbid_{i}')
             if erid is None:
                 break
 
@@ -1148,6 +1150,8 @@ def marks_enter(request, section_stid):
             try:
                 SthCrtrn.objects.using('sis').update_or_create(
                     sth_crtrn_erid_id=erid,
+                    sth_crtrn_rbid_id=rbid,
+                    sth_crtrn_stid_id=stid,
                     defaults={
                         'sth_crtrn_final_mark_avg': mark_avg,
                         'sth_crtrn_final_mkid_id': final_mkid,

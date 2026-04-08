@@ -551,6 +551,8 @@ class SrlSubjs(models.Model):
 
 class SthCrtrn(models.Model):
     sth_crtrn_erid = models.OneToOneField(SrhEnrol, models.DO_NOTHING, db_column='sth_crtrn_erid', primary_key=True, db_comment='Enrollment ID (foreign key to srh_enrol).')
+    sth_crtrn_rbid = models.ForeignKey(GumIdent, models.DO_NOTHING, db_column='sth_crtrn_rbid', blank=False, null=False, db_comment='Person Ribbon ID (foriegn key to gum_ident)')
+    sth_crtrn_stid = models.ForeignKey(SrlSubjs, models.DO_NOTHING, db_column='sth_crtrn_stid', blank=False, null=False, db_comment='Secton ID (foriegn key to srl_subjs)')
     sth_crtrn_final_mark_avg = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, db_comment='Final numeric grade/percentage achieved.')
     sth_crtrn_final_mkid = models.ForeignKey('StlMarks', models.DO_NOTHING, db_column='sth_crtrn_final_mkid', blank=True, null=True, db_comment='Final letter grade (foreign key to stl_marks).')
     sth_crtrn_created_date = models.DateField(db_comment='Date grade was recorded.')
