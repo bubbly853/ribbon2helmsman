@@ -20,9 +20,30 @@
                 <td>{{ creq.scr_creqs_crid.srl_cours_sbid_id }}</td>
                 <td>{{ creq.scr_creqs_crid.srl_cours_crse_num }}</td>
                 <td>{{ creq.scr_creqs_crid.srl_cours_hr_name }}</td>
-                {% endif %}>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
+    {% for rqgrp in rqgrps %}
+    <h2>{{ rqgrp.scr_rqgrp_hr_name }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_hr_name">Course Subject</th>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">Course Number</th>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Course Name</th>
+            </tr>
+        </thead>
+        {% for creq in creqs %}
+            <tr>
+                {% if creq.scr_creqs_rtid == rqgrp.scr_rqgrp_rtid %}
+                <td>{{ creq.scr_creqs_crid.srl_cours_sbid_id }}</td>
+                <td>{{ creq.scr_creqs_crid.srl_cours_crse_num }}</td>
+                <td>{{ creq.scr_creqs_crid.srl_cours_hr_name }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
 </div>
 {% endblock %}
