@@ -17,7 +17,7 @@
         {% for creq in creqs %}
             <tr>
                 {% if creq.scr_creqs_rtid.srl_rqtyp_group_ind == 'N' %}
-                <td>{{ creq.scr_creqs_crid.srl_crse_sbid }}</td>
+                <td>{{ creq.scr_creqs_crid.srl_cours_sbid_id }}</td>
                 <td>{{ creq.scr_creqs_crid.srl_cours_crse_num }}</td>
                 <td>{{ creq.scr_creqs_crid.srl_cours_hr_name }}</td>
                 {% endif %}>
