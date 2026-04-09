@@ -1,0 +1,28 @@
+{% extends 'sis/detail_base.html' %}
+
+{% block title %}{{ stucv.scm_stucv_cvid.scl_currv_mrid.scl_major_hr_name }} - Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Curriculum/Major Degree Audit</h1>
+    <h2>Core Courses</h2>
+    <table>
+        <thead>
+            <tr>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_hr_name">Course Subject</th>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">Course Number</th>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Course Name</th>
+            </tr>
+        </thead>
+        {% for creq in creqs %}
+            <tr>
+                {% if creq.scr_creqs_rtid.srl_rqtyp_group_ind = 'N' %}
+                <td>{{ creq.scr_creqs_crid.scl_crse_sbid_id}}</td>
+                <td>{{ creq.scr_creqs_crid.srl_cours_crse_num}}</td>
+                <td>{{ creq.scr_creqs_crid.srl_cours_hr_name}}</td>
+                {% endif %}>
+            </tr>
+        {% end for %}
+    </table>
+</div>
+{% endblock %}
