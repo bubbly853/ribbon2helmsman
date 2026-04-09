@@ -676,3 +676,21 @@ class HsvSects(models.Model):
         managed = False
         db_table = '"helmsman"."hsv_sects"'
         db_table_comment = 'Helmsman sections view - course sections with term, course, and instructor details.'
+
+class HsvAudit(models.Model):
+    hsv_audit_pkid = models.CharField(max_length=100, primary_key=True, help_text="Surrogate PK: concatenation of scm_stucv_scid || srl_cours_crid",)
+    hsv_audit_scid = models.CharField(max_length=50, help_text="Student curriculum record ID (scm_stucv.scm_stucv_scid)",)
+    hsv_audit_rbid = models.CharField(max_length=20, help_text="Enrollment record batch ID (scm_stucv.scm_stucv_rbid)",)
+    hsv_audit_group_ind = models.CharField(max_length=1, null=True, blank=True, help_text="Requirement type group indicator (srl_rqtyp.srl_rqtyp_group_ind)",)
+    hsv_audit_rtid = models.CharField(max_length=20, help_text="Requirement type ID (scr_creqs.scr_creqs_rtid)",)
+    hsv_audit_sbid = models.CharField(max_length=10, help_text="Subject/department ID (srl_cours.srl_cours_sbid)",)
+    hsv_audit_crse_numb = models.CharField(max_length=10, help_text="Course number (srl_cours.srl_cours_crse_num)",)
+    hsv_audit_stid = models.CharField(max_length=50, null=True, blank=True, help_text="Section ID from the most recent qualifying transcript record (srb_sects.srb_sects_stid)",)
+    hsv_audit_final_mark = models.DecimalField( max_digits=5, decimal_places=2, null=True, blank=True, help_text="Final mark average from the most recent qualifying transcript record",)
+    hsv_audit_final_mkid = models.CharField( max_length=50, null=True, blank=True, help_text="Final mark grade ID from the most recent qualifying transcript record",)
+
+    class Meta:
+        managed = False
+        db_table = '"helmsman"."hsv_audit"'
+        verbose_name = "Audit View Record"
+        verbose_name_plural = "Audit View Records"
