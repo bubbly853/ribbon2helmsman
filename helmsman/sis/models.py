@@ -246,7 +246,7 @@ class SclMajor(models.Model):
 
 class ScmStucv(models.Model):
     scm_stucv_scid = models.CharField(primary_key=True, max_length=23)
-    scm_stucv_rbid = models.CharField(max_length=9)
+    scm_stucv_rbid = models.ForeignKey(GumIdent, models.DO_NOTHING, db_column='scm_stucv_rbid')
     scm_stucv_cvid = models.ForeignKey(SclCurrv, models.DO_NOTHING, db_column='scm_stucv_cvid')
     scm_stucv_admit_term = models.CharField(max_length=6)
     scm_stucv_active_ind = models.CharField(max_length=1)
