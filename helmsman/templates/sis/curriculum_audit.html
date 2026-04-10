@@ -14,12 +14,12 @@
                 <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Course Name</th>
             </tr>
         </thead>
-        {% for creq in creqs %}
+        {% for audit in audits %}
             <tr>
-                {% if creq.scr_creqs_rtid.srl_rqtyp_group_ind == 'N' %}
-                <td>{{ creq.scr_creqs_crid.srl_cours_sbid_id }}</td>
-                <td>{{ creq.scr_creqs_crid.srl_cours_crse_num }}</td>
-                <td>{{ creq.scr_creqs_crid.srl_cours_hr_name }}</td>
+                {% if audit.hsv_audit_group_ind == 'N' %}
+                <td>{{ audit.hsv_audit_sbid }}</td>
+                <td>{{ audit.hsv_audit_crse_numb }}</td>
+                <td>{{ audit.hsv_audit_crse_name }}</td>
                 {% endif %}
             </tr>
         {% endfor %}
@@ -34,12 +34,12 @@
                 <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Course Name</th>
             </tr>
         </thead>
-        {% for creq in creqs %}
+        {% for audit in audits %}
             <tr>
-                {% if creq.scr_creqs_rtid == rqgrp.scr_rqgrp_rtid %}
-                <td>{{ creq.scr_creqs_crid.srl_cours_sbid_id }}</td>
-                <td>{{ creq.scr_creqs_crid.srl_cours_crse_num }}</td>
-                <td>{{ creq.scr_creqs_crid.srl_cours_hr_name }}</td>
+                {% if audit._hsv_audit_rtid == rqgrp.scr_rqgrp_rtid %}
+                <td>{{ audit.hsv_audit_sbid }}</td>
+                <td>{{ audit.hsv_audit_crse_numb }}</td>
+                <td>{{ audit.hsv_audit_crse_name }}</td>
                 {% endif %}
             </tr>
         {% endfor %}

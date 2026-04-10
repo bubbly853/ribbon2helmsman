@@ -685,9 +685,12 @@ class HsvAudit(models.Model):
     hsv_audit_rtid = models.CharField(max_length=20, help_text="Requirement type ID (scr_creqs.scr_creqs_rtid)",)
     hsv_audit_sbid = models.CharField(max_length=10, help_text="Subject/department ID (srl_cours.srl_cours_sbid)",)
     hsv_audit_crse_numb = models.CharField(max_length=10, help_text="Course number (srl_cours.srl_cours_crse_num)",)
+    hsv_audit_crse_name = models.CharField(max_length=64, db_comment='Course human-readable name.')
     hsv_audit_stid = models.CharField(max_length=50, null=True, blank=True, help_text="Section ID from the most recent qualifying transcript record (srb_sects.srb_sects_stid)",)
     hsv_audit_final_mark = models.DecimalField( max_digits=5, decimal_places=2, null=True, blank=True, help_text="Final mark average from the most recent qualifying transcript record",)
     hsv_audit_final_mkid = models.CharField( max_length=50, null=True, blank=True, help_text="Final mark grade ID from the most recent qualifying transcript record",)
+    hsv_audit_progress_stid = models.CharField(max_length=50, null=True, blank=True, help_text="Section ID wtihout sequence from the current term",)
+
 
     class Meta:
         managed = False
