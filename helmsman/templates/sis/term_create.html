@@ -18,12 +18,12 @@
 
         <!-- Editable: Semester -->
         <div class="form-group">
-            <label for="smid">Financial Aid Year</label>
+            <label for="smid">Semester</label>
             <select id="smid" name="smid"
             data-db-field="sgl_terms.sgl_terms_smid | sgl_smstr.sgl_smstr_hr_name">
                 {% for smstr in smstrs %}
                     <option value="{{ smstr.sgl_smrst_smid }}">
-                        {{ smstr.sgl_smrst_hr_name }}
+                        {{ smstr.sgl_smstr_hr_name }}
                     </option>
                 {% endfor %}
             </select>
@@ -42,8 +42,7 @@
             <select id="fyid" name="fyid"
             data-db-field="gum_adinf.gum_adinf_czid | ggl_citzn.ggl_citzn_hr_name">
                 {% for fyear in fyears %}
-                    <option value="{{ fyear.fgl_fyear_fyid }}"
-                    {% if fyear.fgl_fyear_fyid == term.sgl_terms_fyid %}selected{% endif %}>
+                    <option value="{{ fyear.fgl_fyear_fyid }}">
                         {{ fyear.fgl_fyear_fyid }}
                     </option>
                 {% endfor %}
