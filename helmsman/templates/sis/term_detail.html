@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="card">
-    <h1>Person Details</h1>
+    <h1>Term Details</h1>
 
     <form method="post">
         {% csrf_token %}
@@ -18,34 +18,34 @@
 
         <!-- Year -->
         <div class="form-group">
-            <label>TMID</label>
+            <label>Year</label>
             <input type="text" value="{{ term.sgl_terms_year }}" disabled
                    data-db-field="sgl_terms.sgl_terms_year">
         </div>
 
         <!-- Semester -->
         <div class="form-group">
-            <label>TMID</label>
+            <label>Semester</label>
             <input type="text" value="{{ term.sgl_terms_smid.sgl_smstr_hr_name  }}" disabled
                    data-db-field="sgl_terms.sgl_terms_smid | sgl_smstr_hr_name">
         </div>
 
         <!-- Name -->
         <div class="form-group">
-            <label>TMID</label>
+            <label>Name</label>
             <input type="text" value="{{ term.sgl_terms_hr_name  }}" disabled
                    data-db-field="sgl_terms.sgl_terms_hr_name">
         </div>
 
         <!-- Editable: Fiscal Year -->
         <div class="form-group">
-            <label for="fyid">Citizenship Code</label>
+            <label for="fyid">Financial Aid Year</label>
             <select id="fyid" name="fyid"
             data-db-field="gum_adinf.gum_adinf_czid | ggl_citzn.ggl_citzn_hr_name">
                 {% for fyear in fyears %}
-                    <option value="{{ fyear.fgl_fyears_fyid }}"
-                    {% if fyear.fgl_fyears_fyid == term.sgl_terms_fyid %}selected{% endif %}>
-                        {{ fyear.fgl_fyear_fyid }} {{ term.sgl_terms_fyid }}
+                    <option value="{{ fyear.fgl_fyear_fyid }}"
+                    {% if fyear.fgl_fyear_fyid == term.sgl_terms_fyid %}selected{% endif %}>
+                        {{ fyear.fgl_fyear_fyid }}
                     </option>
                 {% endfor %}
             </select>
