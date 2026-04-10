@@ -1232,7 +1232,7 @@ def term_create(request):
             end_date = datetime.datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d').date()
             terms=SglTerms.objects.using('sis')
             with transaction.atomic(using='sis'):
-                terms.create(sgl_terms_year=year, sgl_terms_smid_id=smid, sgl_terms_hr_name=name, sgl_terms_smid_id=fyid, sgl_terms_start_date=start_date, sgl_terms_end_date=end_date)
+                terms.create(sgl_terms_year=year, sgl_terms_smid_id=smid, sgl_terms_hr_name=name, sgl_terms_fyid=fyid, sgl_terms_start_date=start_date, sgl_terms_end_date=end_date)
             messages.success(request, 'Term created successfully.')
             return redirect('sis:term_create')
         except Exception as e:
