@@ -14,6 +14,7 @@ from django.core.paginator import Paginator
 from django.db import transaction
 from django.urls import reverse
 from datetime import datetime
+from django.http import Http404
 
 # Import your real models
 from .models import (
@@ -1177,7 +1178,7 @@ def term_detail(request, term_tmid):
     """List terms with search and pagination"""
     term = SglTerms.objects.using('sis').filter(sgl_terms_tmid=term_tmid).first()
     if not term:
-        return get_object_or_404(term)
+       raise Http404("Product does not exist")
     fyears = FglFyear.objects.using('sis').all().order_by('fgl_fyear_fyid')
 
     context = {
