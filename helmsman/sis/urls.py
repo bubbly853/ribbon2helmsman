@@ -31,6 +31,7 @@ urlpatterns = [
     path('curriculums/<str:curriculum_cvid>', views.curriculum_detail, name='curriculum_detail'),
     path('terms', views.term_list, name='term_list'),
     path('terms/<str:term_tmid>', views.term_detail, name='term_detail'),
+    path('create_term/', views.term_create, name='term_create'),
     path('audit/student/', views.student_list, name='curriculum_audit_student_select'),
     path('audit/student/<str:student_id>', views.curriculum_audit_curriculum_select, name='curriculum_audit_curriculum_select'),
     path('audit/view/<str:stucv_scid>', views.curriculum_audit, name='curriculum_audit'),

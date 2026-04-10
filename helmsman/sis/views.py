@@ -1184,7 +1184,6 @@ def term_list(request):
 
 @login_required
 def term_detail(request, term_tmid):
-    """List terms with search and pagination"""
     term = SglTerms.objects.using('sis').filter(sgl_terms_tmid=term_tmid).first()
 
     if not term:
@@ -1208,6 +1207,31 @@ def term_detail(request, term_tmid):
     context = {
         'term': term,
         'fyears': fyears,
+    }
+    return render(request, 'sis/term_detail.html', context)
+
+@login_required
+def term_create(request):
+    smstrs = SglSmstr.objects.using('sis').all().order_by('sgl_smstr_smid')
+    fyears = FglFyear.objects.using('sis').all().order_by('fgl_fyear_fyid')
+
+    # if request.method == 'POST':
+    #     try:
+    #         with transaction.atomic(using='sis'):
+    #             if term:
+    #                 term.sgl_terms_year = request.POST.get('year', term.sgl_terms_year)
+    #                 term.sgl_terms_start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d').date()
+    #                 term.sgl_terms_end_date = datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d').date()
+    #                 term.save(using='sis')
+    #         messages.success(request, 'Term updated successfully.')
+    #         return redirect('sis:term_detail', term_tmid=term_tmid)
+    #     except Exception as e:
+    #         messages.error(request, f'Error updating term: {e}')
+
+    context = {
+        'fyears': fyears,
+        'smstrs': smstrs,
+        'today': datetime.date.today().isoformat(),
     }
     return render(request, 'sis/term_detail.html', context)
 
