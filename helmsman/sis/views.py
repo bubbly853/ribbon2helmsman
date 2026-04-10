@@ -1215,18 +1215,28 @@ def term_create(request):
     smstrs = SglSmstr.objects.using('sis').all().order_by('sgl_smstr_smid')
     fyears = FglFyear.objects.using('sis').all().order_by('fgl_fyear_fyid')
 
-    # if request.method == 'POST':
-    #     try:
-    #         with transaction.atomic(using='sis'):
-    #             if term:
-    #                 term.sgl_terms_year = request.POST.get('year', term.sgl_terms_year)
-    #                 term.sgl_terms_start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d').date()
-    #                 term.sgl_terms_end_date = datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d').date()
-    #                 term.save(using='sis')
-    #         messages.success(request, 'Term updated successfully.')
-    #         return redirect('sis:term_detail', term_tmid=term_tmid)
-    #     except Exception as e:
-    #         messages.error(request, f'Error updating term: {e}')
+    if request.method == 'POST':
+        try:
+            year = None
+            smid = None
+            name = None
+            fyid = None
+            start_date = None
+            end_date = None
+
+            year = request.POST.get('year')
+            smid = request.POST.get('smid')
+            name = request.POST.get('name')
+            fyid = request.POST.get('fyid')
+            start_date = datetime.datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d').date()
+            end_date = datetime.datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d').date()
+            terms=SglTerms.objects.using('sis')
+            with transaction.atomic(using='sis'):
+                terms.create(sgl_terms_year=year, sgl_terms_smid_id=smid, sgl_terms_hr_name=name, sgl_terms_smid_id=fyid, sgl_terms_start_date=start_date, sgl_terms_end_date=end_date)
+            messages.success(request, 'Term created successfully.')
+            return redirect('sis:term_create')
+        except Exception as e:
+            messages.error(request, f'Error creating term: {e}')
 
     context = {
         'fyears': fyears,
