@@ -1175,7 +1175,7 @@ def term_list(request):
 
 def term_detail(request, term_tmid):
     """List terms with search and pagination"""
-    term = SglTerms.objects.using('sis').filter(sgl_terms_tmid=term_tmid).first();
+    term = SglTerms.objects.using('sis').filter(sgl_terms_tmid=term_tmid).first()
     get_object_or_404(term)
     fyears = FglFyear.objects.using('sis').all().order_by('fgl_fyear_fyid')
 
