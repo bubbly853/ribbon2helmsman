@@ -887,7 +887,7 @@ def person_detail(request, person_rbid):
             middle_name = request.POST.get('middle_name') if request.POST.get('middle_name') != '' else None
             last_name = request.POST.get('last_name')
             suffix = request.POST.get('suffix') if request.POST.get('suffix') != '' else None
-            birthday = datetime.strptime(request.POST.get('birthday'), '%Y-%m-%d').date()
+            birthday = datetime.datetime.strptime(request.POST.get('birthday'), '%Y-%m-%d').date()
             id_num = request.POST.get('id_num')
             id_country = request.POST.get('id_country')
             username = request.POST.get('username') if request.POST.get('username') != '' else None
@@ -1196,8 +1196,8 @@ def term_detail(request, term_tmid):
             with transaction.atomic(using='sis'):
                 if term:
                     term.sgl_terms_year = request.POST.get('year', term.sgl_terms_year)
-                    term.sgl_terms_start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d').date()
-                    term.sgl_terms_end_date = datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d').date()
+                    term.sgl_terms_start_date = datetime.datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d').date()
+                    term.sgl_terms_end_date = datetime.datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d').date()
                     term.save(using='sis')
             messages.success(request, 'Term updated successfully.')
             return redirect('sis:term_detail', term_tmid=term_tmid)
@@ -1327,7 +1327,7 @@ def person_create(request):
         middle_name = request.POST.get('middle_name') if request.POST.get('middle_name') != '' else None
         last_name = request.POST.get('last_name')
         suffix = request.POST.get('suffix') if request.POST.get('suffix') != '' else None
-        birthday = datetime.strptime(request.POST.get('birthday'), '%Y-%m-%d').date()
+        birthday = datetime.datetime.strptime(request.POST.get('birthday'), '%Y-%m-%d').date()
         id_num = request.POST.get('id_num')
         id_country = request.POST.get('id_country')
         username = request.POST.get('username') if request.POST.get('username') != '' else None
