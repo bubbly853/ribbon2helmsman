@@ -1160,7 +1160,7 @@ def term_list(request):
     # Build term records
     terms: List = []
     for term in term_list:
-        terms.append(make_student_record(term))
+        terms.append(SglTerms.objects.using('sis').filter(sgl_terms_tmid=term.sgl_terms_tmid).first())
 
     # Pagination
     paginator = Paginator(terms, 25)  # 25 per page
