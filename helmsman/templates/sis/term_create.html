@@ -22,7 +22,7 @@
             <select id="smid" name="smid"
             data-db-field="sgl_terms.sgl_terms_smid | sgl_smstr.sgl_smstr_hr_name">
                 {% for smstr in smstrs %}
-                    <option value="{{ smstr.sgl_smrst_smid }}">
+                    <option value="{{ smstr.sgl_smstr_smid }}">
                         {{ smstr.sgl_smstr_hr_name }}
                     </option>
                 {% endfor %}
