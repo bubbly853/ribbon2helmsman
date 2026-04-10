@@ -45,7 +45,7 @@
                 {% for fyear in fyears %}
                     <option value="{{ fyear.fgl_fyears_fyid }}"
                     {% if fyear.fgl_fyears_fyid == term.sgl_terms_fyid %}selected{% endif %}>
-                        {{ fyear.fgl_fyear_hr_name }}
+                        {{ fyear.fgl_fyear_fyid }}
                     </option>
                 {% endfor %}
             </select>
