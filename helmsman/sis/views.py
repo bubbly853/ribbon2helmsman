@@ -611,8 +611,7 @@ def student_detail(request, student_rbid):
     # Build combined student record
     record = make_student_detail_record(student_rbid)
     if not record:
-        # mimic get_object_or_404 behaviour
-        return get_object_or_404(GumIdent, gum_ident_rbid=student_rbid)
+        raise Http404("Student does not exist")
     stypes = SglStype.objects.using('sis').all()
     levels = SglLevel.objects.using('sis').all()
     camps = SdlCamps.objects.using('sis').all()
@@ -723,6 +722,8 @@ def course_detail(request, course_crid):
     """View/edit individual course by CRID"""
     # Get course (SrlCours)
     record = make_course_detail_record(course_crid)
+    if not record:
+        raise Http404("Course does not exist")
     subjects = SrlSubjs.objects.using('sis').all()
     if request.method == 'POST':
         cours = record.cours
@@ -788,6 +789,8 @@ def section_detail(request, section_stid):
     """View/edit individual course by CRID"""
     # Get course (SrlCours)
     record = make_section_detail_record(section_stid)
+    if not record:
+        raise Http404("Section does not exist")
     persons = GumIdent.objects.using('sis').all()
     if request.method == 'POST':
         sects = record.sects
@@ -872,9 +875,9 @@ def person_detail(request, person_rbid):
     draces = GrlRdetl.objects.using('sis').all().order_by('grl_rdetl_hr_name')
     czcodes = GglCitzn.objects.using('sis').all().order_by('ggl_citzn_hr_name')
     if not ident:
-        return get_object_or_404(GumIdent, gum_ident_rbid=person_rbid)
+        raise Http404("Person Base Record does not exist")
     if not adinf:
-        return get_object_or_404(GumAdinf, gum_adinf_rbid_id=person_rbid)
+        raise Http404("Person Aditional Info Record does not exist")
 
     if request.method == 'POST':
         try:
@@ -979,7 +982,8 @@ def curriculum_list(request):
 def curriculum_audit_curriculum_select(request, student_id):
     stucv = ScmStucv.objects.using('sis').filter(scm_stucv_rbid=student_id).all()
     ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=student_id).first()
-    get_object_or_404(stucv)
+    if not stucv:
+        raise Http404("Curriculum does not exist")
     context = {
         'ident': ident,
         'stucvs': stucv,
@@ -992,6 +996,9 @@ def curriculum_detail(request, curriculum_cvid):
         scl_currv_cvid=curriculum_cvid
     ).first()
 
+    if not currv:
+        raise Http404("Curriculum does not exist")
+    
     creqs = ScrCreqs.objects.using('sis').filter(
         scr_creqs_cvid_id=curriculum_cvid
     ).all().order_by(
@@ -1177,8 +1184,10 @@ def term_list(request):
 def term_detail(request, term_tmid):
     """List terms with search and pagination"""
     term = SglTerms.objects.using('sis').filter(sgl_terms_tmid=term_tmid).first()
+
     if not term:
-       raise Http404("Product does not exist")
+       raise Http404("Term does not exist")
+    
     fyears = FglFyear.objects.using('sis').all().order_by('fgl_fyear_fyid')
 
     context = {
@@ -1199,6 +1208,10 @@ def marks_enter(request, section_stid):
         'srh_enrol_rbid__gumadinf__gum_adinf_pref_first_name',
         'srh_enrol_rbid__gum_ident_first_name'
     ).all()
+
+    if not enrol:
+       raise Http404("Enrollments do not exist")
+
     marks = StlMarks.objects.using('sis').all().order_by('stl_marks_mkid')
     context = {
         'enrol': enrol,
@@ -1246,6 +1259,10 @@ def marks_enter(request, section_stid):
 @login_required
 def curriculum_audit(request, stucv_scid):
     stucv=ScmStucv.objects.using('sis').filter(scm_stucv_scid=stucv_scid).first()
+
+    if not stucv:
+       raise Http404("Curriculum does not exist")
+
     ident=GumIdent.objects.using('sis').filter(gum_ident_rbid=stucv.scm_stucv_rbid_id).first()
     rqgrp=ScrRqgrp.objects.using('sis').filter(scr_rqgrp_cvid_id=stucv.scm_stucv_cvid_id).all().order_by('scr_rqgrp_hr_name')
     audit=HsvAudit.objects.using('sis').filter(hsv_audit_scid=stucv_scid).all().order_by('hsv_audit_sbid', 'hsv_audit_crse_numb')
@@ -1366,6 +1383,10 @@ def section_create(request):
 @login_required
 def enrollment_create_term_select(request, student_id):
     person = GumIdent.objects.using('sis').select_related('gumadinf').filter(gum_ident_rbid=student_id).first()
+
+    if not person:
+       raise Http404("Person does not exist")
+
     terms = SrhSterm.objects.using('sis').select_related('srh_sterm_tmid').filter(srh_sterm_rbid=student_id)
 
     if request.method == 'POST':
@@ -1387,6 +1408,10 @@ def enrollment_create_term_select(request, student_id):
 @login_required
 def enrollment_create(request, student_term_tsid):
     sterm = SrhSterm.objects.using('sis').filter(srh_sterm_tsid=student_term_tsid).select_related('srh_sterm_rbid').first()
+
+    if not sterm:
+       raise Http404("Student does not exist for the term")
+
     person = GumIdent.objects.using('sis').select_related('gumadinf').filter(gum_ident_rbid=sterm.srh_sterm_rbid_id).first()
     term = sterm.srh_sterm_tmid_id
     sects = SrbSects.objects.using('sis').filter(srb_sects_tmid=term).select_related('srb_sects_crid').all()
@@ -1414,6 +1439,10 @@ def enrollment_create(request, student_term_tsid):
 @login_required
 def student_create_term_select(request, person_rbid):
     person = GumIdent.objects.using('sis').select_related('gumadinf').filter(gum_ident_rbid=person_rbid).first()
+
+    if not person:
+       raise Http404("Person does not exist")
+    
     srh_tmids = SrhSterm.objects.using('sis').filter(srh_sterm_rbid=person_rbid).values_list('srh_sterm_tmid', flat=True)
     terms = SglTerms.objects.using('sis').exclude(sgl_terms_tmid__in=srh_tmids)
     if request.method == 'POST':
