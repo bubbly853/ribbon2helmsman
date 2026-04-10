@@ -9,21 +9,25 @@
     <table>
         <thead>
             <tr>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_hr_name">Status</th>
                 <th data-db-field="scr_rqgrp.scr_rqgrp_hr_name">Course Subject</th>
                 <th data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">Course Number</th>
                 <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Course Name</th>
                 <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Satisfied By</th>
                 <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Final Mark</th>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">In Progress</th>
             </tr>
         </thead>
         {% for audit in audits %}
             <tr>
                 {% if audit.hsv_audit_group_ind == 'N' %}
+                <td>{% if audit.hsv_audit_stid %}✅{% elif hsv_audit_progress_stid %}🟦{% else %}❌{% endif %}</td>
                 <td>{{ audit.hsv_audit_sbid }}</td>
                 <td>{{ audit.hsv_audit_crse_numb }}</td>
                 <td>{{ audit.hsv_audit_crse_name }}</td>
-                <td>{{ audit.hsv_audit_stid }}</td>
-                <td>{{ audit.hsv_audit_final_mark }}</td>
+                <td>{{ audit.hsv_audit_stid|default: '' }}</td>
+                <td>{{ audit.hsv_audit_final_mark|default: '' }}</td>
+                <td>{{ audit.hsv_audit_progress_stid|default: ''}}
                 {% endif %}
             </tr>
         {% endfor %}
@@ -33,17 +37,25 @@
     <table>
         <thead>
             <tr>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_hr_name">Status</th>
                 <th data-db-field="scr_rqgrp.scr_rqgrp_hr_name">Course Subject</th>
                 <th data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">Course Number</th>
                 <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Course Name</th>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Satisfied By</th>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">Final Mark</th>
+                <th data-db-field="scr_rqgrp.scr_rqgrp_min_courses">In Progress</th>
             </tr>
         </thead>
         {% for audit in audits %}
             <tr>
                 {% if audit.hsv_audit_rtid == rqgrp.scr_rqgrp_rtid_id %}
+                <td>{% if audit.hsv_audit_stid %}✅{% elif hsv_audit_progress_stid %}🟦{% else %}❌{% endif %}</td>
                 <td>{{ audit.hsv_audit_sbid }}</td>
                 <td>{{ audit.hsv_audit_crse_numb }}</td>
                 <td>{{ audit.hsv_audit_crse_name }}</td>
+                <td>{{ audit.hsv_audit_stid|default: '' }}</td>
+                <td>{{ audit.hsv_audit_final_mark|default: '' }}</td>
+                <td>{{ audit.hsv_audit_progress_stid|default: ''}}
                 {% endif %}
             </tr>
         {% endfor %}
