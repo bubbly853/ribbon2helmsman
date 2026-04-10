@@ -29,6 +29,7 @@
                 <th>TMID</th>
                 <th>Year</th>
                 <th>Semester</th>
+                <th>Name</th>
                 <th class="hide-mobile">Fiscal Year</th>
                 <th class="hide-mobile">Start Date</th>
                 <th class="hide-mobile">End Date</th>
@@ -41,11 +42,12 @@
                 <td data-label="TMID">{{ term.sgl_terms_tmid }}</td>
                 <td data-label="Year">{{ term.sgl_terms_year }}</td>
                 <td data-label="Semester">{{ term.sgl_terms_smid.sgl_smstr_hr_name }}</td>
+                <td data-label="name">{{ term.sgl_terms_hr_name }}</td>
                 <td data-label="Fiscal Year" class="hide-mobile">{{ term.sgl_terms_fyid }}</td>
                 <td data-label="Start Date" class="hide-mobile">{{ term.sgl_terms_start_date }}</td>
                 <td data-label="End Date" class="hide-mobile">{{ term.sgl_terms_end_date }}</td>
                 <td>
-                    {% if student.rbid %}
+                    {% if term.sgl_terms_tmid %}
                         <a href="{% url 'sis:student_detail' term.sgl_terms_tmid %}" class="btn">View</a>
                     {% else %}
                         <span class="text-muted">No RBID</span>
@@ -54,7 +56,7 @@
             </tr>
             {% empty %}
             <tr data-label="Actions">
-                <td colspan="7" style="text-align: center; padding: 40px;">
+                <td colspan="8" style="text-align: center; padding: 40px;">
                     {% if search_query %}
                     No students found matching "{{ search_query }}"
                     {% else %}
