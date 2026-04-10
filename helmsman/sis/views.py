@@ -1137,6 +1137,7 @@ def curriculum_detail(request, curriculum_cvid):
     
     return render(request, 'sis/curriculum_detail.html', context)
 
+@login_required
 def term_list(request):
     """List terms with search and pagination"""
     search_query = request.GET.get('search', '').strip()
@@ -1181,6 +1182,7 @@ def term_list(request):
     }
     return render(request, term_link, context)
 
+@login_required
 def term_detail(request, term_tmid):
     """List terms with search and pagination"""
     term = SglTerms.objects.using('sis').filter(sgl_terms_tmid=term_tmid).first()
@@ -1189,6 +1191,19 @@ def term_detail(request, term_tmid):
        raise Http404("Term does not exist")
     
     fyears = FglFyear.objects.using('sis').all().order_by('fgl_fyear_fyid')
+
+    if request.method == 'POST':
+        try:
+            with transaction.atomic(using='sis'):
+                if term:
+                    term.sgl_terms_year = request.POST.get('year', term.sgl_terms_year)
+                    term.sgl_terms_start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d').date()
+                    term.sgl_terms_end_date = datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d').date()
+                    term.save(using='sis')
+            messages.success(request, 'Term updated successfully.')
+            return redirect('sis:course_detail', course_crid=course_crid)
+        except Exception as e:
+            messages.error(request, f'Error updating term: {e}')
 
     context = {
         'term': term,
