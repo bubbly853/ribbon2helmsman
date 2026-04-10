@@ -1176,13 +1176,11 @@ def marks_enter(request, section_stid):
 def curriculum_audit(request, stucv_scid):
     stucv=ScmStucv.objects.using('sis').filter(scm_stucv_scid=stucv_scid).first()
     ident=GumIdent.objects.using('sis').filter(gum_ident_rbid=stucv.scm_stucv_rbid_id).first()
-    creqs=ScrCreqs.objects.using('sis').filter(scr_creqs_cvid_id=stucv.scm_stucv_cvid_id).all().order_by('scr_creqs_crid')
     rqgrp=ScrRqgrp.objects.using('sis').filter(scr_rqgrp_cvid_id=stucv.scm_stucv_cvid_id).all().order_by('scr_rqgrp_hr_name')
     audit=HsvAudit.objects.using('sis').filter(hsv_audit_scid=stucv_scid).all().order_by('hsv_audit_sbid', 'hsv_audit_crse_numb')
     context = {
         'stucv': stucv,
         'ident': ident,
-        'creqs': creqs,
         'rqgrps': rqgrp,
         'audits': audit,
     }
