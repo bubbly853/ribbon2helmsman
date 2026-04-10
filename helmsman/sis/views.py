@@ -561,7 +561,7 @@ def student_list(request):
     student_link_map = {
         'student_list': 'sis/student_list.html',
         'enrollment_create_student_select': 'sis/enrollment_create_student_select.html',
-        'curriculum_audit_student_select': 'sis/curriculum_audit_person_select'
+        'curriculum_audit_student_select': 'sis/curriculum_audit_person_select.html'
     }
     student_link = student_link_map.get(url_name, 'sis/student_list.html')
 
