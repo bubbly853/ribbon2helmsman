@@ -40,8 +40,7 @@
         </thead>
         {% for audit in audits %}
             <tr>
-                <td>{{audit.hsv_audit_rtid}} {{rqgrp.scr_rqgrp_rtid}}</td>
-                {% if audit.hsv_audit_rtid == rqgrp.scr_rqgrp_rtid %}
+                {% if audit.hsv_audit_rtid == rqgrp.scr_rqgrp_rtid_id %}
                 <td>{{ audit.hsv_audit_sbid }}</td>
                 <td>{{ audit.hsv_audit_crse_numb }}</td>
                 <td>{{ audit.hsv_audit_crse_name }}</td>
