@@ -1,22 +1,22 @@
 {% extends 'sis/base.html' %}
 
-{% block title %}Select Student to View Audits - Helmsman{% endblock %}
+{% block title %}Terms - Helmsman{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Select a student to view audits</h1>
+    <h1>Student List</h1>
     <br>
     <form method="get" class="search-form">
         <div class="search-grid">
             <input class="search-input search-grid1" 
                    name="search" 
                    type="text"
-                   placeholder="Search by name or RBID..."
+                   placeholder="Search by name, year, or TMID..."
                    value="{{ search_query }}"
                    autofocus/>
             <button type="submit" class="btn search-grid2">Search</button>
             {% if search_query %}
-            <a href="{% url 'sis:curriculum_audit_student_select' %}" class="btn btn-secondary search-grid3">Clear</a>
+            <a href="{% url 'sis:term_list' %}" class="btn btn-secondary search-grid3">Clear</a>
             {% else %}
             <a href="{% url 'sis:dashboard' %}" class="btn btn-secondary search-grid3">Return</a>
             {% endif %}
@@ -26,27 +26,27 @@
     <table>
         <thead>
             <tr>
-                <th>RBID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th class="hide-mobile">Level</th>
-                <th class="hide-mobile">Active Status</th>
-                <th class="hide-mobile">Type</th>
+                <th>TMID</th>
+                <th>Year</th>
+                <th>Semester</th>
+                <th class="hide-mobile">Fiscal Year</th>
+                <th class="hide-mobile">Start Date</th>
+                <th class="hide-mobile">End Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for student in page_obj %}
+            {% for term in page_obj %}
             <tr>
-                <td data-label="RBID">{{ student.rbid }}</td>
-                <td data-label="First Name">{{ student.preferred_name|default:student.first_name }}</td>
-                <td data-label="Last Name">{{ student.last_name }}</td>
-                <td data-label="Level" class="hide-mobile">{{ student.level_name }}</td>
-                <td data-label="Active Status" class="hide-mobile">{{ student.student_type_name }}</td>
-                <td data-label="Type" class="hide-mobile">{{ student.active_ind|default:"—" }}</td>
+                <td data-label="TMID">{{ term.sgl_terms_tmid }}</td>
+                <td data-label="Year">{{ term.sgl_terms_year }}</td>
+                <td data-label="Semester">{{ term.sgl_terms_smid.sgl_smstr_hr_name }}</td>
+                <td data-label="Fiscal Year" class="hide-mobile">{{ term.sgl_terms_fyid }}</td>
+                <td data-label="Start Date" class="hide-mobile">{{ term.sgl_terms_start_date }}</td>
+                <td data-label="End Date" class="hide-mobile">{{ term.sgl_terms_end_date }}</td>
                 <td>
                     {% if student.rbid %}
-                        <a href="{% url 'sis:curriculum_audit_curriculum_select' student.rbid %}" class="btn">Select Audit</a>
+                        <a href="{% url 'sis:student_detail' term.sgl_terms_tmid %}" class="btn">View</a>
                     {% else %}
                         <span class="text-muted">No RBID</span>
                     {% endif %}
