@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.urls import reverse
-from datetime import datetime
+import datetime
 from django.http import Http404
 
 # Import your real models
