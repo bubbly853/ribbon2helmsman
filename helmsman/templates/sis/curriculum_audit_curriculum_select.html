@@ -1,0 +1,48 @@
+{% extends 'sis/base.html' %}
+
+{% block title %}{{ident.gumadinf.gum_adinf_pref_first_name|default:ident.gum_ident_first_name}} {{ ident.gum_ident_last_name }} Degree Audit - Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ident.gumadinf.gum_adinf_pref_first_name|default:ident.gum_ident_first_name}} {{ ident.gum_ident_last_name }} Degree Audit </h1>
+    <br>
+    <h2>Curriculum Select</h2>
+    <br>
+    <table>
+        <thead>
+            <tr>
+                <th>Curriculum ID</th>
+                <th>Major ID</th>
+                <th>Term ID</th>
+                <th>Major Name</th>
+                <th class="hide-mobile">Curriculum Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stucv in stucvs %}
+            <tr>
+                <td data-label="Curriculum ID">{{ stucv.scm_stucv_cvid_id }}</td>
+                <td data-label="Major ID">{{ stucv.scm_stucv_cvid.scl_currv_mrid_id }}</td>
+                <td data-label="Term ID">{{ stucv.scm_stucv_cvid.scl_currv_effective_term_id }}</td>
+                <td data-label="Major Name">{{ stucv.scm_stucv_cvid.scl_currv_mrid.scl_major_hr_name }}</td>
+                <td data-label="Curriculum Type" calss="hide-mobile">{{ stucv.scm_stucv_cvid.scl_currv_ctid.scl_crtyp_hr_name }}</td>
+                <td data-label="Actions">
+                    {% if stucv.scm_stucv_scid %}
+                        <a href="{% url 'sis:curriculum_audit' stucv.scm_stucv_scid %}" class="btn">View</a>
+                    {% else %}
+                        <span class="text-muted">No SCID</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 40px;">
+                    No curricula found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

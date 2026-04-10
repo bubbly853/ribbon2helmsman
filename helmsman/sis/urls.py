@@ -29,5 +29,7 @@ urlpatterns = [
     path('enter_marks/<str:section_stid>', views.marks_enter, name='marks_enter'),
     path('curriculums/', views.curriculum_list, name='curriculum_list'),
     path('curriculums/<str:curriculum_cvid>', views.curriculum_detail, name='curriculum_detail'),
-    path('audit/<str:stucv_scid>', views.curriculum_audit, name='curriculum_audit'),
+    path('audit/student/', views.student_list, name='curriculum_audit_student_select'),
+    path('audit/student/<str:student_id>', views.curriculum_audit_curriculum_select, name='curriculum_audit_curriculum_select'),
+    path('audit/view/<str:stucv_scid>', views.curriculum_audit, name='curriculum_audit'),
 ]

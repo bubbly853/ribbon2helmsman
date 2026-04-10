@@ -561,6 +561,7 @@ def student_list(request):
     student_link_map = {
         'student_list': 'sis/student_list.html',
         'enrollment_create_student_select': 'sis/enrollment_create_student_select.html',
+        'curriculum_audit_student_select': 'sis/curriculum_audit_person_select'
     }
     student_link = student_link_map.get(url_name, 'sis/student_list.html')
 
@@ -971,6 +972,17 @@ def curriculum_list(request):
         'search_query': search_query,
     }
     return render(request, curriculum_link, context)
+
+@login_required
+def curriculum_audit_curriculum_select(request, student_id):
+    stucv = ScmStucv.objects.using('sis').filter(scm_stucv_rbid=student_id).all()
+    ident = GumIdent.objects.using('sis').filter(gum_ident_rbid=student_id).first()
+    get_object_or_404(stucv)
+    context = {
+        'ident': ident,
+        'stucvs': stucv,
+    }
+    return render(request, 'sis/curriculum_audit_curriculum_select.html', context)
 
 @login_required
 def curriculum_detail(request, curriculum_cvid):
