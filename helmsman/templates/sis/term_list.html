@@ -48,7 +48,7 @@
                 <td data-label="End Date" class="hide-mobile">{{ term.sgl_terms_end_date }}</td>
                 <td>
                     {% if term.sgl_terms_tmid %}
-                        <a href="{% url 'sis:student_detail' term.sgl_terms_tmid %}" class="btn">View</a>
+                        <a href="{% url 'sis:term_detail' term.sgl_terms_tmid %}" class="btn">View</a>
                     {% else %}
                         <span class="text-muted">No RBID</span>
                     {% endif %}
