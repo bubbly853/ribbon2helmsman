@@ -1201,7 +1201,7 @@ def term_detail(request, term_tmid):
                     term.sgl_terms_end_date = datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d').date()
                     term.save(using='sis')
             messages.success(request, 'Term updated successfully.')
-            return redirect('sis:course_detail', course_crid=course_crid)
+            return redirect('sis:term_detail', term_tmid=term_tmid)
         except Exception as e:
             messages.error(request, f'Error updating term: {e}')
 
