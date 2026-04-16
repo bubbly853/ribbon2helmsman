@@ -1432,7 +1432,7 @@ def course_create(request):
             name = request.POST.get('name')
             credit_hrs = request.POST.get('credit_hrs')
             with transaction.atomic(using='sis'):
-                cours.create(srl_cours_stid_id=subj, srb_course_crse_num=numb, srl_crse_hr_name=name, srl_cours_credit_hours=credit_hrs)
+                cours.create(srl_cours_stid_id=subj, srb_course_crse_num=numb, srl_crse_hr_name=name, srl_cours_credit_hours=credit_hrs, srl_cours_active_ind='Y')
             messages.success(request, 'Section created successfully.')
             return redirect('sis:section_create')
         except Exception as e:
