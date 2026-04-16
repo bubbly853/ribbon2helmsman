@@ -18,8 +18,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
+#ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -148,13 +148,7 @@ SESSION_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 CSRF_COOKIE_DOMAIN = None
 SESSION_COOKIE_DOMAIN = None
-CSRF_TRUSTED_ORIGINS = [
-    "https://192.168.56.25",
-    "https://localhost",
-    "http://localhost",
-    "http://127.0.0.1",
-]
-
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
 # Security settings for production
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
