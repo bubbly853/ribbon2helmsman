@@ -1391,7 +1391,7 @@ def person_create(request):
 def section_create(request):
     """Create a section"""
     courses = SrlCours.objects.using('sis').all().order_by('srl_cours_crid')
-    courses = courses.filter(f__exact='Y')
+    courses = courses.filter(srl_cours_active_ind__exact='Y')
     terms = SglTerms.objects.using('sis').all().order_by('-sgl_terms_tmid')
     persons = GumIdent.objects.using('sis').all().order_by('gum_ident_last_name', 'gum_ident_first_name')
 
