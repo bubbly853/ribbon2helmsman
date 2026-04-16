@@ -1,10 +1,10 @@
 {% extends 'sis/detail_base.html' %}
 
-{% block title %}Create Person - Helmsman{% endblock %}
+{% block title %}Create a Person - Helmsman{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Create Person</h1>
+    <h1>Create a Person</h1>
 
     <form method="post">
         {% csrf_token %}
@@ -103,7 +103,7 @@
         <div class="form-group">
             <label for="hispanic">Hispanic</label>
             <select id="hispanic" name="hispanic"
-            data-db-field="srl_cours.srl_cours_active_ind">
+            data-db-field="gum_adinf.gum_adinf_hispanic_ind">
                 <option value="Y">Yes</option>
                 <option value="N">No</option>
             </select>
@@ -153,7 +153,7 @@
         <div class="form-group">
             <label for="legal_country">Country of Citizenship</label>
             <select id="legal_country" name="legal_country"
-            data-db-field="gum_ident.gum_ident_id_coid | ggl_count.ggl_count_hr_name">
+            data-db-field="gum_ident.gum_adinf_citizen_coid | ggl_count.ggl_count_hr_name">
                 {% for country in countries %}
                     <option value="{{ country.ggl_count_coid }}">
                         {{ country.ggl_count_hr_name }}

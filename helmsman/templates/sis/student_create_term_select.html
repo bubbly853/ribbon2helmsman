@@ -1,6 +1,6 @@
 {% extends 'sis/detail_base.html' %}
 
-{% block title %}Select term for {{ person.gumadinf.gum_adinf_pref_first_name|default:person.gum_ident_first_name }} {{ person.gum_ident_last_name }} {% endblock %}
+{% block title %}Create Student Term Record for {{ person.gumadinf.gum_adinf_pref_first_name|default:person.gum_ident_first_name }} {{ person.gum_ident_last_name }} {% endblock %}
 
 {% block content %}
 <div class="card">
@@ -8,20 +8,21 @@
 
     <form method="POST">
         {% csrf_token %}
-        <!--   RBID -->
+        <!-- RBID -->
         <div class="form-group">
             <label>RBID</label>
             <input type="text" value="{{ person.gum_ident_rbid }}" disabled
                    data-db-field="srh_sterm.srh_sterm_rbid | gum_ident.gum_ident_rbid">
         </div>
 
-        <!--   Name -->
+        <!-- Name -->
         <div class="form-group">
             <label>First Name</label>
             <input type="text" value="{{ person.gumadinf.gum_adinf_pref_first_name|default:person.gum_ident_first_name }} {{ person.gum_ident_last_name }}" disabled
                    data-db-field="gum_ident.gum_ident_first_name | gum_ident.gum_ident_last_name">
         </div>
 
+        <!-- Select: Name -->
         <div class="form-group">
             <label for="terms-dropdown">Term</label>
             <select id="terms-dropdown" name="term"

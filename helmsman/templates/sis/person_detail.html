@@ -104,7 +104,7 @@
         <div class="form-group">
             <label for="hispanic">Hispanic</label>
             <select id="hispanic" name="hispanic"
-            data-db-field="gum_adinf.gum_adinf_hispanic_inf">
+            data-db-field="gum_adinf.gum_adinf_hispanic_ind">
                 <option value="Y" {% if adinf.gum_adinf_hispanic_ind == 'Y' %}selected{% endif %}>Yes</option>
                 <option value="N" {% if adinf.gum_adinf_hispanic_ind == 'N' %}selected{% endif %}>No</option>
             </select>
@@ -160,7 +160,7 @@
         <div class="form-group">
             <label for="legal_country">Country of Citizenship</label>
             <select id="legal_country" name="legal_country"
-            data-db-field="gum_ident.gum_ident_id_coid | ggl_count.ggl_count_hr_name">
+            data-db-field="gum_ident.gum_adinf_citizen_coid | ggl_count.ggl_count_hr_name">
                 {% for country in countries %}
                     <option value="{{ country.ggl_count_coid }}"
                     {% if country.ggl_count_coid == adinf.gum_adinf_citizen_coid_id %}selected{% endif %}>

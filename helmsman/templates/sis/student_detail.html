@@ -94,8 +94,8 @@
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="scid" value="{{ major.scm_stucv_scid }}">
-                    <td data-db-field="scl_currv.scl_currv_mrid | scl_major.scl_major_hr_name">{{ major.scm_stucv_cvid.scl_currv_mrid.scl_major_hr_name }}</td>
-                    <td data-db-field="scm_stucv.scm_stucv_cpid | sdl_camps.sdl_camps_hr_name">
+                    <td data-label="Name" data-db-field="scl_currv.scl_currv_mrid | scl_major.scl_major_hr_name">{{ major.scm_stucv_cvid.scl_currv_mrid.scl_major_hr_name }}</td>
+                    <td data-label="Campus" data-db-field="scm_stucv.scm_stucv_cpid | sdl_camps.sdl_camps_hr_name">
                         <select name="cpid">
                             {% for camp in camps %}
                             <option value="{{ camp.sdl_camps_cpid }}" 
@@ -105,15 +105,15 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td data-db-field="scl_currv.scl_currv_ctid | scl_crtyp.scl_crtyp_hr_name">{{ major.scm_stucv_cvid.scl_currv_ctid.scl_crtyp_hr_name }}</td>
-                    <td data-db-field="scl_major.scl_major_dgid | scl_degrs.scl_degrs_hr_name">{{ major.scm_stucv_cvid.scl_currv_mrid.scl_major_dgid.scl_degrs_hr_name }}</td>
-                    <td data-db-field="scm_stucv.scm_stucv_active_ind">
+                    <td data-label="Type" data-db-field="scl_currv.scl_currv_ctid | scl_crtyp.scl_crtyp_hr_name">{{ major.scm_stucv_cvid.scl_currv_ctid.scl_crtyp_hr_name }}</td>
+                    <td data-label="Degree" data-db-field="scl_major.scl_major_dgid | scl_degrs.scl_degrs_hr_name">{{ major.scm_stucv_cvid.scl_currv_mrid.scl_major_dgid.scl_degrs_hr_name }}</td>
+                    <td data-label="Active Ind" data-db-field="scm_stucv.scm_stucv_active_ind">
                         <select name="m_active_ind">
                             <option value="Y" {% if major.scm_stucv_active_ind == "Y" %}selected{% endif %}>Y</option>
                             <option value="N" {% if major.scm_stucv_active_ind == "N" %}selected{% endif %}>N</option>
                         </select>
                     </td>
-                    <td><button type="submit" name="update_major" class="btn">Save</button></td>
+                    <td data-label="Save"><button type="submit" name="update_major" class="btn">Save</button></td>
                 </form>
             </tr>
             {% empty %}
@@ -142,14 +142,14 @@
         <tbody>
             {% for e in enrollments %}
             <tr>
-                <td data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_crid | srl_subjs.srl_subjs_sbid | srl_cours.srl_cours_crse_numb">
+                <td data-label="Course" data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_crid | srl_subjs.srl_subjs_sbid | srl_cours.srl_cours_crse_numb">
                         {{ e.srh_enrol_stid.srb_sects_crid.srl_cours_sbid_id }}
                         {{ e.srh_enrol_stid.srb_sects_crid.srl_cours_crse_num }}
                 </td>
-                <td data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_hr_name">{{ e.srh_enrol_stid.srb_sects_crid.srl_cours_hr_name }}</td>
-                <td data-db-field="srh_enrol.srh_enrol_stid | srb_sects.srb_sects_stid">{{ e.srh_enrol_stid_id }}</td>
-                <td data-db-field="srb_sects.srb_sects_tmid | sgl_terms.sgl_terms_hr_name">{{ e.srh_enrol_stid.srb_sects_tmid.sgl_terms_hr_name }}</td>
-                <td data-db-field="srh_enrol.srh_enrol_esid | srl_enrst.srl_enrst_hr_name">{{ e.srh_enrol_esid.srl_enrst_hr_name }}</td>
+                <td data-label="Title" data-db-field="srb_sects.srb_sects_crid | srl_cours.scl_cours_hr_name">{{ e.srh_enrol_stid.srb_sects_crid.srl_cours_hr_name }}</td>
+                <td data-label="Section" data-db-field="srh_enrol.srh_enrol_stid | srb_sects.srb_sects_stid">{{ e.srh_enrol_stid_id }}</td>
+                <td data-label="Term" data-db-field="srb_sects.srb_sects_tmid | sgl_terms.sgl_terms_hr_name">{{ e.srh_enrol_stid.srb_sects_tmid.sgl_terms_hr_name }}</td>
+                <td data-label="Status" data-db-field="srh_enrol.srh_enrol_esid | srl_enrst.srl_enrst_hr_name">{{ e.srh_enrol_esid.srl_enrst_hr_name }}</td>
             </tr>
             {% empty %}
             <tr>

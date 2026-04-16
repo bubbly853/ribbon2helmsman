@@ -9,27 +9,27 @@
     <form method="post">
         {% csrf_token %}
 
-        <!-- SBID (Course Subject) -->
+        <!-- Editable: SBID (Course Subject) -->
         <div class="form-group">
             <label for="subj">Course Subject</label>
             <select id="subj" name="subj"
             data-db-field="srl_cours.srl_cours_sbid | scl_subjs.scl_subjs_hr_name">
                 {% for subj in subjs %}
-                    <option value="{{ subj.scl_subj_sbid }}">
-                        {{ subj.scl_subj_hr_name }}
+                    <option value="{{ subj.scl_subjs_sbid }}">
+                        {{ subj.scl_subjs_hr_name }}
                     </option>
                 {% endfor %}
             </select>
         </div>
 
-        <!-- Course Number -->
+        <!-- Editable: Course Number -->
         <div class="form-group">
             <label for="numb">Course Number</label>
             <input type="text" id="numb" name="bumb"
                    data-db-field="srl_cours.srl_cours_crse_num" disabled>
         </div>
 
-        <!-- Course Name -->
+        <!-- Editable: Course Name -->
         <div class="form-group">
             <label for="name">Course Name</label>
             <input type="text" id="name" name="name"

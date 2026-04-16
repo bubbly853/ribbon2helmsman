@@ -24,13 +24,13 @@
         {% for audit in audits %}
             <tr>
                 {% if audit.hsv_audit_group_ind == 'N' %}
-                <td data-db-field="">{% if audit.hsv_audit_stid %}✅{% elif hsv_audit_progress_stid %}🟦{% else %}❌{% endif %}</td>
-                <td data-db-field="scl_cours.scl_cours_sbid | scr_subjs.scr_subjs_sbid | scr_subjs.scr_subjs_hr_name">{{ audit.hsv_audit_sbid }}</td>
-                <td data-db-field="scl_cours.scl_cours_crse_num">{{ audit.hsv_audit_crse_numb }}</td>
-                <td data-db-field="scl_cours.scl_cours_hr_name">{{ audit.hsv_audit_crse_name }}</td>
-                <td data-db-field="srb_sects.srb_sects_stid | srh_enrol.srh_enrol_stid">{{ audit.hsv_audit_stid|default:'' }}</td>
-                <td data-db-field="sth_crtrn_final_mark_avg">{{ audit.hsv_audit_final_mark|default:'' }}</td>
-                <td data-db-field="srb_sects.srb_sects_stid | srh_enrol.srh_enrol_stid">{{ audit.hsv_audit_progress_stid|default:'' }}</td>
+                <td data-label="Status" data-db-field="">{% if audit.hsv_audit_stid %}✅{% elif hsv_audit_progress_stid %}🟦{% else %}❌{% endif %}</td>
+                <td data-label="Course Subject" data-db-field="scl_cours.scl_cours_sbid | scr_subjs.scr_subjs_sbid | scr_subjs.scr_subjs_hr_name">{{ audit.hsv_audit_sbid }}</td>
+                <td data-label="Course Number" data-db-field="scl_cours.scl_cours_crse_num">{{ audit.hsv_audit_crse_numb }}</td>
+                <td data-label="Course Name" data-db-field="scl_cours.scl_cours_hr_name">{{ audit.hsv_audit_crse_name }}</td>
+                <td data-label="Satisfied By" data-db-field="srb_sects.srb_sects_stid | srh_enrol.srh_enrol_stid">{{ audit.hsv_audit_stid|default:'' }}</td>
+                <td data-label="Final Mark" data-db-field="sth_crtrn_final_mark_avg">{{ audit.hsv_audit_final_mark|default:'' }}</td>
+                <td data-label="In Progress" data-db-field="srb_sects.srb_sects_stid | srh_enrol.srh_enrol_stid">{{ audit.hsv_audit_progress_stid|default:'' }}</td>
                 {% endif %}
             </tr>
         {% endfor %}
@@ -53,13 +53,13 @@
         {% for audit in audits %}
             <tr>
                 {% if audit.hsv_audit_rtid == rqgrp.scr_rqgrp_rtid_id %}
-                <td data-db-field="">{% if audit.hsv_audit_stid %}✅{% elif hsv_audit_progress_stid %}🟦{% else %}❌{% endif %}</td>
-                <td data-db-field="scl_cours.scl_cours_sbid | scr_subjs.scr_subjs_sbid | scr_subjs.scr_subjs_hr_name">{{ audit.hsv_audit_sbid }}</td>
-                <td data-db-field="scl_cours.scl_cours_crse_num">{{ audit.hsv_audit_crse_numb }}</td>
-                <td data-db-field="scl_cours.scl_cours_hr_name">{{ audit.hsv_audit_crse_name }}</td>
-                <td data-db-field="srb_sects.srb_sects_stid | srh_enrol.srh_enrol_stid">{{ audit.hsv_audit_stid|default:'' }}</td>
-                <td data-db-field="sth_crtrn_final_mark_avg">{{ audit.hsv_audit_final_mark|default:'' }}</td>
-                <td data-db-field="srb_sects.srb_sects_stid | srh_enrol.srh_enrol_stid">{{ audit.hsv_audit_progress_stid|default:'' }}</td>
+                <td data-label="Status" data-db-field="">{% if audit.hsv_audit_stid %}✅{% elif hsv_audit_progress_stid %}🟦{% else %}❌{% endif %}</td>
+                <td data-label="Course Subject" data-db-field="scl_cours.scl_cours_sbid | scr_subjs.scr_subjs_sbid | scr_subjs.scr_subjs_hr_name">{{ audit.hsv_audit_sbid }}</td>
+                <td data-label="Course Number" data-db-field="scl_cours.scl_cours_crse_num">{{ audit.hsv_audit_crse_numb }}</td>
+                <td data-label="Course Name" data-db-field="scl_cours.scl_cours_hr_name">{{ audit.hsv_audit_crse_name }}</td>
+                <td data-label="Satisfied By" data-db-field="srb_sects.srb_sects_stid | srh_enrol.srh_enrol_stid">{{ audit.hsv_audit_stid|default:'' }}</td>
+                <td data-label="Final Mark" data-db-field="sth_crtrn_final_mark_avg">{{ audit.hsv_audit_final_mark|default:'' }}</td>
+                <td data-label="In Progress" data-db-field="srb_sects.srb_sects_stid | srh_enrol.srh_enrol_stid">{{ audit.hsv_audit_progress_stid|default:'' }}</td>
                 {% endif %}
             </tr>
         {% endfor %}

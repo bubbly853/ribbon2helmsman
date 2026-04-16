@@ -8,21 +8,21 @@
 
     <form method="post">
         {% csrf_token %}
-        <!--   RBID -->
+        <!-- RBID -->
         <div class="form-group">
             <label>RBID</label>
             <input type="text" value="{{ person.gum_ident_rbid }}" disabled
                    data-db-field="srh_sterm.srh_sterm_rbid | gum_ident.gum_ident_rbid">
         </div>
 
-        <!--   Name -->
+        <!-- Name -->
         <div class="form-group">
             <label>Name</label>
             <input type="text" value="{{ person.gumadinf.gum_adinf_pref_first_name|default:person.gum_ident_first_name }} {{ person.gum_ident_last_name }}" disabled
                    data-db-field="gum_ident.gum_ident_first_name | gum_ident.gum_ident_last_name">
         </div>
 
-        <!--   Term -->
+        <!-- Term -->
         <div class="form-group">
             <label>Term</label>
             <input type="text" value="{{ sterm.srh_sterm_tmid_id }} {{ sterm.srh_sterm_tmid.sgl_terms_hr_name }}" disabled

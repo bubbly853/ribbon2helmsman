@@ -8,24 +8,25 @@
 
     <form method="POST">
         {% csrf_token %}
-        <!--   RBID -->
+        <!-- RBID -->
         <div class="form-group">
             <label>RBID</label>
             <input type="text" value="{{ person.gum_ident_rbid }}" disabled
                    data-db-field="srh_sterm.srh_sterm_rbid | gum_ident.gum_ident_rbid">
         </div>
 
-        <!--   Name -->
+        <!-- Name -->
         <div class="form-group">
             <label>First Name</label>
             <input type="text" value="{{ person.gumadinf.gum_adinf_pref_first_name|default:person.gum_ident_first_name }} {{ person.gum_ident_last_name }}" disabled
                    data-db-field="gum_ident.gum_ident_first_name | gum_ident.gum_ident_last_name">
         </div>
 
+        <!-- Select: Term -->
         <div class="form-group">
             <label for="terms-dropdown">Term</label>
             <select id="terms-dropdown" name="term"
-                    data-db-field="srh_sterm.srh_sterm_tsid | srh_sterm.srh_sterm_tmid |sgl_terms.sgl_terms_tmid">
+                    data-db-field="srh_sterm.srh_sterm_tsid | srh_sterm.srh_sterm_tmid | sgl_terms.sgl_terms_tmid | sgl_terms.sgl_terms_hr_name">
             {% for term in terms %}
                 <option value="{{ term.srh_sterm_tsid }}"></option>>
                     {{ term.srh_sterm_tmid.sgl_terms_hr_name }}

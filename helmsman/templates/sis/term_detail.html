@@ -41,7 +41,7 @@
         <div class="form-group">
             <label for="fyid">Financial Aid Year</label>
             <select id="fyid" name="fyid"
-            data-db-field="gum_adinf.gum_adinf_czid | ggl_citzn.ggl_citzn_hr_name">
+            data-db-field="sgl_terms.sgl_terms_fyid | fgl_fyear.fgl_fyear_fyid">
                 {% for fyear in fyears %}
                     <option value="{{ fyear.fgl_fyear_fyid }}"
                     {% if fyear.fgl_fyear_fyid == term.sgl_terms_fyid %}selected{% endif %}>
@@ -56,7 +56,7 @@
             <label for="start_date">Start Date</label>
             <input type="date" id="start_date" 
                    value="{{ term.sgl_terms_start_date|date:'Y-m-d' }}" name="start_date"
-                   required data-db-field="gum_ident.gum_ident_birthday">
+                   required data-db-field="sgl_terms.sgl_terms_start_date">
         </div>
 
         <!-- Editable: Start Date -->
@@ -64,7 +64,7 @@
             <label for="end_date">End Date</label>
             <input type="date" id="end_date" 
                    value="{{ term.sgl_terms_end_date|date:'Y-m-d' }}" name="end_date"
-                   required data-db-field="gum_ident.gum_ident_birthday">
+                   required data-db-field="sgl_terms.sgl_terms_end_date">
         </div>
 
         <button type="submit" class="btn">Save Changes</button>

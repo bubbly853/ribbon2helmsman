@@ -9,14 +9,14 @@
     <form method="post">
         {% csrf_token %}
 
-        <!-- Year -->
+        <!-- Editable: Year -->
         <div class="form-group">
             <label for="year">Year</label>
             <input type="text" id="year" name="year" required
                    data-db-field="sgl_terms.sgl_terms_year">
         </div>
 
-        <!-- Editable: Semester -->
+        <!-- Select: Semester -->
         <div class="form-group">
             <label for="smid">Semester</label>
             <select id="smid" name="smid"
@@ -29,7 +29,7 @@
             </select>
         </div>
 
-        <!-- Name -->
+        <!-- Editable: Name -->
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" name="name" required
@@ -40,7 +40,7 @@
         <div class="form-group">
             <label for="fyid">Financial Aid Year</label>
             <select id="fyid" name="fyid"
-            data-db-field="gum_adinf.gum_adinf_czid | ggl_citzn.ggl_citzn_hr_name">
+            data-db-field="sgl_terms.sgl_terms_fyid | fgl_fyear.fgl_fyear_fyid">
                 {% for fyear in fyears %}
                     <option value="{{ fyear.fgl_fyear_fyid }}">
                         {{ fyear.fgl_fyear_fyid }}
@@ -54,7 +54,7 @@
             <label for="start_date">Start Date</label>
             <input type="date" id="start_date" 
                    value="{{ today }}" name="start_date"
-                   required data-db-field="gum_ident.gum_ident_birthday">
+                   required data-db-field="sgl_terms.sgl_terms_start_date">
         </div>
 
         <!-- Editable: Start Date -->
@@ -62,7 +62,7 @@
             <label for="end_date">End Date</label>
             <input type="date" id="end_date" 
                    value="{{ today }}" name="end_date"
-                   required data-db-field="gum_ident.gum_ident_birthday">
+                   required data-db-field="sgl_terms.sgl_terms_end_date">
         </div>
 
         <button type="submit" class="btn">Save Changes</button>

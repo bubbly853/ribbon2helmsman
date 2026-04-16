@@ -110,8 +110,8 @@
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="rqid" value="{{ creq.scr_creqs_rqid }}">
-                    <td data-db-field="scr_creqs.scr_creqs_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name"><input type="text" disabled value="{{ creq.scr_creqs_crid.srl_cours_hr_name }}"></td>
-                    <td data-db-field="scr_creqs.scr_creqs_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
+                    <td data-label="Course Name" data-db-field="scr_creqs.scr_creqs_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name"><input type="text" disabled value="{{ creq.scr_creqs_crid.srl_cours_hr_name }}"></td>
+                    <td data-label="Type" data-db-field="scr_creqs.scr_creqs_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
                         <select name="creq_rtid">
                             {% for rqtyp in rqtyps %}
                             <option value="{{ rqtyp.srl_rqtyp_rtid }}" 
@@ -121,11 +121,11 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td data-db-field="scr_creqs.scr_creqs_min_mark_avg">
+                    <td data-label="Minimum Average Mark" data-db-field="scr_creqs.scr_creqs_min_mark_avg">
                         <input type="number" step="0.01" min="0" max="100" 
                                id="min_creq_mark_avg" name="min_creq_mark_avg" value="{{ creq.scr_creqs_min_mark_avg }}">
                     </td>
-                    <td data-db-field="scr_creqs.scr_creqs_min_mkid | stl_marks.stl_marks_mkid">
+                    <td data-label="Minimum Letter Mark" data-db-field="scr_creqs.scr_creqs_min_mkid | stl_marks.stl_marks_mkid">
                         <select name="min_creq_letter_mark">
                             {% for mark in marks %}
                             <option value="{{ mark.stl_marks_mkid }}" 
@@ -136,18 +136,18 @@
                             <option value="NULL" {% if not creq.scr_creqs_min_mkid_id %}selected{% endif %}> - </option>
                         </select>
                     </td>
-                    <td data-db-field="scr_creqs.scr_creqs_min_credits">
+                    <td data-label="Minimum Credits" data-db-field="scr_creqs.scr_creqs_min_credits">
                         <input type="number" step="0.5" min="0" max="4" 
                                id="min_credits" name="min_creq_credits" value="{{ creq.scr_creqs_min_credits }}">
                     </td>
-                    <td><button type="submit" name="update_creq" class="btn">Save</button></td>
+                    <td data-label="Save or Add"><button type="submit" name="update_creq" class="btn">Save</button></td>
                 </form>
             </tr>
             {% endfor %}
             <tr class="form-group">
                 <form method="post">
                     {% csrf_token %}
-                    <td data-db-field="scr_creqs.scr_creqs_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">
+                    <td data-label="Course Name" data-db-field="scr_creqs.scr_creqs_crid | srl_cours.srl_cours_crid | srl_cours.srl_cours_hr_name">
                         <select name="creq_crid">
                             {% for course in courses %}
                             <option value="{{ course.srl_cours_crid }}">
@@ -156,7 +156,7 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td data-db-field="scr_creqs.scr_creqs_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
+                    <td data-label="Type" data-db-field="scr_creqs.scr_creqs_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
                         <select name="creq_rtid">
                             {% for rqtyp in rqtyps %}
                             <option value="{{ rqtyp.srl_rqtyp_rtid }}">
@@ -165,11 +165,11 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td data-db-field="scr_creqs.scr_creqs_min_mark_avg">
+                    <td data-label="Minimum Average Mark" data-db-field="scr_creqs.scr_creqs_min_mark_avg">
                         <input type="number" step="0.01" min="0" max="100" 
                                id="min_crse_mark" name="min_creq_mark_avg">
                     </td>
-                    <td data-db-field="scr_creqs.scr_creqs_min_mkid | stl_marks.stl_marks_mkid">
+                    <td data-label="Minimum Letter Mark" data-db-field="scr_creqs.scr_creqs_min_mkid | stl_marks.stl_marks_mkid">
                         <select name="min_creq_letter_mark">
                             {% for mark in marks %}
                             <option value="{{ mark.stl_marks_mkid }}" >
@@ -179,11 +179,11 @@
                             <option value="NULL"> - </option>
                         </select>
                     </td>
-                    <td data-db-field="scr_creqs.scr_creqs_min_credits">
+                    <td data-label="Minimum Credits" data-db-field="scr_creqs.scr_creqs_min_credits">
                         <input type="number" step="0.5" min="0" max="4" 
                                id="min_credits" name="min_creq_credits">
                     </td>
-                    <td><button type="submit" name="create_creq" class="btn">Add</button></td>
+                    <td data-label="Save or Add"><button type="submit" name="create_creq" class="btn">Add</button></td>
                 </form>
             </tr>
         </tbody>
@@ -209,11 +209,11 @@
                 <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="rgid" value="{{ rqgrp.scr_rqgrp_rgid }}">
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_hr_name">
+                    <td data-label="Group Name" data-db-field="scr_rqgrp.scr_rqgrp_hr_name">
                         <input type="text" id="rqgrp_name" name="rqgrp_name" 
                                value="{{ rqgrp.scr_rqgrp_hr_name }}" required>
                     </td>
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
+                    <td data-label="Group Type" data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
                         <select name="rqgrp_rtid">
                             {% for rqtyp in grqtyps %}
                             <option value="{{ rqtyp.srl_rqtyp_rtid }}" 
@@ -223,19 +223,19 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_min_courses">
+                    <td data-label="Mininum Courses" data-db-field="scr_rqgrp.scr_rqgrp_min_courses">
                         <input type="number" step="1" min="1" max="20" 
                                id="min_grp_courses" name="min_grp_courses" value="{{ rqgrp.scr_rqgrp_min_courses }}">
                     </td>
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_min_credits">
+                    <td data-label="Minimum Credit Hours" data-db-field="scr_rqgrp.scr_rqgrp_min_credits">
                         <input type="number" step="1" min="1" max="80" 
                                id="min_grp_credits" name="min_grp_credits" value="{{ rqgrp.scr_rqgrp_min_credits }}">
                     </td>
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_min_mark_avg">
+                    <td data-label="Minimum Mark Average" data-db-field="scr_rqgrp.scr_rqgrp_min_mark_avg">
                         <input type="number" step="0.01" min="0" max="100" 
                                id="min_grp_mark" name="min_grp_mark" value="{{ rqgrp.scr_rqgrp_min_mark_avg }}">
                     </td>
-                    <td><button type="submit" name="update_rqgrp" class="btn">Save</button></td>
+                    <td data-label="Save or Add"><button type="submit" name="update_rqgrp" class="btn">Save</button></td>
                 </form>
             </tr>
             {% endfor %}
@@ -243,10 +243,10 @@
             <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="rgid" value="{{ rqgrp.scr_rqgrp_rgid }}">
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_hr_name">
+                    <td data-label="Group Name" data-db-field="scr_rqgrp.scr_rqgrp_hr_name">
                         <input type="text" id="rqgrp_name" name="rqgrp_name" required>
                     </td>
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
+                    <td data-label="Group Type" data-db-field="scr_rqgrp.scr_rqgrp_rtid | srl_rqtyp.srl_rqtyp_rtid | srl_rqtyp.srl_rqtyp_hr_name">
                         <select name="rqgrp_rtid">
                             {% for rqtyp in grqtyps %}
                             <option value="{{ rqtyp.srl_rqtyp_rtid }}" >
@@ -255,19 +255,19 @@
                             {% endfor %}
                         </select>
                     </td>
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_min_courses">
+                    <td data-label="Mininum Courses" data-db-field="scr_rqgrp.scr_rqgrp_min_courses">
                         <input type="number" step="1" min="1" max="20" 
                                id="min_grp_courses" name="min_grp_courses">
                     </td>
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_min_credits">
+                    <td data-label="Minimum Credit Hours" data-db-field="scr_rqgrp.scr_rqgrp_min_credits">
                         <input type="number" step="1" min="1" max="80" 
                                id="min_grp_credits" name="min_grp_credits">
                     </td>
-                    <td data-db-field="scr_rqgrp.scr_rqgrp_min_mark_avg">
+                    <td data-label="Minimum Mark Average" data-db-field="scr_rqgrp.scr_rqgrp_min_mark_avg">
                         <input type="number" step="0.01" min="0" max="100" 
                                id="min_grp_mark" name="min_grp_mark">
                     </td>
-                    <td><button type="submit" name="create_rqgrp" class="btn">Add</button></td>
+                    <td data-label="Save or Add"><button type="submit" name="create_rqgrp" class="btn">Add</button></td>
                 </form>
             </tr>
         </tbody>
