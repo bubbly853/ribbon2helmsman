@@ -13,10 +13,10 @@
         <div class="form-group">
             <label for="subj">Course Subject</label>
             <select id="subj" name="subj"
-            data-db-field="srl_cours.srl_cours_sbid | scl_subjs.scl_subjs_hr_name">
+            data-db-field="srl_cours.srl_cours_sbid | scl_subjs.srl_subjs_hr_name">
                 {% for subj in subjs %}
-                    <option value="{{ subj.scl_subjs_sbid }}">
-                        {{ subj.scl_subjs_hr_name }}
+                    <option value="{{ subj.srl_subjs_sbid }}">
+                        {{ subj.srl_subjs_hr_name }}
                     </option>
                 {% endfor %}
             </select>
