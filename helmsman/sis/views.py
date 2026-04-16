@@ -1433,10 +1433,10 @@ def course_create(request):
             credit_hrs = request.POST.get('credit_hrs')
             with transaction.atomic(using='sis'):
                 cours.create(srl_cours_sbid_id=subj, srl_cours_crse_num=numb, srl_cours_hr_name=name, srl_cours_credit_hours=credit_hrs, srl_cours_active_ind='Y')
-            messages.success(request, 'Section created successfully.')
+            messages.success(request, 'Course created successfully.')
             return redirect('sis:section_create')
         except Exception as e:
-            messages.error(request, f'Error creating section: {e}')
+            messages.error(request, f'Error creating course: {e}')
 
     context = {
         'subjs': subjs,
