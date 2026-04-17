@@ -552,7 +552,7 @@ def dashboard(request):
         {"url": reverse("sis:enrollment_create_student_select"), "title": "Create Enrollment",  "desc": "Enroll a student in a section",  "icon": "👨‍🎓📅✚"},
         {"url": reverse("sis:student_create_person_select"), "title": "Create Student Term Record",  "desc": "Create a term record for a student, creates a student record if needed",  "icon": "👨‍🎓✚"},
         {"url": reverse("sis:term_create"), "title": "Create Term",  "desc": "Create a term",  "icon": "🗓️✚"},
-        {"url": reverse("sis:course_create"), "title": "Create Course",  "desc": "Create a course",  "icon": "🗓️✚"},
+        {"url": reverse("sis:course_create"), "title": "Create Course",  "desc": "Create a course",  "icon": "📚✚"},
         {"url": reverse("sis:marks_enter_section_select"), "title": "Enter or Update Final Marks",  "desc": "Enter or update final marks for a section",  "icon": "✅📝"},
         {"url": "/admin/", "title": "Admin",  "desc": "Django administration panels",  "icon": "⚙️"},
     ]
