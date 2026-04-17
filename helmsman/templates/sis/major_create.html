@@ -1,0 +1,109 @@
+{% extends 'sis/detail_base.html' %}
+
+{% block title %}Create a Major- Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Create a Major</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Editable: MRID (Major ID)) -->
+        <div class="form-group">
+            <label for="mrid">Major ID</label>
+            <input type="mrid" id="mrid" name="mrid"
+                   data-db-field="scl_major.scl_major_mrid" required>
+        </div>
+
+        <!-- Editable: Major Name -->
+        <div class="form-group">
+            <label for="name">Major Name</label>
+            <input type="text" id="name" name="name"
+                   data-db-field="scl_major.scl_major_hr_name" required>
+        </div>
+
+        <!-- Editable: Short Name -->
+        <div class="form-group">
+            <label for="name">Major Short Name</label>
+            <input type="text" id="name" name="name"
+                   data-db-field="scl_major.scl_major_hr_name" required>
+        </div>
+
+        <!-- Editable: CGID (College ID) -->
+        <div class="form-group">
+            <label for="cgid">College</label>
+            <select id="cgid" name="cgid"
+            data-db-field="scl_major.scl_major_cgid | sdl_coleg.sdl_coleg_hr_name">
+                {% for coleg in colegs %}
+                    <option value="{{ coleg.sdl_coleg_cgid }}">
+                        {{ coleg.sdl_coleg_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: DGID (Degree ID) -->
+        <div class="form-group">
+            <label for="dgid">Degree</label>
+            <select id="dgid" name="dgid"
+            data-db-field="scl_major.scl_major_dgid | scl_degrs.scl_degrs_hr_name">
+                {% for degr in degrs %}
+                    <option value="{{ degr.scl_degrs_dgid }}">
+                        {{ degr.scl_degrs_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Major Ind -->
+        <div class="form-group">
+            <label for="major">Major Ind</label>
+            <select id="major" name="major"
+            data-db-field="scl_major.scl_major_major_ind">
+                <option value="Y" selected>Yes</option>
+                <option value="N">No</option>
+            </select>
+        </div>
+
+        <!-- Editable: Minor Ind -->
+        <div class="form-group">
+            <label for="minor">Minor Ind</label>
+            <select id="minor" name="minor"
+            data-db-field="scl_major.scl_major_minor_ind">
+                <option value="Y">Yes</option>
+                <option value="N" selected>No</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="ciid">CIP Code</label>
+            <select id="ciid" name="ciid"
+            data-db-field="scl_major.scl_major_ciid | scl_cipcd.scl_cipcd_hr_name">
+                {% for cipcd in cicpds %}
+                    <option value="{{ cicpd.scl_cipcd_ciid }}">
+                        {{ cicpd.scl_cipcd_hr_name }}
+                    </option>
+                {% endfor %}
+                <option value="NULL" selected></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="ifid">ISCED Code</label>
+            <select id="ifid" name="ifid"
+            data-db-field="scl_major.scl_major_ifid | scl_major">
+                {% for iscdf in iscdfs %}
+                    <option value="{{ iscdf.scl_iscdf_ifid }}">
+                        {{ iscdf.scl_iscdf_hr_name }}
+                    </option>
+                {% endfor %}
+                <option value="NULL" selected></option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn">Save Changes</button>
+        <a href="{% url 'sis:course_list' %}" class="btn btn-secondary">View List</a>
+    </form>
+</div>
+{% endblock %}

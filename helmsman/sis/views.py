@@ -1575,3 +1575,34 @@ def term_create(request):
         'today': datetime.date.today().isoformat(),
     }
     return render(request, 'sis/term_create.html', context)
+
+@login_required
+def major_create(request):
+    """Create a Major"""
+    colegs = SdlColeg.objects.using('sis').all().order_by('sdl_coleg_hr_name')
+    degrs = SclDegrs.objects.using('sis').all().order_by('scl_degrs_hr_name')
+    cicpds = SclCipcd.objects.using('sis').all().order_by('scl_cipcd_hr_name')
+    iscdfs = SclIscdf.objects.using('sis').all().order_by('scl_iscdf_hr_name')
+
+    # if request.method == 'POST':
+        
+    #     try:
+    #         sect = SrbSects.objects.using('sis')
+    #         scnd_inst = v_scnd_inst if (v_scnd_inst := request.POST.get('scnd_inst')) != 'NULL' else None
+    #         course = request.POST.get('course')
+    #         term = request.POST.get('term')
+    #         prim_inst = request.POST.get('prim_inst')
+    #         with transaction.atomic(using='sis'):
+    #             cours.create(srl_cours_sbid_id=subj, srl_cours_crse_num=numb, srl_cours_hr_name=name, srl_cours_credit_hours=credit_hrs, srl_cours_active_ind='Y')
+    #         messages.success(request, 'Course created successfully.')
+    #         return redirect('sis:section_create')
+    #     except Exception as e:
+    #         messages.error(request, f'Error creating course: {e}')
+
+    context = {
+        'colegs': colegs,
+        'degrs': degrs,
+        'cicpds': cicpds,
+        'iscdfs': iscdfs,
+    }
+    return render(request, 'sis/major_create.html', context)
