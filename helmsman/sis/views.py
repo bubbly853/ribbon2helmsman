@@ -1430,7 +1430,7 @@ def major_detail(request, major_mrid):
                 major.scl_major_ciid_id=ciid
                 major.scl_major_ifid_id=ifid
             messages.success(request, 'Major updated successfully.')
-            return redirect('sis:major_detail')
+            return redirect('sis:major_detail', major_mrid=major_mrid)
         except Exception as e:
             messages.error(request, f'Error updating major: {e}')
 
