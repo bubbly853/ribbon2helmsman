@@ -572,8 +572,8 @@ def make_major_record(major: Optional[SclMajor]) -> PersonRecord:
         degree = major.scl_major_dgid.scl_degrs_dgid
         major_ind = major.scl_major_major_ind
         minor_ind = major.scl_major_minor_ind
-        cip = major.scl_major_ciid.scl_cipcd_hr_name
-        isced = major.scl_major_ifid.scl_iscdf_hr_name
+        cip = major.scl_major_ciid.scl_cipcd_hr_name if major.scl_major_ciid else None
+        isced = major.scl_major_ifid.scl_iscdf_hr_name if major.scl_major_ifid else None
 
 
     return MajorRecord(
