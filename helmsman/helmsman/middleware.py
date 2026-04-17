@@ -9,6 +9,7 @@ from django.db import OperationalError
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 import re
+from django.shortcuts import redirect
 
 class SISConnectionMiddleware:
     """
@@ -62,3 +63,18 @@ class DatabaseAvailabilityMiddleware:
         if "6379" in msg or "redis" in msg.lower():
             return "Redis"
         return "backend service"
+    
+EXEMPT_PATHS = ('/admin/', '/accounts/login/', '/accounts/logout/')
+
+class AdminRedirectMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if (
+            request.user.is_authenticated
+            and request.user.is_staff
+            and not any(request.path.startswith(p) for p in EXEMPT_PATHS)
+        ):
+            return redirect('/admin/')
+        return self.get_response(request)
