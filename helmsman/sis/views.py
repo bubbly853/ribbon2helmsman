@@ -1599,7 +1599,7 @@ def major_create(request):
             ciid = v_ciid if (v_ciid := request.POST.get('ciid')) != 'NULL' else None
             ifid = v_ifid if (v_ifid := request.POST.get('ifid')) != 'NULL' else None
             with transaction.atomic(using='sis'):
-                major.create(scl_major_mrid=mrid, scl_major_hr_name=name, scl_major_short_name=sname, scl_major_cgid=cgid, scl_major_dgid=dgid, scl_major_major_ind=major_ind, scl_major_minor_ind=minor_ind, scl_major_ciid=ciid, scl_major_ifid=ifid)
+                major.create(scl_major_mrid=mrid, scl_major_hr_name=name, scl_major_short_name=sname, scl_major_cgid_id=cgid, scl_major_dgid_id=dgid, scl_major_major_ind=major_ind, scl_major_minor_ind=minor_ind, scl_major_ciid_id=ciid, scl_major_ifid_id=ifid)
             messages.success(request, 'Course created successfully.')
             return redirect('sis:section_create')
         except Exception as e:
