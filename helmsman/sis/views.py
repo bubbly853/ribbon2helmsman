@@ -1397,7 +1397,52 @@ def marks_enter(request, section_stid):
         return redirect('sis:marks_enter', section_stid=section_stid)
     
     return render(request, 'sis/marks_enter.html', context)
+
+@login_required
+def major_detail(request, major_mrid):
+    """View or Manage a Major"""
+    major = SclMajor.objects.using('sis').filter(scl_major_mrid=major_mrid).first()
+
+    if not major:
+       raise Http404("Enrollments do not exist")
     
+    colegs = SdlColeg.objects.using('sis').all().order_by('sdl_coleg_hr_name')
+    degrs = SclDegrs.objects.using('sis').all().order_by('scl_degrs_hr_name')
+    cicpds = SclCipcd.objects.using('sis').all().order_by('scl_cipcd_hr_name')
+    iscdfs = SclIscdf.objects.using('sis').all().order_by('scl_iscdf_hr_name')
+    
+
+    if request.method == 'POST':
+        try:
+            sname = request.POST.get('sname')
+            cgid = request.POST.get('cgid')
+            dgid = request.POST.get('dgid')
+            major_ind = request.POST.get('major_ind')
+            minor_ind = request.POST.get('minor_ind')
+            ciid = v_ciid if (v_ciid := request.POST.get('ciid')) != 'NULL' else None
+            ifid = v_ifid if (v_ifid := request.POST.get('ifid')) != 'NULL' else None
+            with transaction.atomic(using='sis'):
+                major.scl_major_short_name=sname
+                major.scl_major_cgid_id=cgid
+                major.scl_major_dgid_id=dgid
+                major.scl_major_major_ind=major_ind
+                major.scl_major_minor_ind=minor_ind
+                major.scl_major_ciid_id=ciid
+                major.scl_major_ifid_id=ifid
+            messages.success(request, 'Major updated successfully.')
+            return redirect('sis:major_create')
+        except Exception as e:
+            messages.error(request, f'Error updating major: {e}')
+
+    context = {
+        'major': major,
+        'colegs': colegs,
+        'degrs': degrs,
+        'cicpds': cicpds,
+        'iscdfs': iscdfs,
+    }
+    return render(request, 'sis/major_create.html', context)
+
 @login_required
 def curriculum_audit(request, stucv_scid):
     stucv=ScmStucv.objects.using('sis').filter(scm_stucv_scid=stucv_scid).first()

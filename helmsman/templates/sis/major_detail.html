@@ -1,0 +1,113 @@
+{% extends 'sis/detail_base.html' %}
+
+{% block title %}Create a Major- Helmsman{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Create a Major</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Editable: MRID (Major ID)) -->
+        <div class="form-group">
+            <label for="mrid">Major ID</label>
+            <input type="mrid" id="mrid" name="mrid" value="{{ major.scl_major_mrid }}"
+                   data-db-field="scl_major.scl_major_mrid" disabled>
+        </div>
+
+        <!-- Editable: Major Name -->
+        <div class="form-group">
+            <label for="name">Major Name</label>
+            <input type="text" id="name" name="name" value="{{ major.scl_major_hr_name }}"
+                   data-db-field="scl_major.scl_major_hr_name" required>
+        </div>
+
+        <!-- Editable: Short Name -->
+        <div class="form-group">
+            <label for="sname">Major Short Name</label>
+            <input type="text" id="sname" name="sname" value="{{ major.scl_major_short_name }}" 
+                   data-db-field="scl_major.scl_major_short_name" required>
+        </div>
+
+        <!-- Editable: CGID (College ID) -->
+        <div class="form-group">
+            <label for="cgid">College</label>
+            <select id="cgid" name="cgid"
+            data-db-field="scl_major.scl_major_cgid | sdl_coleg.sdl_coleg_hr_name">
+                {% for coleg in colegs %}
+                    <option value="{{ coleg.sdl_coleg_cgid }}"
+                            {% if coleg.sdl_coleg_cgid == scl_major_cgid_id %}selected{% endif %}>
+                        {{ coleg.sdl_coleg_hr_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: DGID (Degree ID) -->
+        <div class="form-group">
+            <label for="dgid">Degree</label>
+            <select id="dgid" name="dgid"
+            data-db-field="scl_major.scl_major_dgid | scl_degrs.scl_degrs_hr_name">
+                {% for degr in degrs %}
+                    <option value="{{ degr.scl_degrs_dgid }}"
+                            {% if degr.scl_degrs_dgid == major.scl_major_dgid_id %}selected{% endif %}>
+                        {{ degr.scl_degrs_hr_name }} - {{ degr.scl_degrs_dgid }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Editable: Major Ind -->
+        <div class="form-group">
+            <label for="major_ind">Major Ind</label>
+            <select id="major_ind" name="major_ind"
+            data-db-field="scl_major.scl_major_major_ind">
+                <option value="Y" {% if major.scl_major_major_ind == "Y" %}selected{% endif %}>Yes</option>
+                <option value="N" {% if major.scl_major_major_ind == "N" %}selected{% endif %}>No</option>
+            </select>
+        </div>
+
+        <!-- Editable: Minor Ind -->
+        <div class="form-group">
+            <label for="minor_ind">Minor Ind</label>
+            <select id="minor_ind" name="minor_ind"
+            data-db-field="scl_major.scl_major_minor_ind">
+                <option value="Y" {% if major.scl_major_minor_ind == "Y" %}selected{% endif %}>Yes</option>
+                <option value="N" {% if major.scl_major_minor_ind == "N" %}selected{% endif %}>No</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="ciid">CIP Code</label>
+            <select id="ciid" name="ciid"
+            data-db-field="scl_major.scl_major_ciid | scl_cipcd.scl_cipcd_hr_name">
+                {% for cipcd in cicpds %}
+                    <option value="{{ cicpd.scl_cipcd_ciid }}"
+                            {% if cipcd.scl_cipcd_ciid == major.scl_major_ciid_id %}selected{% endif %}>
+                        {{ cicpd.scl_cipcd_hr_name }}
+                    </option>
+                {% endfor %}
+                <option value="NULL" {% if not major.scl_major_ciid %}selected{% endif %}></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="ifid">ISCED Code</label>
+            <select id="ifid" name="ifid"
+            data-db-field="scl_major.scl_major_ifid | scl_iscdf.scl_iscdf_ifid">
+                {% for iscdf in iscdfs %}
+                    <option value="{{ iscdf.scl_iscdf_ifid }}"
+                            {% if iscdf.scl_iscdf_ifid == major.scl_major_ifid_id %}selected{% endif %}>
+                        {{ iscdf.scl_iscdf_hr_name }}
+                    </option>
+                {% endfor %}
+                <option value="NULL" {% if not major.scl_major_ifid %}selected{% endif %}></option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn">Save Changes</button>
+        <a href="{% url 'sis:major_list' %}" class="btn btn-secondary">View List</a>
+    </form>
+</div>
+{% endblock %}
