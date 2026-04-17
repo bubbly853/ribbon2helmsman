@@ -175,6 +175,17 @@ class CurriculumRecord:
     gpa_min: Optional[str]
     min_credits: Optional[str]
 
+@dataclass
+class MajorRecord:
+    mrid: str
+    name: Optional[str]
+    short_name: Optional[str]
+    college: Optional[str]
+    degree: Optional[str]
+    major_ind: Optional[str]
+    minor_ind: Optional[str]
+    cip: Optional[str]
+    isced: Optional[HgvPrson] = None
 
 # --- Utility functions ---
 def make_student_record(stdnt: Optional[HsvStdnt]) -> StudentRecord:
@@ -535,6 +546,48 @@ def make_curriculum_record(crcrc: Optional[HsvCrcrc]) -> PersonRecord:
         min_credits=min_credits,
     )
 
+def make_major_record(major: Optional[SclMajor]) -> PersonRecord:
+    """
+    Build Curriculum Record from HsvCrcrc Object.
+    """
+
+    # --------------------
+    # SclMajor fields
+    # --------------------
+    mrid = None
+    name = None
+    short_name = None
+    college = None
+    degree = None
+    major_ind = None
+    minor_ind = None
+    cip = None
+    isced = None
+
+    if major:
+        mrid = major.scl_major_mrid
+        name = major.scl_major_hr_name
+        short_name = major.scl_major_short_name
+        college = major.scl_major_cgid.sdl_coleg_hr_name
+        degree = major.scl_major_dgid.scl_degrs_dgid
+        major_ind = major.scl_major_major_ind
+        minor_ind = major.scl_major_minor_ind
+        cip = major.scl_major_ciid.scl_cipcd_hr_name
+        isced = major.scl_major_ifid.scl_iscdf_hr_name
+
+
+    return MajorRecord(
+        mrid=mrid,
+        name=name,
+        short_name=short_name,
+        college=college,
+        degree=degree,
+        major_ind=major_ind,
+        minor_ind=minor_ind,
+        cip=cip,
+        isced=isced,
+    )
+
 # --- Search and Update Views ---
 @login_required
 def dashboard(request):
@@ -613,6 +666,53 @@ def student_list(request):
         'search_query': search_query,
     }
     return render(request, student_link, context)
+
+@login_required
+def major_list(request):
+    """List  majors with search and pagination"""
+    search_query = request.GET.get('search', '').strip()
+    rbid_query = request.GET.get('rbid', '').strip()
+    url_name = request.resolver_match.url_name
+
+    major_link_map = {
+        'major_list': 'sis/major_list.html'
+    }
+    major_link = major_link_map.get(url_name, 'sis/major_list.html')
+
+    # Base queryset: only majors that have a SGM_majr record
+    majr_qs = SclMajor.objects.using('sis').all()
+
+    # Search by name or RBID through GumIdent
+    if search_query:
+        majr_qs = majr_qs.filter(
+            models.Q(scl_major_mrid__icontains=search_query) |
+            models.Q(scl_major_hr_name__icontains=search_query) |
+            models.Q(scl_major_shor_name__icontains=search_query)
+        )
+
+    # Order by last_name, first_name from GumIdent
+    majr_qs = majr_qs.order_by(
+        'scl_major_hr_name'
+    )
+
+    # Limit to 2000 results for safety
+    majr_list = majr_qs[:2000]
+
+    # Build major records
+    majors: List = []
+    for majr in majr_list:
+        majors.append(make_major_record(majr))
+
+    # Pagination
+    paginator = Paginator(majors, 25)  # 25 per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'search_query': search_query,
+    }
+    return render(request, major_link, context)
 
 @login_required
 def student_detail(request, student_rbid):
@@ -1435,7 +1535,7 @@ def course_create(request):
             with transaction.atomic(using='sis'):
                 cours.create(srl_cours_sbid_id=subj, srl_cours_crse_num=numb, srl_cours_hr_name=name, srl_cours_credit_hours=credit_hrs, srl_cours_active_ind='Y')
             messages.success(request, 'Course created successfully.')
-            return redirect('sis:section_create')
+            return redirect('sis:course_create')
         except Exception as e:
             messages.error(request, f'Error creating course: {e}')
 
@@ -1600,10 +1700,10 @@ def major_create(request):
             ifid = v_ifid if (v_ifid := request.POST.get('ifid')) != 'NULL' else None
             with transaction.atomic(using='sis'):
                 major.create(scl_major_mrid=mrid, scl_major_hr_name=name, scl_major_short_name=sname, scl_major_cgid_id=cgid, scl_major_dgid_id=dgid, scl_major_major_ind=major_ind, scl_major_minor_ind=minor_ind, scl_major_ciid_id=ciid, scl_major_ifid_id=ifid)
-            messages.success(request, 'Course created successfully.')
-            return redirect('sis:section_create')
+            messages.success(request, 'Major created successfully.')
+            return redirect('sis:major_create')
         except Exception as e:
-            messages.error(request, f'Error creating course: {e}')
+            messages.error(request, f'Error creating major: {e}')
 
     context = {
         'colegs': colegs,
