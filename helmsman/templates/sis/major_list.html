@@ -52,7 +52,7 @@
                 <td data-label="ISCED F Code" class="hide-mobile">{{ major.isced|default:'-' }}</td>
                 <td data-label="Actions">
                     {% if major.mrid %}
-                        <a href="{% url 'sis:curriculum_detail' major.mrid %}" class="btn">View</a>
+                        <a href="{% url 'sis:major_detail' major.mrid %}" class="btn">View</a>
                     {% else %}
                         <span class="text-muted">No STID</span>
                     {% endif %}
