@@ -25,8 +25,8 @@
 
         <!-- Editable: Short Name -->
         <div class="form-group">
-            <label for="name">Major Short Name</label>
-            <input type="text" id="name" name="name"
+            <label for="sname">Major Short Name</label>
+            <input type="text" id="sname" name="sname"
                    data-db-field="scl_major.scl_major_hr_name" required>
         </div>
 
@@ -50,7 +50,7 @@
             data-db-field="scl_major.scl_major_dgid | scl_degrs.scl_degrs_hr_name">
                 {% for degr in degrs %}
                     <option value="{{ degr.scl_degrs_dgid }}">
-                        {{ degr.scl_degrs_hr_name }}
+                        {{ degr.scl_degrs_hr_name }} - {{ degr.scl_degrs_dgid }}
                     </option>
                 {% endfor %}
             </select>
@@ -58,8 +58,8 @@
 
         <!-- Editable: Major Ind -->
         <div class="form-group">
-            <label for="major">Major Ind</label>
-            <select id="major" name="major"
+            <label for="major_ind">Major Ind</label>
+            <select id="major_ind" name="major"
             data-db-field="scl_major.scl_major_major_ind">
                 <option value="Y" selected>Yes</option>
                 <option value="N">No</option>
@@ -68,8 +68,8 @@
 
         <!-- Editable: Minor Ind -->
         <div class="form-group">
-            <label for="minor">Minor Ind</label>
-            <select id="minor" name="minor"
+            <label for="minor_ind">Minor Ind</label>
+            <select id="minor_ind" name="minor"
             data-db-field="scl_major.scl_major_minor_ind">
                 <option value="Y">Yes</option>
                 <option value="N" selected>No</option>

@@ -1583,21 +1583,27 @@ def major_create(request):
     degrs = SclDegrs.objects.using('sis').all().order_by('scl_degrs_hr_name')
     cicpds = SclCipcd.objects.using('sis').all().order_by('scl_cipcd_hr_name')
     iscdfs = SclIscdf.objects.using('sis').all().order_by('scl_iscdf_hr_name')
+    
 
-    # if request.method == 'POST':
+    if request.method == 'POST':
         
-    #     try:
-    #         sect = SrbSects.objects.using('sis')
-    #         scnd_inst = v_scnd_inst if (v_scnd_inst := request.POST.get('scnd_inst')) != 'NULL' else None
-    #         course = request.POST.get('course')
-    #         term = request.POST.get('term')
-    #         prim_inst = request.POST.get('prim_inst')
-    #         with transaction.atomic(using='sis'):
-    #             cours.create(srl_cours_sbid_id=subj, srl_cours_crse_num=numb, srl_cours_hr_name=name, srl_cours_credit_hours=credit_hrs, srl_cours_active_ind='Y')
-    #         messages.success(request, 'Course created successfully.')
-    #         return redirect('sis:section_create')
-    #     except Exception as e:
-    #         messages.error(request, f'Error creating course: {e}')
+        try:
+            major = SclMajor.objects.using('sis')
+            mrid = request.POST.get('mrid')
+            name = request.POST.get('name')
+            sname = request.POST.get('sname')
+            cgid = request.POST.get('cgid')
+            dgid = request.POST.get('dgid')
+            major_ind = request.POST.get('major_ind')
+            minor_ind = request.POST.get('minor_ind')
+            ciid = v_ciid if (v_ciid := request.POST.get('ciid')) != 'NULL' else None
+            ifid = v_ifid if (v_ifid := request.POST.get('ifid')) != 'NULL' else None
+            with transaction.atomic(using='sis'):
+                major.create(scl_major_mrid=mrid, scl_major_hr_name=name, scl_major_short_name=sname, scl_major_cgid=cgid, scl_major_dgid=dgid, scl_major_major_ind=major_ind, scl_major_minor_ind=minor_ind, scl_major_ciid=ciid, scl_major_ifid=ifid)
+            messages.success(request, 'Course created successfully.')
+            return redirect('sis:section_create')
+        except Exception as e:
+            messages.error(request, f'Error creating course: {e}')
 
     context = {
         'colegs': colegs,
