@@ -1,6 +1,6 @@
 {% extends 'sis/base.html' %}
 
-{% block title %}Majors/Curriculums - Helmsman{% endblock %}
+{% block title %}Majors - Helmsman{% endblock %}
 
 {% block content %}
 <div class="card">
@@ -48,8 +48,8 @@
                 <td data-label="Degree">{{ major.degree }}</td>
                 <td data-label="Major Ind" class="hide-mobile">{{ major.major_ind }}</td>
                 <td data-label="Minor Ind" class="hide-mobile">{{ major.minor_ind }}</td>
-                <td data-label="CIP Code" class="hide-mobile">{{ major.cip }}</td>
-                <td data-label="ISCED F Code" class="hide-mobile">{{ major.isced }}</td>
+                <td data-label="CIP Code" class="hide-mobile">{{ major.cip|default:'-' }}</td>
+                <td data-label="ISCED F Code" class="hide-mobile">{{ major.isced|default:'-' }}</td>
                 <td data-label="Actions">
                     {% if major.mrid %}
                         <a href="{% url 'sis:curriculum_detail' major.mrid %}" class="btn">View</a>
