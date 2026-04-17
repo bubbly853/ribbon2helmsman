@@ -34,6 +34,7 @@ urlpatterns = [
     path('create_term/', views.term_create, name='term_create'),
     path('create_course/', views.course_create, name='course_create'),
     path('major_list/', views.major_list, name='major_list'),
+    path('major_detail/', views.major_detail, name='major_detail'),
     path('create_major/', views.major_create, name='major_create'),
     path('audit/student/', views.student_list, name='curriculum_audit_student_select'),
     path('audit/student/<str:student_id>', views.curriculum_audit_curriculum_select, name='curriculum_audit_curriculum_select'),
