@@ -22,7 +22,7 @@ postgres$: psql -d postgres
 
 2. create the ribbon2 user as follows:
 
-```postgresql
+```sql
 CREATE USER ribbon2 WITH PASSWORD 'your_secure_password_here';
 ALTER USER ribbon2 CREATEDB;
 ALTER USER ribbon2 WITH CREATEROLE;
@@ -30,14 +30,14 @@ ALTER USER ribbon2 WITH CREATEROLE;
 
 3. create the database ribbon2 as follows:
 
-```postgresql
+```sql
 CREATE DATABASE ribbon2 WITH OWNER "ribbon2";
 GRANT CONNECT ON DATABASE ribbon2 TO "ribbon2";
 ```
 
 5. Exit the postgreSQL terminal
 
-```postgresql
+```sql
 \q
 ```
 
@@ -70,4 +70,22 @@ $: psql -U ribbon2 -d ribbon2 -f 2-finance.sql
 $: psql -U ribbon2 -d ribbon2 -f 3-student.sql
 $: psql -U ribbon2 -d ribbon2 -f 4-ireland_inserts.sql
 $: psql -U ribbon2 -d ribbon2 -f 5-roles.sql
+```
+
+9. Connect to ribbon2 as user ribbon2
+
+```bash
+$: psql -U ribbon2 -d ribbon2
+```
+
+10. Change the password for the petruskan user
+
+```sql
+\password username
+```
+
+11. Exit the postgreSQL terminal
+
+```sql
+\q
 ```
