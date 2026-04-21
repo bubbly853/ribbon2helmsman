@@ -1096,8 +1096,8 @@ CREATE TABLE student.sar_advrl (
 );
 
 COMMENT ON TABLE student.sar_advrl IS 'Advisor Rule Table.';
-COMMENT ON COLUMN student.sar_advrl.sal_avtyp_avid IS 'Advisor rule ID.';
-COMMENT ON COLUMN student.sar_advrl.sal_avtyp_avid IS 'Advisor type ID.';
+COMMENT ON COLUMN student.sar_advrl.sar_advrl_arid IS 'Advisor rule ID.';
+COMMENT ON COLUMN student.sar_advrl.sar_advrl_avid IS 'Advisor type ID.';
 COMMENT ON COLUMN student.sar_advrl.sar_advrl_begin_letter IS 'Student Last Name Begin Letter.';
 COMMENT ON COLUMN student.sar_advrl.sar_advrl_end_letter IS 'Student Last Name End Letter.';
 COMMENT ON COLUMN student.sar_advrl.sar_advrl_advr_rbid IS 'Advisor Ribbon ID.';
