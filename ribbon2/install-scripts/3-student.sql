@@ -840,7 +840,7 @@ CREATE TABLE student.sgl_terms (
     sgl_terms_tmid character(6) NOT NULL,
     sgl_terms_year integer NOT NULL,
     sgl_terms_smid character(4) NOT NULL,
-    sgl_terms_hr_name character varying(32) NOT NULL
+    sgl_terms_hr_name character varying(32) NOT NULL,
     sgl_terms_fyid character(4) NOT NULL,
     sgl_terms_start_date date NOT NULL,
     sgl_terms_end_date date NOT NULL,
