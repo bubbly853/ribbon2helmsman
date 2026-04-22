@@ -90,3 +90,12 @@ postgres$: psql -U ribbon2 -d ribbon2
 ```conf
 host    ribbon2     all     <helmsman-server-ip>/32   md5
 ```
+
+13. Make sure all created accounts are mapped properly to one of the following roles
+
+* sis_admin
+* sis_application
+* sis_instructor
+* sis_advisor
+* sis_registrar
+* sis_readonly

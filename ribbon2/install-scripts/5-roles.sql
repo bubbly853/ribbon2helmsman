@@ -1,5 +1,5 @@
 -- ============================================
--- Ribbon2 General Schema for Ribbon2 SIS Users and Roles
+-- Ribbon2 SIS Users and Roles
 -- Release 1.0 - Initial Schema
 -- Date: 2026-04-20
 -- PostgreSQL 16+

@@ -1,5 +1,5 @@
 -- ============================================
--- Ribbon2 General Schema for Ribbon2 SIS Student
+-- Student Schema for Ribbon2 SIS
 -- Release 1.0 - Initial Schema
 -- Date: 2026-04-20
 -- PostgreSQL 16+
