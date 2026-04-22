@@ -5,20 +5,28 @@ Ribbon2 is a modern SIS built on postgreSQL.
 
 # Ribbon2 Database
 
+**📝Notice:** This guide assumes the supported distros of Rocky Linux (Rocky) or Oracle Linux (OL) 9.4 or higher. It should also work with RHEL 9.4 or higher, if subscriptions and repositories are properly set up. We reccomend Rocky or Oracle Linux 10.0 or higher for security.
+
+**📝Notice:** This guide assumes the default DB name of ribbon2. You are welcome to add environment based prefixes like -prod or -pprd. Make sure to append this anywhere you'd list the database name.
+
 ## Prerequisites
 
-To set up the Ribbon2 SIS database, you will need to install PostgreSQL. We reccomend Oracle Linux or Rocky Linux. The latest version of PostgreSQL can be found [here](https://www.postgresql.org/download/linux/redhat/ "RHEL/Yum PostgreSQL official repos"), as well as instructions to install the distro provided version, and instructions to set up PostgreSQL after installation.
+To set up the Ribbon2 SIS, you will need to install PostgreSQL. For the latest version of PostgreSQL supported by the distro, run the following commands:
 
-If you wish to install on another linux ditsro, PostgreSQL has instructions [here](https://www.postgresql.org/download/linux/ "Linux download instructions for PostgreSQL").
+1. Remove the default PostgreSQL module
+```bash
+$: dnf module disable postgresql -y
+$: dnf clean all
+```
 
-PostgreSQL provides instructions for and supports Windows, but we do not support installing Ribbon2 SIS on Windows. 
+2. Install PostgreSQL 16 via [this web link](https://www.postgresql.org/download/linux/redhat/ "PGDG Install Instructions for Red Hat Family"), ensuring the correct OL/Rocky version is selected. 
 
 ## Setup
 
-1. Connect to the postgreSQL terminal as the local DBA, as the linux account postgres
+1. Connect to the postgreSQL termobal as the linux account postgres
 
 ```bash
-postgres$: psql -d postgres
+postgres#: psql -d postgres
 ```
 
 2. create the ribbon2 user as follows:
@@ -42,21 +50,7 @@ GRANT CONNECT ON DATABASE ribbon2 TO "ribbon2";
 \q
 ```
 
-6. Modify the pg_hba.conf file
-
-* if using postgreSQL repo
-
-```bash
-#: vi (or nano) /var/lib/pgsql/<version_number>/data/pg_hba.conf
-```
-
-* if using shipped postgreSQL
-
-```bash
-#: vi (or nano) /var/lib/pgsql/data/pg_hba.conf
-```
-
-7. Add the following line, then save and exit:
+6. Modify the pg_hba.conf */var/lib/pgsql/16/data/pg_hba.conf* file to add the following line:
 
 ```conf
 local   all     all                                     md5
@@ -65,28 +59,34 @@ local   all     all                                     md5
 8. cd to the install scripts in the git repository, and Run the following scripts, to built the Ribbon2 SIS database
 
 ```bash
-$: cd (/path/to/)ribbon2helmsman/ribbon2/install_scripts
-$: psql -U ribbon2 -d ribbon2 -f 1-general.sql
-$: psql -U ribbon2 -d ribbon2 -f 2-finance.sql
-$: psql -U ribbon2 -d ribbon2 -f 3-student.sql
-$: psql -U ribbon2 -d ribbon2 -f 4-ireland_inserts.sql
-$: psql -U ribbon2 -d ribbon2 -f 5-roles.sql
+postgres$: cd (/path/to/)ribbon2helmsman/ribbon2/install_scripts
+postgres$: psql -U ribbon2 -d ribbon2 -f 1-general.sql
+postgres$: psql -U ribbon2 -d ribbon2 -f 2-finance.sql
+postgres$: psql -U ribbon2 -d ribbon2 -f 3-student.sql
+postgres$: psql -U ribbon2 -d ribbon2 -f 4-ireland_inserts.sql
+postgres$: psql -U ribbon2 -d ribbon2 -f 5-roles.sql
 ```
 
 9. Connect to ribbon2 as user ribbon2
 
 ```bash
-$: psql -U ribbon2 -d ribbon2
+postgres$: psql -U ribbon2 -d ribbon2
 ```
 
 10. Change the password for the petruskan user
 
 ```sql
-\password username
+\password petruskan
 ```
 
 11. Exit the postgreSQL terminal
 
 ```sql
 \q
+```
+
+12. Modify the pg_hba.conf */var/lib/pgsql/16/data/pg_hba.conf* file to add the following line, allowing connection from helmsman
+
+```conf
+host    ribbon2     all     <helmsman-server-ip>/32   md5
 ```
