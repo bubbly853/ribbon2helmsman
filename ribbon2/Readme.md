@@ -12,6 +12,7 @@ To set up the Ribbon2 SIS database, you will need to install PostgreSQL. We recc
 If you wish to install on another linux ditsro, PostgreSQL has instructions [here](https://www.postgresql.org/download/linux/ "Linux download instructions for PostgreSQL").
 
 PostgreSQL provides instructions for and supports Windows, but we do not support installing Ribbon2 SIS on Windows. 
+
 ## Setup
 
 1. Connect to the postgreSQL terminal as the local DBA, as the linux account postgres

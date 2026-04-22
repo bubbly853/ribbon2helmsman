@@ -16,10 +16,9 @@ print(os.path.join(BASE_DIR.parent, '.env'))
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
-#ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -85,7 +84,7 @@ DATABASES = {
     },
     'sis': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ribbon2',
+        'NAME': os.getenv('SIS_DB_NAME'),
         'USER': '',  # Will be set dynamically per user
         'PASSWORD': '',  # Will be set dynamically per user
         'HOST': os.getenv('SIS_DB_HOST'),
