@@ -65,6 +65,7 @@ postgres$: psql -U ribbon2 -d ribbon2 -f 2-finance.sql
 postgres$: psql -U ribbon2 -d ribbon2 -f 3-student.sql
 postgres$: psql -U ribbon2 -d ribbon2 -f 4-ireland_inserts.sql
 postgres$: psql -U ribbon2 -d ribbon2 -f 5-roles.sql
+postgres$: psql -U ribbon2 -d ribbon2 -f 6-helmsman.sql
 ```
 
 9. Connect to ribbon2 as user ribbon2
