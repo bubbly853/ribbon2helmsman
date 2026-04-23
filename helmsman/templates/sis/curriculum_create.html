@@ -15,7 +15,7 @@
             data-db-field="scl_currv.scl_currv_mrid | scl_major.scl_major_hr_name">
                 {% for major in majors %}
                     <option value="{{ major.scl_major_mrid }}">
-                        {{ major.scl_major_hr_name }}
+                        {{ major.scl_major_hr_name }} {{ major.scl_major_mrid }}
                     </option>
                 {% endfor %}
             </select>
