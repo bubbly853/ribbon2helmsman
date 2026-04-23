@@ -1781,7 +1781,7 @@ def curriculum_create(request):
         
         try:
             currv = SclCurrv.objects.using('sis')
-            mrid = request.POST.get('major')
+            mrid = request.POST.get('mrid')
             eff_term = request.POST.get('eff_term')
             ctid = request.POST.get('ctid')
             mark_avg = v_mark_avg if (v_mark_avg:= request.POST.get('mark_avg')) != '' else None
