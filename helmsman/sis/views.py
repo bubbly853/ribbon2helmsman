@@ -1417,7 +1417,6 @@ def major_detail(request, major_mrid):
     degrs = SclDegrs.objects.using('sis').all().order_by('scl_degrs_hr_name')
     cicpds = SclCipcd.objects.using('sis').all().order_by('scl_cipcd_hr_name')
     iscdfs = SclIscdf.objects.using('sis').all().order_by('scl_iscdf_hr_name')
-    print(major.scl_major_cgid_id)
     
 
     if request.method == 'POST':

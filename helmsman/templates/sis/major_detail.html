@@ -37,8 +37,8 @@
             data-db-field="scl_major.scl_major_cgid | sdl_coleg.sdl_coleg_hr_name">
                 {% for coleg in colegs %}
                     <option value="{{ coleg.sdl_coleg_cgid }}"
-                            {% if coleg.sdl_coleg_cgid == scl_major_cgid_id %}selected{% endif %}>
-                        {{ coleg.sdl_coleg_hr_name }}: {{ coleg.sdl_coleg_cgid }} - {{ scl_major_cgid_id }}
+                            {% if coleg.sdl_coleg_cgid == major.scl_major_cgid_id %}selected{% endif %}>
+                        {{ coleg.sdl_coleg_hr_name }}
                     </option>
                 {% endfor %}
             </select>
