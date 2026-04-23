@@ -1436,6 +1436,7 @@ def major_detail(request, major_mrid):
                 major.scl_major_minor_ind=minor_ind
                 major.scl_major_ciid_id=ciid
                 major.scl_major_ifid_id=ifid
+                major.save()
             messages.success(request, 'Major updated successfully.')
             return redirect('sis:major_detail', major_mrid=major_mrid)
         except Exception as e:
