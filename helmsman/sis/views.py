@@ -1788,7 +1788,7 @@ def curriculum_create(request):
             min_gpa = v_min_gpa if (v_min_gpa := request.POST.get('min_gpa')) != 'NULL' else None
             min_credits = request.POST.get('min_credits')
             with transaction.atomic(using='sis'):
-                currv.create(scl_currv_mrid_id=mrid, scl_currv_effctive_term=eff_term, scl_currv_ctid_id=ctid, scl_currv_min_mark_avg=mark_avg, scl_currv_min_gpa=min_gpa, scl_currv_min_credits=min_credits)
+                currv.create(scl_currv_mrid_id=mrid, scl_currv_effective_term=eff_term, scl_currv_ctid_id=ctid, scl_currv_min_mark_avg=mark_avg, scl_currv_min_gpa=min_gpa, scl_currv_min_credits=min_credits)
             messages.success(request, 'Curriculum created successfully.')
             return redirect('sis:major_create')
         except Exception as e:
