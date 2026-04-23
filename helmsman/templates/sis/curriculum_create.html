@@ -9,8 +9,8 @@
     <form method="post">
         <!-- Major -->
         <div class="form-group">
-            <label for="major">Major</label>
-            <select id="major" name="major"
+            <label for="mrid">Major</label>
+            <select id="mrid" name="mrid"
             data-db-field="scl_currv.scl_currv_mrid | scl_major.scl_major_hr_name">
                 {% for major in majors %}
                     <option value="{{ major.scl_major_mrid }}">
@@ -35,8 +35,8 @@
 
         <!-- Editable: Crtyp -->
         <div class="form-group">
-            <label for="crtyp">Curriculum Type</label>
-            <select id="crtyp" name="crtyp"
+            <label for="ctid">Curriculum Type</label>
+            <select id="ctid" name="ctid"
             data-db-field="scl_currv.scl_currv_ctid | scl_crtyp.scl_crtyp_ctid | scl_crtyp.scl_crtyp_hr_name">
                 {% for crtyp in crtyps %}
                     <option value="{{ crtyp.scl_crtyp_ctid }}">

@@ -1775,10 +1775,27 @@ def curriculum_create(request):
     crtyps = SclCrtyp.objects.using('sis').all().order_by('scl_crtyp_hr_name')
     
     terms = SglTerms.objects.using('sis').all().order_by('sgl_terms_hr_name')
+
+    if request.method == 'POST':
+        
+        try:
+            currv = SclCurrv.objects.using('sis')
+            mrid = request.POST.get('major')
+            eff_term = request.POST.get('eff_term')
+            ctid = request.POST.get('ctid')
+            mark_avg = v_mark_avg if (v_mark_avg:= request.POST.get('mark_avg')) != 'NULL' else None
+            min_gpa = v_min_gpa if (v_min_gpa := request.POST.get('min_gpa')) != 'NULL' else None
+            min_credits = request.POST.get('min_credits')
+            with transaction.atomic(using='sis'):
+                currv.create(scl_currv_mrid_id=mrid, scl_currv_eefctive_term=eff_term, scl_currv_ctid_id=ctid, scl_currv_min_mark_avg=mark_avg, scl_currv_min_gpa=min_gpa, scl_currv_min_credits=min_credits)
+            messages.success(request, 'Curriculum created successfully.')
+            return redirect('sis:major_create')
+        except Exception as e:
+            messages.error(request, f'Error creating curriculum: {e}')
+
     context = {
         'majors': majors,
         'crtyps': crtyps,
         'terms': terms,
     }
-
     return render(request, 'sis/curriculum_create.html', context)
