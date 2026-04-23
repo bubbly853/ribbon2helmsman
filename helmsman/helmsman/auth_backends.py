@@ -17,7 +17,7 @@ class PostgreSQLAuthBackend(BaseBackend):
     
     # Define which PostgreSQL roles map to Django permissions
     ADMIN_ROLES = ['sis_admin', 'sis_application'] 
-    STAFF_ROLES = ['sis_instructor', 'sis_advisor', 'sis_registrar', 'sis_readonly']
+    STAFF_ROLES = ['sis_admin', 'sis_application', 'sis_instructor', 'sis_advisor', 'sis_registrar', 'sis_readonly']
     
     def authenticate(self, request, username=None, password=None, **kwargs):
         """
