@@ -598,10 +598,13 @@ class SISAuthForm(AuthenticationForm):
         try:
             return super().clean()
         except forms.ValidationError:
+            print("=== caught ValidationError ===")
+            print("request:", self.request)
+            print("_auth_error:", getattr(self.request, '_auth_error', 'NOT SET'))
             error = getattr(self.request, '_auth_error', None)
             if error:
                 raise forms.ValidationError(error)
-            raise  # re-raise the original generic error
+            raise
 
 class custom_login(LoginView):
     form_class = SISAuthForm

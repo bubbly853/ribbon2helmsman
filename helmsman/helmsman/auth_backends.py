@@ -45,6 +45,8 @@ class PostgreSQLAuthBackend(BaseBackend):
             
             permitted_roles = set(self.ADMIN_ROLES + self.STAFF_ROLES)
             if not any(role in permitted_roles for role in roles):
+                print("=== setting _auth_error on request ===")
+                print("request is:", request)
                 if request:
                     request._auth_error = "User not permitted to login"
                 raise PermissionDenied("User not permitted to login")
