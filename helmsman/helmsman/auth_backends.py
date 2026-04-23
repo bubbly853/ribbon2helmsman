@@ -7,6 +7,7 @@ import psycopg2
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth.models import User
 from django.conf import settings
+from django.core.exceptions import PermissionDenied 
 
 
 class PostgreSQLAuthBackend(BaseBackend):
@@ -17,7 +18,7 @@ class PostgreSQLAuthBackend(BaseBackend):
     
     # Define which PostgreSQL roles map to Django permissions
     ADMIN_ROLES = ['sis_admin', 'sis_application'] 
-    STAFF_ROLES = ['sis_admin', 'sis_application', 'sis_instructor', 'sis_advisor', 'sis_registrar', 'sis_readonly']
+    STAFF_ROLES = ['sis_instructor', 'sis_advisor', 'sis_registrar', 'sis_readonly']
     
     def authenticate(self, request, username=None, password=None, **kwargs):
         """
@@ -41,6 +42,10 @@ class PostgreSQLAuthBackend(BaseBackend):
             # Get user's PostgreSQL roles
             roles = self.get_user_roles(connection, username)
             connection.close()
+            
+            permitted_roles = set(self.ADMIN_ROLES + self.STAFF_ROLES)
+            if not any(role in permitted_roles for role in roles):
+                raise PermissionDenied("User not permitted to login")
             
             # Determine Django permissions based on PG roles
             is_superuser = any(role in self.ADMIN_ROLES for role in roles)
