@@ -45,6 +45,8 @@ class PostgreSQLAuthBackend(BaseBackend):
             
             permitted_roles = set(self.ADMIN_ROLES + self.STAFF_ROLES)
             if not any(role in permitted_roles for role in roles):
+                if request:
+                    request._auth_error = "User not permitted to login"
                 raise PermissionDenied("User not permitted to login")
             
             # Determine Django permissions based on PG roles

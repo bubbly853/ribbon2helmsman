@@ -597,8 +597,11 @@ class SISAuthForm(AuthenticationForm):
     def clean(self):
         try:
             return super().clean()
-        except PermissionDenied as e:
-            raise forms.ValidationError(str(e))
+        except forms.ValidationError:
+            error = getattr(self.request, '_auth_error', None)
+            if error:
+                raise forms.ValidationError(error)
+            raise  # re-raise the original generic error
 
 class custom_login(LoginView):
     form_class = SISAuthForm
