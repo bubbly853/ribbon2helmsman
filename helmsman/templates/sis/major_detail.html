@@ -1,10 +1,10 @@
 {% extends 'sis/detail_base.html' %}
 
-{% block title %}Create a Major- Helmsman{% endblock %}
+{% block title %}{{ major.scl_major_mrid }} {{ major.scl_major_hr_name }} - Helmsman{% endblock %}
 
 {% block content %}
 <div class="card">
-    <h1>Create a Major</h1>
+    <h1>Major Detail for {{ major.scl_major_mrid }} {{ major.scl_major_hr_name }}</h1>
 
     <form method="post">
         {% csrf_token %}
