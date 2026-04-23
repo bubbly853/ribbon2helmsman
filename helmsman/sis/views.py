@@ -1784,8 +1784,8 @@ def curriculum_create(request):
             mrid = request.POST.get('major')
             eff_term = request.POST.get('eff_term')
             ctid = request.POST.get('ctid')
-            mark_avg = v_mark_avg if (v_mark_avg:= request.POST.get('mark_avg')) != 'NULL' else None
-            min_gpa = v_min_gpa if (v_min_gpa := request.POST.get('min_gpa')) != 'NULL' else None
+            mark_avg = v_mark_avg if (v_mark_avg:= request.POST.get('mark_avg')) != '' else None
+            min_gpa = v_min_gpa if (v_min_gpa := request.POST.get('min_gpa')) != '' else None
             min_credits = request.POST.get('min_credits')
             with transaction.atomic(using='sis'):
                 currv.create(scl_currv_mrid_id=mrid, scl_currv_effective_term_id=eff_term, scl_currv_ctid_id=ctid, scl_currv_min_mark_avg=mark_avg, scl_currv_min_gpa=min_gpa, scl_currv_min_credits=min_credits)
