@@ -35,6 +35,7 @@ urlpatterns = [
     path('major_list/', views.major_list, name='major_list'),
     path('major_detail/<str:major_mrid>', views.major_detail, name='major_detail'),
     path('create_major/', views.major_create, name='major_create'),
+    path('create_curriculum/', views.curriculum_create, name='curriculum_create'),
     path('audit/student/', views.student_list, name='curriculum_audit_student_select'),
     path('audit/student/<str:student_id>', views.curriculum_audit_curriculum_select, name='curriculum_audit_curriculum_select'),
     path('audit/view/<str:stucv_scid>', views.curriculum_audit, name='curriculum_audit'),

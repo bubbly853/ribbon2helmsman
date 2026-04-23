@@ -1764,3 +1764,21 @@ def major_create(request):
         'iscdfs': iscdfs,
     }
     return render(request, 'sis/major_create.html', context)
+
+
+@login_required
+def curriculum_create(request):
+    """Create a curriculum record"""
+
+    major = SclMajor.objects.using('sis').all().order_by('scl_major_hr_name')
+
+    crtyps = SclCrtyp.objects.using('sis').all().order_by('scl_crtyp_hr_name')
+    
+    terms = SglTerms.objects.using('sis').all().order_by('sgl_terms_hr_name')
+    context = {
+        'major': major,
+        'crtyps': crtyps,
+        'terms': terms,
+    }
+
+    return render(request, 'sis/curriculum_create.html', context)

@@ -131,5 +131,5 @@ ALTER DEFAULT PRIVILEGES FOR ROLE ribbon2 IN SCHEMA finance
 ALTER DEFAULT PRIVILEGES FOR ROLE ribbon2 IN SCHEMA student
     GRANT ALL PRIVILEGES ON TABLES TO sis_application;
     
-CREATE USER petruskan WITH PASSWORD 'Ch4ng3_m3';
-GRANT ROLE sis_application to petruskan;
+CREATE USER petruskan WITH PASSWORD 'Ch4ng3_m3_pl34s3';
+GRANT sis_application to petruskan;
