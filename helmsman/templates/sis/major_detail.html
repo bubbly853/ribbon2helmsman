@@ -38,7 +38,7 @@
                 {% for coleg in colegs %}
                     <option value="{{ coleg.sdl_coleg_cgid }}"
                             {% if coleg.sdl_coleg_cgid == scl_major_cgid_id %}selected{% endif %}>
-                        {{ coleg.sdl_coleg_hr_name }}
+                        {{ coleg.sdl_coleg_hr_name }}: {{ coleg.sdl_coleg_cgid }} - {{ scl_major_cgid_id }}
                     </option>
                 {% endfor %}
             </select>
