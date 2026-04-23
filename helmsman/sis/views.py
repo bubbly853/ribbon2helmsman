@@ -612,6 +612,7 @@ def dashboard(request):
         {"url": reverse("sis:term_create"), "title": "Create Term",  "desc": "Create a term",  "icon": "🗓️✚"},
         {"url": reverse("sis:major_create"), "title": "Create Major",  "desc": "Create a major",  "icon": "🎓✚"},
         {"url": reverse("sis:course_create"), "title": "Create Course",  "desc": "Create a course",  "icon": "📚✚"},
+        {"url": reverse("sis:curriculum_create"), "title": "Create Curriculum",  "desc": "Create a curriculum version",  "icon": "📋✚"},
         {"url": reverse("sis:marks_enter_section_select"), "title": "Enter or Update Final Marks",  "desc": "Enter or update final marks for a section",  "icon": "✅📝"},
         {"url": "/admin/", "title": "Admin",  "desc": "Django administration panels",  "icon": "⚙️"},
 
@@ -1790,7 +1791,7 @@ def curriculum_create(request):
             with transaction.atomic(using='sis'):
                 currv.create(scl_currv_mrid_id=mrid, scl_currv_effective_term_id=eff_term, scl_currv_ctid_id=ctid, scl_currv_min_mark_avg=mark_avg, scl_currv_min_gpa=min_gpa, scl_currv_min_credits=min_credits)
             messages.success(request, 'Curriculum created successfully.')
-            return redirect('sis:major_create')
+            return redirect('sis:curriculum_create')
         except Exception as e:
             messages.error(request, f'Error creating curriculum: {e}')
 
