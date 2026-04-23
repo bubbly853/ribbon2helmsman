@@ -592,25 +592,6 @@ def make_major_record(major: Optional[SclMajor]) -> PersonRecord:
         isced=isced,
     )
 
-# --- login view ---
-class SISAuthForm(AuthenticationForm):
-    def clean(self):
-        print("=== SISAuthForm.clean() called ===")
-        try:
-            result = super().clean()
-            print("=== super().clean() returned without raising ===")
-            return result
-        except Exception as e:
-            print(f"=== caught {type(e).__name__}: {e} ===")
-            error = getattr(self.request, '_auth_error', None)
-            print(f"=== _auth_error is: {error} ===")
-            if isinstance(e, forms.ValidationError) and error:
-                raise forms.ValidationError(error)
-            raise
-
-class custom_login(LoginView):
-    form_class = SISAuthForm
-
 # --- Search and Update Views ---
 @login_required
 def dashboard(request):
