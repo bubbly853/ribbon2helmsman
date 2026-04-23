@@ -15,8 +15,10 @@ from django.db import transaction
 from django.urls import reverse
 import datetime
 from django.http import Http404
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.core.exceptions import PermissionDenied
+from django import forms
 
 # Import your real models
 from .models import (
@@ -590,15 +592,18 @@ def make_major_record(major: Optional[SclMajor]) -> PersonRecord:
         isced=isced,
     )
 
-# --- Search and Update Views ---
-class custom_login(LoginView):
-    def form_valid(self, form):
+# --- login view ---
+class SISAuthForm(AuthenticationForm):
+    def clean(self):
         try:
-            return super().form_valid(form)
+            return super().clean()
         except PermissionDenied as e:
-            form.add_error(None, str(e))
-            return self.form_invalid(form)
+            raise forms.ValidationError(str(e))
 
+class custom_login(LoginView):
+    form_class = SISAuthForm
+
+# --- Search and Update Views ---
 @login_required
 def dashboard(request):
     """Main dashboard/home page"""
