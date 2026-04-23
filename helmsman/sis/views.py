@@ -15,6 +15,8 @@ from django.db import transaction
 from django.urls import reverse
 import datetime
 from django.http import Http404
+from django.contrib.auth.views import LoginView
+from django.core.exceptions import PermissionDenied
 
 # Import your real models
 from .models import (
@@ -589,6 +591,14 @@ def make_major_record(major: Optional[SclMajor]) -> PersonRecord:
     )
 
 # --- Search and Update Views ---
+class custom_login(LoginView):
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except PermissionDenied as e:
+            form.add_error(None, str(e))
+            return self.form_invalid(form)
+
 @login_required
 def dashboard(request):
     """Main dashboard/home page"""

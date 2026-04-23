@@ -39,4 +39,5 @@ urlpatterns = [
     path('audit/student/', views.student_list, name='curriculum_audit_student_select'),
     path('audit/student/<str:student_id>', views.curriculum_audit_curriculum_select, name='curriculum_audit_curriculum_select'),
     path('audit/view/<str:stucv_scid>', views.curriculum_audit, name='curriculum_audit'),
+    path('login/', views.custom_login.as_view(), name='login'),
 ]
