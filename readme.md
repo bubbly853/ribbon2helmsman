@@ -202,6 +202,14 @@ This allows a host type connection to the database helmsman_db from the helmsman
     *  FATAL:  database "helmsman_db" does not exist:
         * The database "helmsman_db" was not set up. Ensure that the database is set up properly.
 
+12. Create the run directory, as root or sudo:
+
+    ```bash
+    mkdir /run/helmsman
+    chown helmsman:nginx /run/helmsman
+    chomd 750 /run/helmsman
+    ```
+
 12. as root, create the gunicorn file */etc/systemd/system/helmsman.service* as shows
 
     ```service
@@ -215,7 +223,7 @@ This allows a host type connection to the database helmsman_db from the helmsman
     WorkingDirectory=/opt/helmsman/app/helmsman
     ExecStart=/opt/helmsman/app/.venv/bin/gunicorn \
         --workers 3 \
-        --bind unix:/run/helmsman.sock \
+        --bind unix:/run/helmsman/helmsman.sock \
         helmsman.wsgi:application
     ExecReload=/bin/kill -s HUP $MAINPID
     Restart=always
@@ -261,7 +269,7 @@ This allows a host type connection to the database helmsman_db from the helmsman
         }
     
         location / {
-            proxy_pass http://unix:/run/helmsman.sock;
+            proxy_pass http://unix:/run/helmsman/helmsman.sock;
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
