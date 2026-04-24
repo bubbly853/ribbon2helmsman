@@ -37,7 +37,7 @@ GRANT SELECT ON student.sdl_camps, student.sdl_coleg, student.sdl_depts,
                 student.scl_currv, student.scr_creqs, student.scr_rqgrp, 
                 student.scr_preqs, student.srh_sterm, student.scm_stucv, 
                 student.srb_sects, student.sgm_stubi, student.srh_enrol,
-                sar_advrl, sar_ovrar, scr_ovcls, scr_ovmrk TO sis_registrar;             
+                student.sar_advrl, student.sar_ovrar, student.scr_ovcls, student.scr_ovmrk TO sis_registrar;             
 GRANT INSERT, UPDATE ON student.scl_major, student.scl_currv, student.scr_creqs, 
                         student.scr_rqgrp, student.scr_preqs, student.srh_sterm, 
                         student.scm_stucv, student.srb_sects, student.sgm_stubi, 
@@ -54,9 +54,9 @@ GRANT USAGE ON SCHEMA general TO sis_advisor;
 GRANT USAGE ON SCHEMA finance TO sis_advisor;
 GRANT USAGE ON SCHEMA student TO sis_advisor;
 GRANT SELECT (gum_ident_rbid, gum_ident_first_name, gum_ident_last_name, gum_ident_birthday) ON general.gum_ident TO sis_advisor;
-GRANT SELECT (gum_adinf_rbid, gum_adinf_pref_first_name, gum_adinf_prefix, gum_adinf_suffix, gum_adinf_username, gum_adinf_czid, gum_adinf_citizen_coid) ON general.gum_ident TO sis_advisor;
-GRANT SELECT ON TABLE ggl_count TO sis_advisor;
-GRANT SELECT ON TABLE ggl_citzn TO sis_advisor;
+GRANT SELECT (gum_adinf_rbid, gum_adinf_pref_first_name, gum_adinf_prefix, gum_adinf_suffix, gum_adinf_username, gum_adinf_czid, gum_adinf_citizen_coid) ON general.gum_adinf TO sis_advisor;
+GRANT SELECT ON TABLE general.ggl_count TO sis_advisor;
+GRANT SELECT ON TABLE general.ggl_citzn TO sis_advisor;
 GRANT SELECT ON TABLE finance.fgl_fyear TO sis_advisor;
 GRANT SELECT ON student.sdl_camps, student.sdl_coleg, student.sdl_depts, 
                 student.sgl_smstr, student.sgl_terms, student.sgl_level,
@@ -83,9 +83,9 @@ GRANT USAGE ON SCHEMA general TO sis_instructor;
 GRANT USAGE ON SCHEMA finance TO sis_instructor;
 GRANT USAGE ON SCHEMA student TO sis_instructor;
 GRANT SELECT (gum_ident_rbid, gum_ident_first_name, gum_ident_last_name, gum_ident_birthday) ON general.gum_ident TO sis_advisor;
-GRANT SELECT (gum_adinf_rbid, gum_adinf_pref_first_name, gum_adinf_prefix, gum_adinf_suffix, gum_adinf_username, gum_adinf_czid, gum_adinf_citizen_coid) ON general.gum_ident TO sis_advisor;
-GRANT SELECT ON TABLE ggl_count TO sis_advisor;
-GRANT SELECT ON TABLE ggl_citzn TO sis_advisor;
+GRANT SELECT (gum_adinf_rbid, gum_adinf_pref_first_name, gum_adinf_prefix, gum_adinf_suffix, gum_adinf_username, gum_adinf_czid, gum_adinf_citizen_coid) ON general.gum_adinf TO sis_advisor;
+GRANT SELECT ON TABLE general.ggl_count TO sis_advisor;
+GRANT SELECT ON TABLE general.ggl_citzn TO sis_advisor;
 GRANT SELECT ON TABLE finance.fgl_fyear TO sis_instructor;
 GRANT SELECT ON student.sdl_camps, student.sdl_coleg, student.sdl_depts, 
                 student.sgl_smstr, student.sgl_terms, student.sgl_level,
