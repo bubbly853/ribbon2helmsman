@@ -217,7 +217,7 @@ This allows a host type connection to the database helmsman_db from the helmsman
 
 
 
-12. as root, create the gunicorn file */etc/systemd/system/helmsman.service* as shows
+13. as root, create the gunicorn file */etc/systemd/system/helmsman.service* as shows
 
     ```service
     [Unit]
@@ -241,7 +241,7 @@ This allows a host type connection to the database helmsman_db from the helmsman
     WantedBy=multi-user.target
     ```
  
-13. reload systemd and start the service, as root or sudo:
+14. reload systemd and start the service, as root or sudo:
 
     ```bash
     systemctl daemon-reload
@@ -250,7 +250,7 @@ This allows a host type connection to the database helmsman_db from the helmsman
     systemctl status helmsman
     ```
 
-14. Create and edit the nginx helmsman config file */etc/nginx/conf.d/helmsman.conf as shown
+15. Create and edit the nginx helmsman config file */etc/nginx/conf.d/helmsman.conf as shown
 
     ```conf
     server {
