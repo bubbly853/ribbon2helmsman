@@ -195,8 +195,8 @@ this allows a host type connection to the database helmsman_db from the helmsman
     After=network.target
     
     [Service]
-    User=www-data
-    Group=www-data
+    User=helmsman
+    Group=helmsman
     WorkingDirectory=/opt/helmsman/app/helmsman
     ExecStart=/opt/helmsman/app/.venv/bin/gunicorn \
         --workers 3 \
