@@ -43,7 +43,13 @@ To install nginx on Oracle Linux or Rocky Linux, run the following commands.
     firewall-cmd --permanent --add-service=https
     firewall-cmd --reload
     ```
+3. Enable and start nginx, as root or sudo:
 
+    ```bash
+    systemctl enable nginx
+    systemctl start nginx
+    ```
+    
 #### install remaining requirements
 
 Ensure python, gcc, gunicorn, and git are installed and up to date, as root or sudo:
@@ -104,7 +110,7 @@ this allows a host type connection to the database helmsman_db from the helmsman
     mkdir app && cd app
     ```
 
-3. Continuing, ull the git repository
+3. Continuing, clone the git repository
 
    **📝Notice:** Steps 2-10 assume you stay in the same terminal window. If you leave the terminal window at all in these steps, ensure you are in the correct directory. For for 3-8, that is /opt/helmsman/app, for 9 and 10, that is /opt/helmsman/app/helmsman
 
@@ -255,9 +261,22 @@ this allows a host type connection to the database helmsman_db from the helmsman
     }
     ```
 
-    Make sure your certificates are up to date, and they are in the /etc/pki/tls/certs directory.
+    Make sure your certificates are up to date, and they are in the /etc/pki/tls/certs, then reload nginx
+    
+    ```bash
+    systemctl reload nginx
+    ```
+    
+    **📝Notice** If you wish to test with self signed certs, generate them with the following commands
 
-15. Ensure proper functionality of the system. If you cannot reach the SIS DB, ensure the pg_hba.conf on the SIS server allows access from the Helmsman server IP address, and firewalls allow them to communicate on the DB port. Firewall can be set up via the following, as root or sudo:
+    ```
+    dnf install openssl
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        -keyout /etc/pki/tls/private/helmsman.key \
+        -out /etc/pki/tls/certs/helmsman.crt
+    ```
+
+16. Ensure proper functionality of the system. If you cannot reach the SIS DB, ensure the pg_hba.conf on the SIS server allows access from the Helmsman server IP address, and firewalls allow them to communicate on the DB port. Firewall can be set up via the following, as root or sudo:
 
     ```bash
     firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="<django-server-ip>" port port="5432" protocol="tcp" accept'
