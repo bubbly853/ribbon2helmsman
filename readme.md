@@ -111,11 +111,12 @@ This allows a host type connection to the database helmsman_db from the helmsman
     
     ```
 
-2. Login as helmsman, and create the app directory, as root or sudo:
+2. Login as helmsman, and create the app and gunicorn log directories, as root or sudo:
 
     ```bash
     su - helmsman
-    cd ~
+    cd ~'
+    mkdir -p log/gunicorn
     mkdir app && cd app
     ```
 
@@ -202,13 +203,19 @@ This allows a host type connection to the database helmsman_db from the helmsman
     *  FATAL:  database "helmsman_db" does not exist:
         * The database "helmsman_db" was not set up. Ensure that the database is set up properly.
 
-12. Create the run directory, as root or sudo:
+12. Create a tmp conf-file the gunicorn socket at */etc/tmpfiles.d/helmsman.conf*:
+
+    ```
+    d /run/helmsman 0755 helmsman nginx -
+    ```
+
+    then reload it with
 
     ```bash
-    mkdir /run/helmsman
-    chown helmsman:nginx /run/helmsman
-    chomd 750 /run/helmsman
+    systemd-tmpfiles --create --remove /etc/tmpfiles.d/helmsman.conf
     ```
+
+
 
 12. as root, create the gunicorn file */etc/systemd/system/helmsman.service* as shows
 
@@ -223,6 +230,8 @@ This allows a host type connection to the database helmsman_db from the helmsman
     WorkingDirectory=/opt/helmsman/app/helmsman
     ExecStart=/opt/helmsman/app/.venv/bin/gunicorn \
         --workers 3 \
+        --access-logfile /opt/helmsman/log/gunicorn/access.log \
+        --error-logfile /opt/helmsman/log/gunicorn/error.log \
         --bind unix:/run/helmsman/helmsman.sock \
         helmsman.wsgi:application
     ExecReload=/bin/kill -s HUP $MAINPID
