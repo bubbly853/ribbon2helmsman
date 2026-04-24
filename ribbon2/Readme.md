@@ -5,7 +5,7 @@ Ribbon2 is a modern SIS built on postgreSQL.
 
 # Ribbon2 Database
 
-**📝Notice:** This guide assumes the supported distros of Rocky Linux (Rocky) or Oracle Linux (OL) 9.4 or higher. It should also work with RHEL 9.4 or higher, if subscriptions and repositories are properly set up. We reccomend Rocky or Oracle Linux 10.0 or higher for security.
+**📝Notice:** This guide assumes the supported distros of Rocky Linux (Rocky) or Oracle Linux (OL) 10.0 or higher. It should also work with RHEL 10.0 or higher.
 
 **📝Notice:** This guide assumes the default DB name of ribbon2. You are welcome to add environment based prefixes like -prod or -pprd. Make sure to append this anywhere you'd list the database name.
 
