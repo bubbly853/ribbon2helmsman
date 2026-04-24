@@ -83,8 +83,17 @@ Add these lines to the file */var/lib/pgsql/16/data/pg_hba.conf*
 ```conf
 host    helmsman_db    helmsman    127.0.0.1/32    md5
 host    helmsman_db    helmsman    ::1/128         md5
-```    
-this allows a host type connection to the database helmsman_db from the helmsman user over 1pv4 and 1pv6 local host.
+```
+
+then reload postgresql, as root or sudo:
+
+**📝Notice:** you must reload postgresql every time you modify pg_hba.conf
+
+```bash
+systemctl reload postgresql-16
+```
+
+This allows a host type connection to the database helmsman_db from the helmsman user over 1pv4 and 1pv6 local host.
 
 **📝Notice:** Ensure this HBA file is setup properly. This will cause issues with migration if incorrect.
 
