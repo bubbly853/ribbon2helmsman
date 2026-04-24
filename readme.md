@@ -6,7 +6,7 @@ A django Frontend for the Ribbon2 SIS
 
 ## Prerequisites
 
-**📝Notice:** This guide assumes the supported distros of Rocky Linux (Rocky) or Oracle Linux (OL) 9.4 or higher. It should also work with RHEL 9.4 or higher, if subscriptions and repositories are properly set up. We reccomend Rocky or Oracle Linux 10.0 or higher for security.
+**📝Notice:** This guide assumes the supported distros of Rocky Linux (Rocky) or Oracle Linux (OL) 10.0 or higher. It should also work with RHEL 10.0 or higher. Lower versions are not supported due to issues with Python3 version.
 
 #### Ribbon2 database
 
@@ -179,8 +179,15 @@ this allows a host type connection to the database helmsman_db from the helmsman
     python manage.py migrate --database=default
     python manage.py collectstatic --noinput
     ```
+    **📝Notice:** If this step fails, there are multiple possible reasons. The traceback will be long, but look for the postgres error code. Here are a few common errors:
+    * FATAL:  password authentication failed for user "helmsman":
+        * Ensure the password set up for the 'helmsman' user matches the password in the .env file.
+    * no pg_hba.conf entry for host "local", user "helmsman", database "helmsman_db":
+        * Ensure the pg_hba.conf step was followed correctly.
+    *  FATAL:  database "helmsman_db" does not exist:
+        * The database "helmsman_db" was not set up. Ensure that the database is set up properly.
 
-11. as root, create the gunicorn file */etc/systemd/system/helmsman.service* as shows
+12. as root, create the gunicorn file */etc/systemd/system/helmsman.service* as shows
 
     ```service
     [Unit]
@@ -202,7 +209,7 @@ this allows a host type connection to the database helmsman_db from the helmsman
     WantedBy=multi-user.target
     ```
  
-12. reload systemd and start the service, as root or sudo:
+13. reload systemd and start the service, as root or sudo:
 
     ```bash
     systemctl daemon-reload
@@ -211,7 +218,7 @@ this allows a host type connection to the database helmsman_db from the helmsman
     systemctl status helmsman
     ```
 
-13. Create and edit the nginx helmsman config file */etc/nginx/conf.d/helmsman.conf as shown
+14. Create and edit the nginx helmsman config file */etc/nginx/conf.d/helmsman.conf as shown
 
     ```conf
     server {
@@ -250,7 +257,7 @@ this allows a host type connection to the database helmsman_db from the helmsman
 
     Make sure your certificates are up to date, and they are in the /etc/pki/tls/certs directory.
 
-14. Ensure proper functionality of the system. If you cannot reach the SIS DB, ensure the pg_hba.conf on the SIS server allows access from the Helmsman server IP address, and firewalls allow them to communicate on the DB port. Firewall can be set up via the following, as root or sudo:
+15. Ensure proper functionality of the system. If you cannot reach the SIS DB, ensure the pg_hba.conf on the SIS server allows access from the Helmsman server IP address, and firewalls allow them to communicate on the DB port. Firewall can be set up via the following, as root or sudo:
 
     ```bash
     firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="<django-server-ip>" port port="5432" protocol="tcp" accept'
