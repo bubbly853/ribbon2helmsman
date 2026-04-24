@@ -64,9 +64,9 @@ dnf install -y python3 python3-pip python3-devel gcc git
 2. create the helmsman user and database, and exit
 
     ```sql
-    CREATE USER hemlsman WITH PASSWORD 'secure_password_here';
-    CREATE DATABASE hemlsman_db OWNER hemlsman;
-    GRANT ALL PRIVILEGES ON DATABASE hemlsman_db TO hemlsman;
+    CREATE USER helmsman WITH PASSWORD 'secure_password_here';
+    CREATE DATABASE helmsman_db OWNER helmsman;
+    GRANT ALL PRIVILEGES ON DATABASE helmsman_db TO helmsman;
     \q
     ```
 
@@ -75,8 +75,8 @@ dnf install -y python3 python3-pip python3-devel gcc git
 Add these lines to the file */var/lib/pgsql/16/data/pg_hba.conf*
 
 ```conf
-host    hemlsman_db    helmsman    127.0.0.1/32    md5
-host    hemlsman_db    helmsman    ::1/128         md5
+host    helmsman_db    helmsman    127.0.0.1/32    md5
+host    helmsman_db    helmsman    ::1/128         md5
 ```    
 this allows a host type connection to the database helmsman_db from the helmsman user over 1pv4 and 1pv6 local host.
 
