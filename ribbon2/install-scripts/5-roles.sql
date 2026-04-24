@@ -43,7 +43,7 @@ GRANT INSERT, UPDATE ON student.scl_major, student.scl_currv, student.scr_creqs,
                         student.scm_stucv, student.srb_sects, student.sgm_stubi, 
                         student.srh_enrol, student.sar_advrl TO sis_registrar;
 GRANT INSERT ON student.sar_ovrar, student.scr_ovcls, student.scr_ovmrk 
-                TO sis_registrar
+                TO sis_registrar;
                 
 -- ============================================
 -- Create Role sis_advisor
@@ -72,7 +72,7 @@ GRANT SELECT ON student.sdl_camps, student.sdl_coleg, student.sdl_depts,
                 student.scr_ovmrk TO sis_advisor;
 GRANT INSERT, UPDATE ON student.scm_stucv, student.sar_advrl TO sis_advisor;
 GRANT INSERT ON student.sar_ovrar, student.scr_ovcls, student.scr_ovmrk 
-                TO sis_advisor
+                TO sis_advisor;
 
 -- ============================================
 -- Create Role sis_instructor
